@@ -1,6 +1,3 @@
-Aqui está a versão atualizada do seu arquivo **README.md**, incluindo o link para o seu site pessoal na seção de desenvolvimento, conforme solicitado e em conformidade com as fontes.
-
----
 
 # Zonea — Inteligência Territorial
 
