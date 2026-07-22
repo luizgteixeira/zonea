@@ -11,17 +11,17 @@
   --cor-azul-hover: #174887;
   --cor-azul-suave: #EFF6FF;
   --cor-azul-borda: #BFDBFE;
-  
+
   --cor-verde: #2E8B57;           /* Secundária: Território, Planejamento, Sustentabilidade */
   --cor-verde-hover: #246E44;
   --cor-verde-suave: #ECFDF5;
   --cor-verde-borda: #A7F3D0;
-  
+
   --cor-cinza: #4B5563;           /* Textos secundários e descrições */
   --cor-cinza-escuro: #0F172A;    /* Títulos e textos de alto contraste */
   --cor-cinza-claro: #F8FAFC;     /* Fundos de apoio */
   --cor-cinza-borda: #E2E8F0;     /* Bordas sutis */
-  
+
   --cor-alerta-bg: #FFFBEB;
   --cor-alerta-texto: #92400E;
   --cor-alerta-borda: #FDE68A;
@@ -35,7 +35,7 @@
   --raio-borda-md: 10px;
   --raio-borda-lg: 16px;
   --raio-borda-pill: 9999px;
-  
+
   --sombra-subtil: 0 1px 3px rgba(15, 23, 42, 0.05);
   --sombra-card: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
 }
@@ -65,7 +65,7 @@ body {
   z-index: 0;
   opacity: 0.05;
   pointer-events: none;
-  background-image: 
+  background-image:
     url('../img/cartografia-sistematica.png'),
     linear-gradient(to right, var(--cor-azul) 1px, transparent 1px),
     linear-gradient(to bottom, var(--cor-azul) 1px, transparent 1px),
@@ -1098,6 +1098,7 @@ footer, #main-footer {
 
 .footer-credits .logo-text {
   background: none;
+  background-clip: unset; /* Propriedade padrão obrigatória para compatibilidade */
   -webkit-background-clip: unset;
   -webkit-text-fill-color: var(--cor-branco);
   color: var(--cor-branco);

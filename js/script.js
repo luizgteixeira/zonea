@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 4. HEADER BOTÃO DE BLOQUEIO / LICENÇA
   const btnLockToggle = document.getElementById('btnLockToggle');
+  const btnClearToken = document.getElementById('btnClearToken');
   function updateHeaderLockUI() {
     if (!btnLockToggle) return;
     if (hasValidToken()) {
@@ -76,6 +77,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const activationMessage = document.getElementById('activationMessage');
   const accessStatusBadge = document.getElementById('access-status-badge');
 
+  if (btnClearToken) {
+    btnClearToken.addEventListener('click', () => {
+      if (tokenInput) tokenInput.value = '';
+      if (activationMessage) {
+        activationMessage.style.display = 'none';
+        activationMessage.innerHTML = '';
+      }
+    });
+  }
+
   if (tokenInput && btnActivateToken) {
     if (hasValidToken()) {
       if (accessStatusBadge) {
@@ -98,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         activationMessage.style.padding = '10px 14px';
         activationMessage.style.borderRadius = '6px';
         activationMessage.style.border = '1px solid #FFEEBA';
-        activationMessage.innerHTML = '⚠️ <strong>Aviso de Acesso Restrito:</strong> A consulta aos geodados dos 34 municípios exige uma chave de licença ativa. Digite a senha <strong>luiz1701</strong> abaixo para liberar o acesso ao painel.';
+        activationMessage.innerHTML = '⚠️ <strong>Aviso de Acesso Restrito:</strong> A consulta aos geodados dos 34 municípios exige uma chave de licença ativa. Digite a senha no campo acima para liberar o acesso ao painel.';
       }
 
       function executeActivation() {
