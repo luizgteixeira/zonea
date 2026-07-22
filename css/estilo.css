@@ -7,20 +7,26 @@
 
 /* 1. VARIÁVEIS DO SISTEMA DE DESIGN */
 :root {
-  --cor-azul: #1E5AA8;            /* Primária: Confiança, Tecnologia, Informação */
+  --cor-azul: #1E5AA8;
+  /* Primária: Confiança, Tecnologia, Informação */
   --cor-azul-hover: #174887;
   --cor-azul-suave: #EFF6FF;
   --cor-azul-borda: #BFDBFE;
 
-  --cor-verde: #2E8B57;           /* Secundária: Território, Planejamento, Sustentabilidade */
+  --cor-verde: #2E8B57;
+  /* Secundária: Território, Planejamento, Sustentabilidade */
   --cor-verde-hover: #246E44;
   --cor-verde-suave: #ECFDF5;
   --cor-verde-borda: #A7F3D0;
 
-  --cor-cinza: #4B5563;           /* Textos secundários e descrições */
-  --cor-cinza-escuro: #0F172A;    /* Títulos e textos de alto contraste */
-  --cor-cinza-claro: #F8FAFC;     /* Fundos de apoio */
-  --cor-cinza-borda: #E2E8F0;     /* Bordas sutis */
+  --cor-cinza: #4B5563;
+  /* Textos secundários e descrições */
+  --cor-cinza-escuro: #0F172A;
+  /* Títulos e textos de alto contraste */
+  --cor-cinza-claro: #F8FAFC;
+  /* Fundos de apoio */
+  --cor-cinza-borda: #E2E8F0;
+  /* Bordas sutis */
 
   --cor-alerta-bg: #FFFBEB;
   --cor-alerta-texto: #92400E;
@@ -63,21 +69,14 @@ body {
   position: fixed;
   inset: 0;
   z-index: 0;
-  opacity: 0.05;
+  opacity: 0.07;
   pointer-events: none;
-  background-image:
-    url('../img/cartografia-sistematica.png'),
-    linear-gradient(to right, var(--cor-azul) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--cor-azul) 1px, transparent 1px),
-    linear-gradient(to right, var(--cor-verde) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--cor-verde) 1px, transparent 1px),
-    radial-gradient(circle at center, var(--cor-azul) 1.5px, transparent 1.5px);
-  background-size: cover, 80px 80px, 80px 80px, 400px 400px, 400px 400px, 80px 80px;
-  background-position: center center;
-  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat;
-  filter: grayscale(100%);
-  transition: opacity 0.3s ease;
+  background-image:url('../img/mapa-georreferenciamento.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
+
 
 /* 3. HEADER & NAVEGAÇÃO INSTITUCIONAL */
 header {
@@ -181,7 +180,8 @@ h2 .logo-text {
   transition: all 0.2s ease;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
   color: var(--cor-azul);
   background-color: var(--cor-azul-suave);
 }
@@ -464,7 +464,8 @@ input[type="text"]:focus {
   align-items: center;
 }
 
-.suggestion-row:hover, .suggestion-row.active {
+.suggestion-row:hover,
+.suggestion-row.active {
   background-color: var(--cor-azul-suave);
   color: var(--cor-azul);
   font-weight: 600;
@@ -642,7 +643,8 @@ input[type="text"]:focus {
   transition: all 0.2s ease;
 }
 
-.cat-btn:hover, .cat-btn.active {
+.cat-btn:hover,
+.cat-btn.active {
   background-color: var(--cor-azul);
   color: var(--cor-branco);
   border-color: var(--cor-azul);
@@ -824,9 +826,9 @@ input[type="text"]:focus {
   border: 1px solid var(--cor-cinza-borda);
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, box-shadow, border-color;
   position: relative;
 }
@@ -876,6 +878,7 @@ input[type="text"]:focus {
 
 /* Desabilita/simplifica animações para utilizadores com prefers-reduced-motion ativado */
 @media (prefers-reduced-motion: reduce) {
+
   .card,
   .metric-item,
   .search-card,
@@ -922,7 +925,8 @@ input[type="text"]:focus {
   transition: all 0.2s ease;
 }
 
-.muni-path:hover, .muni-path.active {
+.muni-path:hover,
+.muni-path.active {
   fill: var(--cor-azul);
   stroke: #60A5FA;
   stroke-width: 2.5;
@@ -933,7 +937,8 @@ input[type="text"]:focus {
   stroke: var(--cor-verde);
 }
 
-.muni-path.confirmado:hover, .muni-path.confirmado.active {
+.muni-path.confirmado:hover,
+.muni-path.confirmado.active {
   fill: #047857;
   stroke: #34D399;
 }
@@ -1053,7 +1058,8 @@ input[type="text"]:focus {
 }
 
 /* 12. FOOTER INSTITUCIONAL */
-footer, #main-footer {
+footer,
+#main-footer {
   background-color: var(--cor-cinza-escuro);
   color: #94A3B8;
   padding: 32px 24px;
@@ -1098,7 +1104,8 @@ footer, #main-footer {
 
 .footer-credits .logo-text {
   background: none;
-  background-clip: unset; /* Propriedade padrão obrigatória para compatibilidade */
+  background-clip: unset;
+  /* Propriedade padrão obrigatória para compatibilidade */
   -webkit-background-clip: unset;
   -webkit-text-fill-color: var(--cor-branco);
   color: var(--cor-branco);
@@ -1199,8 +1206,8 @@ footer, #main-footer {
   visibility: hidden;
   transform: translateX(8px);
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   user-select: none;
 }
@@ -1230,8 +1237,8 @@ footer, #main-footer {
   justify-content: center;
   box-shadow: 0 4px 16px rgba(46, 139, 87, 0.35), 0 2px 6px rgba(15, 23, 42, 0.12);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   outline: none;
   position: relative;
@@ -1276,10 +1283,10 @@ footer, #main-footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .whatsapp-tooltip,
   .whatsapp-float-btn {
     transition: none !important;
     transform: none !important;
   }
 }
-

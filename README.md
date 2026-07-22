@@ -1,65 +1,87 @@
-# Zonea
-
-**Plataforma de consulta e exploração de dados territoriais e georreferenciados.**
-
-O **Zonea** é um projeto criado para facilitar o acesso, a consulta e a visualização de informações territoriais e urbanas, conectando dados geográficos a uma experiência simples, moderna e intuitiva.
-
-A proposta é transformar dados públicos e bases georreferenciadas em informações mais acessíveis, permitindo que usuários encontrem e compreendam melhor as características de diferentes territórios e municípios.
-
-> **Zonea — dados territoriais de forma simples, acessível e inteligente.**
+Aqui está a versão atualizada do seu arquivo **README.md**, incluindo o link para o seu site pessoal na seção de desenvolvimento, conforme solicitado e em conformidade com as fontes.
 
 ---
 
-## 🎯 Objetivo
+# Zonea — Inteligência Territorial
 
-O objetivo do Zonea é criar uma plataforma capaz de centralizar e organizar informações territoriais e geográficas, oferecendo uma maneira prática de pesquisar e explorar dados de diferentes fontes.
+> **Slogan:** Informação urbanística direto da fonte.
+> **Princípio:** Consulte. Compreenda. Planeje.
 
-A plataforma busca reduzir a complexidade presente em bases geográficas e sistemas técnicos, tornando essas informações mais fáceis de consultar e utilizar.
-
----
-
-## 🗺️ Principais funcionalidades
-
-O projeto está sendo desenvolvido para oferecer recursos como:
-
-- 🔎 Consulta de informações territoriais;
-- 📍 Pesquisa por localização e território;
-- 🏙️ Consulta de municípios e bairros;
-- 🗺️ Visualização de dados georreferenciados;
-- 📊 Organização e apresentação de informações territoriais;
-- 🔗 Integração com bases de dados geográficas públicas;
-- 🌐 Exploração de diferentes fontes de dados municipais;
-- 📱 Interface moderna, responsiva e acessível.
+O **Zonea** é uma plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados. Ele atua como uma **camada de descoberta e organização**, facilitando o acesso a informações oficiais distribuídas em diversos portais municipais e sistemas de geoprocessamento.
 
 ---
 
-## 🚀 Visão do projeto
+## 🗺️ Propósito e Escopo
 
-O Zonea começa com foco em dados territoriais de municípios da **Região Metropolitana de Belo Horizonte (RMBH)**, com possibilidade de expansão progressiva para outras regiões e, futuramente, para diferentes municípios do Brasil.
+O projeto busca reduzir a fragmentação de dados urbanísticos, conectando profissionais e cidadãos diretamente às bases públicas oficiais (WMS, WFS, GeoJSON, etc.) sem substituir os sistemas de origem.
 
-A evolução da plataforma será orientada pela integração de novas fontes de dados, ampliação da cobertura territorial e criação de ferramentas que facilitem a interpretação das informações geográficas.
-
----
-
-## 🏗️ Status do desenvolvimento
-
-🚧 **Em desenvolvimento**
-
-O projeto encontra-se em fase inicial de desenvolvimento. A arquitetura, as funcionalidades e as fontes de dados estão sendo estruturadas gradualmente.
-
-Novos recursos e integrações serão adicionados ao longo da evolução do projeto.
+* **Foco Inicial:** Região Metropolitana de Belo Horizonte (RMBH).
+* **Cobertura:** 34 municípios cadastrados, com portais de alta prioridade já integrados (BHGeo, SIGM, GeoPNL, entre outros).
+* **Público-alvo:** Profissionais de planejamento urbano, arquitetos, engenheiros, analistas territoriais e cidadãos interessados em dados municipais.
 
 ---
 
-## 📂 Estrutura do projeto
+## 🚀 Funcionalidades Atuais
 
-A estrutura do projeto será organizada de forma modular, permitindo a evolução independente de seus diferentes componentes.
+* **Busca Inteligente:** Autocomplete com normalização de strings (ignora acentos e maiúsculas).
+* **Status de Transparência:** Diferenciação visual entre **"Portal Confirmado"** (link validado) e **"Busca Direta"** (município cadastrado, mas sem link validado no código atual).
+* **Gated Content (Acesso Restrito):** Implementação de barreira de acesso experimental para validação de modelo de negócio (Senha de teste: `luiz1701`).
+* **Acessibilidade:** Suporte total a navegação por teclado e respeito às preferências de movimento do sistema (`prefers-reduced-motion`).
+* **Suporte Integrado:** Botão flutuante do **WhatsApp** para contato direto e suporte técnico.
+
+---
+
+## 🎨 Design System e Identidade
+
+A interface do Zonea foi projetada para transmitir **confiança, precisão e tecnologia**, utilizando uma estética limpa inspirada em cartografia.
+
+* **Cores Oficiais:** Azul (#1E5AA8) e Verde (#2E8B57).
+* **Tipografia:** `Inter` para conteúdos institucionais e `JetBrains Mono` para dados técnicos e microtipografia.
+* **Estética Técnica:** Fundo sutil composto por **linhas de coordenadas geográficas**, **curvas de nível em SVG** e uma imagem de **cartografia sistemática** como marca d'água.
+
+---
+
+## 🛠️ Tecnologias e Padrões
+
+O projeto utiliza uma arquitetura de frontend estático, preparada para evoluções em geoprocessamento:
+
+* **Frontend:** HTML5 semântico, CSS3 (Variables, Grid, Flexbox) e Vanilla JavaScript.
+* **Geotecnologias (Roadmap):** Suporte planejado para GeoJSON, WFS, WMS, ArcGIS REST Services e integração com GeoServer.
+* **Escalabilidade:** Migração planejada para separar o catálogo de municípios da lógica de interface via arquivos JSON.
+
+---
+
+## 🏗️ Estrutura do Projeto
 
 ```text
-Zonea/
-├── assets/
-├── css/
-├── js/
-├── data/
-├── docs/
+/
+├── public/
+│   ├── index.html        # Painel de consulta principal (Acesso restrito)
+│   ├── servicos.html     # Landing page de serviços e conversão
+│   ├── faq.html          # Central de ajuda e termos técnicos
+│   ├── css/
+│   │   └── estilo.css    # Design System e regras visuais
+│   ├── js/
+│   │   └── script.js     # Lógica de busca, autocomplete e redirecionamento
+│   └── img/              # Ativos visuais e cartográficos
 └── README.md
+```
+
+---
+
+## 🗺️ Roadmap de Evolução
+
+1. **Fase 1 — Fundação:** Estrutura inicial e catálogo da RMBH.
+2. **Fase 2 — Dados Territoriais:** Validação de portais e organização de metadados.
+3. **Fase 3 — Visualização:** Implementação de mapas interativos e camadas geográficas.
+4. **Fase 4 — Pesquisa Avançada:** Consultas por CEP, endereço, lote e índice cadastral.
+5. **Fase 5 — Inteligência Territorial:** Cruzamento de dados e relatórios automatizados.
+6. **Fase 6 — Expansão Nacional:** Cobertura de outras regiões brasileiras.
+
+---
+
+## 📞 Contato e Desenvolvimento
+
+Desenvolvido por **[Luiz Gustavo](https://www.luizgustavodev.com/)**. Para parcerias, sugestões ou suporte, utilize o canal oficial via WhatsApp disponível na plataforma.
+
+**Localização Técnica:** 19.9167° S, 43.9345° W · BELO HORIZONTE / MG.
