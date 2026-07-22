@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zonea — Central de Conhecimento & Glossário SIG</title>
+  <meta name="description" content="Glossário técnico interativo com os principais conceitos de geoprocessamento, padrões OGC e SIG para apoio a profissionais urbanistas.">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">DADOS TERRITORIAIS</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="conhecimento.html" class="nav-link active">Conhecimento</a>
+        <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Acesso Restrito</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO DA CENTRAL DE CONHECIMENTO -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Glossário Técnico & Padrões Geográficos
+      </div>
+
+      <h1 class="hero-title">
+        Central de <span class="logo-text">Conhecimento</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Desmistificando os termos técnicos de geoprocessamento e sistemas de informação geográfica para conectar arquitetos, engenheiros e gestores à fonte dos dados.
+      </p>
+
+      <div class="hero-concept">
+        Informação urbanística direto da fonte
+      </div>
+    </section>
+
+    <!-- GRID DO GLOSSÁRIO INTERATIVO -->
+    <section class="servicos-grid" style="max-width: 1000px; margin: 0 auto 48px;">
+
+      <!-- TERMO 1: WMS -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-azul-suave); color: var(--cor-azul); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">WMS</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          <strong>Web Map Service:</strong> Padrão OGC que provê imagens georreferenciadas (raster) através da internet. Ideal para visualização em plano de fundo no QGIS ou ArcGIS sem a necessidade de baixar arquivos pesados.
+        </p>
+      </div>
+
+      <!-- TERMO 2: WFS -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-verde-suave); color: var(--cor-verde); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">WFS</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          <strong>Web Feature Service:</strong> Permite a recuperação e manipulação direta de feições vetoriais (pontos, linhas e polígonos) com seus atributos, garantindo acesso completo aos parâmetros numéricos e tabelas de zoneamento.
+        </p>
+      </div>
+
+      <!-- TERMO 3: GeoJSON -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-azul-suave); color: var(--cor-azul); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">GeoJSON</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          Formato aberto e leve estruturado em JSON para representação de geometria espacial e dados não espaciais. É o padrão nativo para aplicações web modernas e bibliotecas como Leaflet e Mapbox.
+        </p>
+      </div>
+
+      <!-- TERMO 4: ArcGIS REST -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-verde-suave); color: var(--cor-verde); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M21 19c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">ArcGIS REST</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          Interface de programação (API) mantida pelos ecossistemas Esri que permite consultar mapas, camadas de atributos e serviços de geocodificação disponibilizados por prefeituras.
+        </p>
+      </div>
+
+      <!-- TERMO 5: GeoServer -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-azul-suave); color: var(--cor-azul); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">GeoServer</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          Servidor open-source em Java utilizado por administrações públicas para compartilhar geodados e servir camadas sob os padrões abertos OGC (WMS, WFS, WCS).
+        </p>
+      </div>
+
+      <!-- TERMO 6: SIG -->
+      <div class="servico-card card">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--cor-verde-suave); color: var(--cor-verde); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <span style="font-family: var(--fonte-mono); font-size: 16px; font-weight: 700; color: var(--cor-azul);">SIG</span>
+        </div>
+        <p style="font-size: 14px; color: var(--cor-cinza); line-height: 1.6;">
+          <strong>Sistema de Informação Geográfica:</strong> Conjunto integrado de hardware, software e dados espaciais projetado para capturar, armazenar, manipular e analisar informações sobre o território.
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

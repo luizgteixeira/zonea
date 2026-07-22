@@ -1,0 +1,342 @@
+[
+  {
+    "nome": "Baldim",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "7.800 hab",
+    "area": "556 km²",
+    "detalhes_tecnicos": "Plano Diretor e legislação urbanística em formato PDF. Catalogação técnica em andamento."
+  },
+  {
+    "nome": "Belo Horizonte",
+    "link": "https://prefeitura.pbh.gov.br/bhgeo",
+    "sistema": "BHGeo / Prodabel",
+    "confirmado": true,
+    "regiao": "Central",
+    "pop": "2.315.000 hab",
+    "area": "331 km²",
+    "detalhes_tecnicos": "WebSIG completo BHGeo, Camadas WMS/WFS OGC, Lei de Uso do Solo 11.181/19, Limites Cadastrais e Zoneamento."
+  },
+  {
+    "nome": "Betim",
+    "link": "https://www.betim.mg.gov.br/portal/secretarias-paginas/308/cartografia/",
+    "sistema": "GeoBetim",
+    "confirmado": true,
+    "regiao": "Oeste",
+    "pop": "411.000 hab",
+    "area": "343 km²",
+    "detalhes_tecnicos": "GeoBetim, Base Cartográfica Oficial, Mapas de Zoneamento, Perímetros Urbanos e Áreas Industriais."
+  },
+  {
+    "nome": "Brumadinho",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "38.900 hab",
+    "area": "639 km²",
+    "detalhes_tecnicos": "Mapeamento de Áreas de Preservação e Plano Diretor sob fase de catalogação técnica."
+  },
+  {
+    "nome": "Caeté",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Leste",
+    "pop": "44.300 hab",
+    "area": "542 km²",
+    "detalhes_tecnicos": "Base cartográfica municipal e diretrizes urbanísticas em auditoria para integração OGC."
+  },
+  {
+    "nome": "Capim Branco",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "9.800 hab",
+    "area": "95 km²",
+    "detalhes_tecnicos": "Dados cadastrais e ambientais sob processo de integração com o modelo de dados Zonea."
+  },
+  {
+    "nome": "Confins",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "6.800 hab",
+    "area": "42 km²",
+    "detalhes_tecnicos": "Mapeamento do entorno aeroportuário e zoneamento municipal em catalogação técnica."
+  },
+  {
+    "nome": "Contagem",
+    "link": "https://geoprocessamento.contagem.mg.gov.br/sigm/",
+    "sistema": "SIGM Contagem",
+    "confirmado": true,
+    "regiao": "Oeste",
+    "pop": "621.000 hab",
+    "area": "195 km²",
+    "detalhes_tecnicos": "SIGM Contagem, Geoportal Vetorial, Camadas WMS de Loteamento, Parcelamento do Solo e Macrozoneamento."
+  },
+  {
+    "nome": "Esmeraldas",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "70.800 hab",
+    "area": "909 km²",
+    "detalhes_tecnicos": "Mapeamento de áreas rurais e expansão urbana sob análise técnica para disponibilização."
+  },
+  {
+    "nome": "Florestal",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "7.500 hab",
+    "area": "194 km²",
+    "detalhes_tecnicos": "Legislação urbanística local e mapa de uso do solo em catálogo para validação."
+  },
+  {
+    "nome": "Ibirité",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "170.000 hab",
+    "area": "72 km²",
+    "detalhes_tecnicos": "Cadastro imobiliário e mapa de zoneamento em fase de estruturação de geodados."
+  },
+  {
+    "nome": "Igarapé",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "43.000 hab",
+    "area": "78 km²",
+    "detalhes_tecnicos": "Geodados municipais e perímetro urbano sob catalogação técnica para integração SIG."
+  },
+  {
+    "nome": "Itaguara",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "13.200 hab",
+    "area": "410 km²",
+    "detalhes_tecnicos": "Base geográfica municipal e plano de desenvolvimento em fase de levantamento."
+  },
+  {
+    "nome": "Itatiaiuçu",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "11.200 hab",
+    "area": "295 km²",
+    "detalhes_tecnicos": "Mapeamento de diretrizes urbanísticas e geologia sob catalogação técnica."
+  },
+  {
+    "nome": "Jaboticatubas",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "20.400 hab",
+    "area": "1.921 km²",
+    "detalhes_tecnicos": "Limites de conservação ambiental e Plano Diretor municipal sob catalogação."
+  },
+  {
+    "nome": "Juatuba",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "27.500 hab",
+    "area": "96 km²",
+    "detalhes_tecnicos": "Zoneamento de polos industriais e perímetro urbano em processo de catalogação."
+  },
+  {
+    "nome": "Lagoa Santa",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "75.000 hab",
+    "area": "229 km²",
+    "detalhes_tecnicos": "Plano Diretor e mapa de zoneamento sob análise para publicação no índice Zonea."
+  },
+  {
+    "nome": "Mário Campos",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "15.600 hab",
+    "area": "35 km²",
+    "detalhes_tecnicos": "Perímetro urbano e áreas de interesse hídrico sob catalogação técnica."
+  },
+  {
+    "nome": "Mateus Leme",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "31.000 hab",
+    "area": "302 km²",
+    "detalhes_tecnicos": "Cartografia básica municipal sob verificação para integração com padrão WMS."
+  },
+  {
+    "nome": "Matozinhos",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "38.000 hab",
+    "area": "252 km²",
+    "detalhes_tecnicos": "Base geográfica e diretrizes do solo sob catalogação técnica prioritária."
+  },
+  {
+    "nome": "Nova Lima",
+    "link": "https://novalima.mg.gov.br/cidadao/portal-servicos/servico/geopnl",
+    "sistema": "GeoPNL Nova Lima",
+    "confirmado": true,
+    "regiao": "Sul",
+    "pop": "111.000 hab",
+    "area": "516 km²",
+    "detalhes_tecnicos": "GeoPNL, WebSIG de Nova Lima, Consultas Cadastrais, Zoneamento Urbano e Parâmetros Construtivos."
+  },
+  {
+    "nome": "Nova União",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Leste",
+    "pop": "5.700 hab",
+    "area": "172 km²",
+    "detalhes_tecnicos": "Geodados municipais e mapa do Plano Diretor em fase de catalogação."
+  },
+  {
+    "nome": "Pedro Leopoldo",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "65.000 hab",
+    "area": "292 km²",
+    "detalhes_tecnicos": "Base cartográfica urbana e dados cadastrais sob auditoria de fontes públicas."
+  },
+  {
+    "nome": "Raposos",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "15.300 hab",
+    "area": "70 km²",
+    "detalhes_tecnicos": "Limites territoriais e declividade urbana sob catalogação técnica."
+  },
+  {
+    "nome": "Ribeirão das Neves",
+    "link": "https://ribeiraodasneves.mg.gov.br/src/pages/geoneves.html",
+    "sistema": "GeoNeves",
+    "confirmado": true,
+    "regiao": "Norte",
+    "pop": "330.000 hab",
+    "area": "155 km²",
+    "detalhes_tecnicos": "GeoNeves, Mapeamento do Uso do Solo, Infraestrutura Urbana e Camadas de Zoneamento."
+  },
+  {
+    "nome": "Rio Acima",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "10.500 hab",
+    "area": "229 km²",
+    "detalhes_tecnicos": "Zoneamento ecológico e Unidades de Conservação em catalogação técnica."
+  },
+  {
+    "nome": "Rio Manso",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Sul",
+    "pop": "5.800 hab",
+    "area": "279 km²",
+    "detalhes_tecnicos": "Dados rurais e perímetro urbano sob catalogação técnica de geoinformação."
+  },
+  {
+    "nome": "Sabará",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Leste",
+    "pop": "137.000 hab",
+    "area": "302 km²",
+    "detalhes_tecnicos": "Plano Diretor e áreas de tombamento histórico em catalogação técnica."
+  },
+  {
+    "nome": "Santa Luzia",
+    "link": "https://geo.santaluzia.mg.gov.br",
+    "sistema": "Geo Santa Luzia",
+    "confirmado": true,
+    "regiao": "Norte",
+    "pop": "220.000 hab",
+    "area": "235 km²",
+    "detalhes_tecnicos": "Geo Santa Luzia, WebSIG de Zoneamento, Cadastro Técnico Multifinalitário e Cartografia Digital."
+  },
+  {
+    "nome": "São Joaquim de Bicas",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "32.000 hab",
+    "area": "72 km²",
+    "detalhes_tecnicos": "Mapeamento de infraestrutura urbana sob catalogação técnica."
+  },
+  {
+    "nome": "São José da Lapa",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "24.000 hab",
+    "area": "48 km²",
+    "detalhes_tecnicos": "Base cadastral municipal e zoneamento em processo de revisão."
+  },
+  {
+    "nome": "Sarzedo",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Oeste",
+    "pop": "33.000 hab",
+    "area": "62 km²",
+    "detalhes_tecnicos": "Geodados de uso do solo e mapa de zoneamento em catalogação."
+  },
+  {
+    "nome": "Taquaraçu de Minas",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Leste",
+    "pop": "4.100 hab",
+    "area": "329 km²",
+    "detalhes_tecnicos": "Mapeamento rural e diretrizes urbanas em catalogação técnica."
+  },
+  {
+    "nome": "Vespasiano",
+    "link": null,
+    "sistema": "Busca Direta",
+    "confirmado": false,
+    "regiao": "Norte",
+    "pop": "129.000 hab",
+    "area": "70 km²",
+    "detalhes_tecnicos": "Base cartográfica e diretrizes do Plano Diretor sob catalogação técnica."
+  }
+]

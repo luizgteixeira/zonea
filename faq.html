@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zonea — Dúvidas Frequentes (FAQ)</title>
+  <meta name="description" content="Respostas oficiais sobre o funcionamento, cobertura, fontes de dados e roadmap de evolução da plataforma Zonea.">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">DADOS TERRITORIAIS</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="faq.html" class="nav-link active">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Acesso Restrito</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO FAQ -->
+    <section class="hero-section" style="margin-bottom: 32px;">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Perguntas & Respostas Frequentes
+      </div>
+
+      <h1 class="hero-title">
+        Dúvidas Frequentes sobre o <span class="logo-text">Zonea</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Informações claras sobre nosso propósito, modo de consulta, abrangência dos dados da RMBH e possibilidades de evolução no roadmap.
+      </p>
+
+      <div class="hero-concept">
+        Consulte. Compreenda. Planeje.
+      </div>
+    </section>
+
+    <!-- FILTROS DE CATEGORIA DO FAQ -->
+    <div class="faq-header-categories">
+      <button type="button" class="cat-btn active" data-category="all">Todas as Categorias</button>
+      <button type="button" class="cat-btn" data-category="geral">1. Geral</button>
+      <button type="button" class="cat-btn" data-category="uso">2. Uso e Funcionalidades</button>
+      <button type="button" class="cat-btn" data-category="cobertura">3. Cobertura e Dados</button>
+      <button type="button" class="cat-btn" data-category="futuro">4. Futuro do Projeto (Roadmap)</button>
+    </div>
+
+    <div style="max-width: 820px; margin: 0 auto;">
+
+      <!-- CATEGORIA 1: GERAL -->
+      <div class="faq-group" data-group-category="geral">
+        <h2 class="faq-group-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          1. Geral
+        </h2>
+
+        <div class="faq-item card open">
+          <button type="button" class="faq-question" aria-expanded="true">
+            <span>O que é o <span class="logo-text">Zonea</span>?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            O <span class="logo-text">Zonea</span> é uma plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados. Nosso objetivo é facilitar a descoberta e o acesso a informações oficiais disponibilizadas por municípios e órgãos públicos, funcionando como uma camada de organização e acesso direto à fonte.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Qual é o objetivo principal da plataforma?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            O projeto busca reduzir a dificuldade de localizar sistemas de geoprocessamento, mapas e legislações que muitas vezes estão espalhados em diferentes portais institucionais. O <span class="logo-text">Zonea</span> segue o princípio: "Consulte. Compreenda. Planeje".
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>O <span class="logo-text">Zonea</span> é um portal imobiliário?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Não. O <span class="logo-text">Zonea</span> possui caráter institucional, tecnológico e orientado a dados oficiais. Ele não deve ser confundido com catálogos de imóveis, anúncios ou plataformas de venda de terrenos.
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIA 2: USO E FUNCIONALIDADES -->
+      <div class="faq-group" data-group-category="uso">
+        <h2 class="faq-group-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          2. Uso e Funcionalidades
+        </h2>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Como realizo uma busca?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Na página inicial, basta digitar o nome do município desejado no campo de consulta. O sistema possui uma função de autocomplete que sugere cidades cadastradas enquanto você digita, ignorando acentos ou diferenças entre maiúsculas e minúsculas.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>O que significam os indicadores "confirmado" e "busca direta"?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            <strong>"Confirmado":</strong> indica que o município possui um link oficial para seu portal geográfico ou urbanístico já validado e cadastrado no <span class="logo-text">Zonea</span>.<br><br>
+            <strong>"Busca direta":</strong> significa que o município está cadastrado na nossa base, mas o link para o portal específico ainda não foi confirmado ou vinculado no código atual.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>O que acontece se o município que procurei não tiver um link cadastrado?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Nesses casos, o sistema informará de forma transparente que o portal oficial para aquela localidade ainda não foi confirmado na base de dados, evitando redirecionar o usuário para fontes não verificadas.
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIA 3: COBERTURA E DADOS -->
+      <div class="faq-group" data-group-category="cobertura">
+        <h2 class="faq-group-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          3. Cobertura e Dados
+        </h2>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Quais regiões o <span class="logo-text">Zonea</span> atende no momento?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            O foco inicial é a Região Metropolitana de Belo Horizonte (RMBH). Atualmente, o sistema conta com 34 municípios cadastrados da RMBH em sua base de dados.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>Quais municípios já possuem portais oficiais vinculados?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Até o momento, os links diretos estão disponíveis para: Belo Horizonte (BHGeo), Betim (Cartografia), Contagem (SIGM), Nova Lima (GeoPNL), Ribeirão das Neves (GeoNeves) e Santa Luzia.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>As informações visualizadas são de responsabilidade do <span class="logo-text">Zonea</span>?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            O <span class="logo-text">Zonea</span> facilita o acesso, mas não substitui as fontes oficiais. Quando você acessa um dado, o sistema redireciona ou orienta você para o portal da prefeitura ou órgão responsável, garantindo que a informação venha direto da fonte.
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIA 4: FUTURO DO PROJETO -->
+      <div class="faq-group" data-group-category="futuro">
+        <h2 class="faq-group-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          4. Futuro do Projeto (Roadmap)
+        </h2>
+
+        <div class="faq-item roadmap-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>
+              Posso pesquisar por endereço, CEP ou lote?
+              <span class="roadmap-badge">ROADMAP (FASE 4)</span>
+            </span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Essas funcionalidades, assim como a busca por bairro ou índice cadastral, representam possibilidades de evolução e estão no roadmap do projeto (Fase 4), mas ainda não estão implementadas na versão atual.
+          </div>
+        </div>
+
+        <div class="faq-item roadmap-item card">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span>
+              O <span class="logo-text">Zonea</span> terá mapas interativos próprios?
+              <span class="roadmap-badge">ROADMAP (FASE 3 E 5)</span>
+            </span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer">
+            Sim, a visão de longo prazo inclui a evolução para uma plataforma de inteligência territorial com mapas interativos, camadas geográficas e ferramentas de análise de dados (Fase 3 e 5), integrando serviços como WMS e WFS.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Entre em contato conosco!</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

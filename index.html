@@ -3,150 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zonea — Informação urbanística direto da fonte</title>
-
-  <!-- Meta tags de Branding e SEO -->
-  <meta name="description" content="Conectando você aos dados oficiais. Consulte os portais oficiais de geoprocessamento e georreferenciamento dos 34 municípios da Região Metropolitana de Belo Horizonte (RMBH).">
-  <meta name="keywords" content="Zonea, geoprocessamento, planejamento urbano, dados territoriais, RMBH, inteligência territorial, Belo Horizonte, cartografia, mapa municipal">
-  <meta name="author" content="Zonea - Inteligência Territorial">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Zonea — Informação urbanística direto da fonte">
-  <meta property="og:description" content="Conectando você aos dados oficiais. Consulte as informações urbanísticas e de geoprocessamento dos municípios da RMBH direto da fonte.">
-  <meta property="og:image" content="img/logo.png">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Zonea — Informação urbanística direto da fonte">
-  <meta name="twitter:description" content="Conectando você aos dados oficiais. Consulte as informações urbanísticas e de geoprocessamento dos municípios da RMBH direto da fonte.">
-  <meta name="twitter:image" content="img/logo-zonea.png">
-
-  <!-- Favicon e Ícones da Marca -->
-  <link rel="icon" type="image/svg+xml" href="img/logo.png">
-  <link rel="apple-touch-icon" href="img/logo.png">
-
-  <!-- Folha de estilo externa -->
+  <title>Zonea — Conectando você aos dados oficiais</title>
+  <meta name="description" content="Plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados da Região Metropolitana de Belo Horizonte (RMBH).">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
+  <div class="contours-watermark"></div>
 
-  <!-- Linhas topográficas de fundo (Subtle GIS theme Watermark) -->
-  <svg class="contours" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" stroke="#1E5AA8" stroke-width="1.2" stroke-opacity="0.6">
-      <path d="M -50 120 Q 200 60 400 140 T 850 100" />
-      <path d="M -50 200 Q 220 130 420 220 T 850 190" />
-      <path d="M -50 280 Q 240 200 440 300 T 850 280" />
-      <path d="M -50 500 Q 180 440 420 520 T 850 480" />
-      <path d="M -50 580 Q 200 520 440 600 T 850 570" />
-      <path d="M -50 660 Q 220 610 460 680 T 850 660" />
-    </g>
-    <g fill="none" stroke="#2E8B57" stroke-width="1.2" stroke-opacity="0.4">
-      <path d="M -50 350 Q 260 260 480 370 T 850 340" />
-      <path d="M -50 420 Q 260 340 480 440 T 850 410" />
-    </g>
-  </svg>
-
-  <!-- Cabeçalho Institucional -->
-  <header id="main-header">
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
     <div class="header-container">
-      <div class="logo-group">
-        <img src="img/logo.png" alt="Logo do Zonea" class="logo-icon">
-        <div class="logo-text">Zonea</div>
-      </div>
-      <div class="header-badge">
-        RMBH · 34 municípios integrados
-      </div>
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">DADOS TERRITORIAIS</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link active">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Acesso Restrito</span>
+        </button>
+      </nav>
     </div>
   </header>
 
-  <!-- Conteúdo Principal do Portal -->
-  <main id="main-content">
-    <div class="portal-grid">
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Plataforma de Geoprocessamento da RMBH
+      </div>
 
-      <!-- Seção de posicionamento institucional -->
-      <section class="intro-section">
-        <div class="institution-eyebrow">Informação Urbanística direto da fonte</div>
-        <h1>Conectando você aos <span>dados oficiais</span>.</h1>
-        <p class="lead-slogan">
-          Consulte. Compreenda. Planeje.
-        </p>
-        <p class="lead-description">
-          Consulte. Compreenda. Planeje. O <span class="logo-text">Zonea</span> facilita o acesso direto aos sistemas e portais oficiais de geoprocessamento, cartografia e dados territoriais das prefeituras da Região Metropolitana de Belo Horizonte.
-        </p>
+      <h1 class="hero-title">
+        <span class="logo-text">Zonea</span> — <span>Conectando você aos dados oficiais</span>
+      </h1>
 
-        <!-- Benefícios e Características Oficiais -->
-        <div class="features-list">
-          <div class="feature-item">
-            <div class="feature-icon-wrapper">
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-              </svg>
-            </div>
-            <span><strong>Conexões Certificadas:</strong> Redirecionamento seguro para as plataformas governamentais.</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon-wrapper">
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-            </div>
-            <span><strong>Foco Geográfico:</strong> Base unificada para os 34 municípios da RMBH.</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon-wrapper">
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-              </svg>
-            </div>
-            <span><strong>Dados Urbanísticos:</strong> Acesso a zoneamento, parcelamento do solo e cartografia oficial.</span>
-          </div>
+      <p class="hero-subtitle">
+        Facilitamos a descoberta e o acesso a informações territoriais, urbanísticas e georreferenciadas disponibilizadas por municípios e órgãos públicos, atuando como uma camada centralizada de organização direta à fonte.
+      </p>
+
+      <div class="hero-concept">
+        Consulte. Compreenda. Planeje.
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-item card">
+          <span class="metric-value">34</span>
+          <span class="metric-label">Municípios RMBH</span>
         </div>
-      </section>
+        <div class="metric-item card">
+          <span class="metric-value">Oficial</span>
+          <span class="metric-label">Fontes Públicas</span>
+        </div>
+        <div class="metric-item card">
+          <span class="metric-value">SIG</span>
+          <span class="metric-label">Geoinformação</span>
+        </div>
+      </div>
+    </section>
 
-      <!-- Painel de Busca e Acesso Oficial -->
-      <section class="search-card">
-        <h2 class="search-title">Consulta de Informação Territorial</h2>
+    <!-- CARD DE CONSULTA TERRITORIAL -->
+    <section class="search-card card">
+      <div class="search-title">
+        <span>Consulta de Informação Territorial</span>
+        <span style="color: var(--cor-verde); font-size: 11px;">Datum SIRGAS 2000</span>
+      </div>
 
-        <form id="geoForm" autocomplete="off">
-          <label class="field-label" for="municipio">Escolha ou digite o município</label>
-          <div class="field-container">
-            <div class="search-input-wrapper">
-              <!-- Ícone de busca/localização -->
-              <svg class="search-input-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-              <input type="text" id="municipio" placeholder="Ex: Belo Horizonte, Betim, Nova Lima..." />
-            </div>
-            <!-- Caixa para sugestões -->
-            <div class="suggestions" id="suggestions"></div>
-          </div>
-
-          <button type="submit" id="goBtn" class="btn-submit">
-            <span>Acessar portal de geoprocessamento</span>
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+      <form id="geoForm" autocomplete="off">
+        <div class="form-group">
+          <label for="municipio" class="form-label">Digite o nome do município da RMBH:</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-          </button>
-
-          <!-- Box para alertas e feedbacks de status -->
-          <div class="status" id="status"></div>
-        </form>
-
-        <!-- Atalhos rápidos para capitais e polos -->
-        <h3 class="quick-access-title">Acesso Rápido</h3>
-        <div class="quick-links">
-          <button type="button" class="quick-link-btn" data-muni="Belo Horizonte">Belo Horizonte</button>
-          <button type="button" class="quick-link-btn" data-muni="Betim">Betim</button>
-          <button type="button" class="quick-link-btn" data-muni="Contagem">Contagem</button>
+            <input
+              type="text"
+              id="municipio"
+              placeholder="Ex: Belo Horizonte, Betim, Nova Lima, Contagem..."
+              spellcheck="false"
+            />
+            <div id="suggestions" class="suggestions-dropdown"></div>
+          </div>
         </div>
-      </section>
 
-    </div>
+        <button type="submit" id="goBtn" class="btn-submit">
+          <span>Acessar portal de geoprocessamento oficial</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </form>
+
+      <div id="status" class="status-message"></div>
+
+      <div class="quick-links">
+        <span class="quick-access-title">Acesso Rápido aos Principais Polos:</span>
+        <div class="quick-buttons">
+          <button type="button" class="quick-link-btn" data-muni="Belo Horizonte">Belo Horizonte</button>
+          <button type="button" class="quick-link-btn" data-muni="Contagem">Contagem</button>
+          <button type="button" class="quick-link-btn" data-muni="Betim">Betim</button>
+          <button type="button" class="quick-link-btn" data-muni="Nova Lima">Nova Lima</button>
+          <button type="button" class="quick-link-btn" data-muni="Santa Luzia">Santa Luzia</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAINEL DE TRANSPARÊNCIA E PILARES INSTITUCIONAIS -->
+    <section class="transparency-section">
+      <div class="transparency-card card">
+        <div class="transparency-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3>Direto da Fonte Oficial</h3>
+        <p>O <span class="logo-text">Zonea</span> organiza links para portais de geoprocessamento, leis de zoneamento e SIGs municipais, direcionando o usuário sempre para os dados oficiais do órgão responsável.</p>
+      </div>
+
+      <div class="transparency-card card">
+        <div class="transparency-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+        <h3>Inteligência Territorial</h3>
+        <p>Desenvolvido para urbanistas, engenheiros, gestores públicos e cidadãos que necessitam de clareza e precisão para o planejamento e análise de território.</p>
+      </div>
+
+      <div class="transparency-card card">
+        <div class="transparency-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h3>Transparência e Neutralidade</h3>
+        <p>A plataforma não possui viés comercial imobiliário. Nosso compromisso é exclusivamente com o acesso livre, transparente e estruturado a geodados públicos.</p>
+      </div>
+    </section>
   </main>
 
-  <!-- Rodapé Institucional e Técnico -->
+  <!-- FOOTER INSTITUCIONAL -->
   <footer id="main-footer">
     <div class="footer-container">
       <div class="footer-credits">
@@ -155,7 +170,21 @@
       </div>
     </div>
   </footer>
-  <!-- Scripts externos -->
-  <script src="js/script.js" defer></script>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Entre em contato conosco!</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
