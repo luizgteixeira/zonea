@@ -5,8 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zonea — Dúvidas Frequentes (FAQ)</title>
   <meta name="description" content="Respostas oficiais sobre o funcionamento, cobertura, fontes de dados e roadmap de evolução da plataforma Zonea.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zonea — Dúvidas Frequentes (FAQ)">
+  <meta property="og:description"
+    content="Respostas oficiais sobre o funcionamento, cobertura e fontes de dados da camada de descoberta de dados oficiais do Zonea.">
+  <meta property="og:image" content="img/logo.png">
+  <meta property="og:locale" content="pt_BR">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/estilo.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "O que é o Zonea?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O Zonea é uma plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados. Seu objetivo é facilitar a descoberta e o acesso a informações oficiais disponibilizadas por municípios e órgãos públicos, funcionando como uma camada de organização e acesso direto à fonte." }
+      },
+      {
+        "@type": "Question",
+        "name": "Qual é o objetivo principal da plataforma?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O projeto busca reduzir a dificuldade de localizar sistemas de geoprocessamento, mapas e legislações que muitas vezes estão espalhados em diferentes portais institucionais. O Zonea segue o princípio: Consulte, Compreenda, Planeje." }
+      },
+      {
+        "@type": "Question",
+        "name": "O Zonea é um portal imobiliário?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. O Zonea possui caráter institucional, tecnológico e orientado a dados oficiais. Ele não deve ser confundido com catálogos de imóveis, anúncios ou plataformas de venda de terrenos." }
+      },
+      {
+        "@type": "Question",
+        "name": "Como realizo uma busca?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Na página inicial, basta digitar o nome do município desejado no campo de consulta. O sistema possui uma função de autocomplete que sugere cidades cadastradas enquanto você digita, ignorando acentos ou diferenças entre maiúsculas e minúsculas." }
+      },
+      {
+        "@type": "Question",
+        "name": "O que significam os indicadores \"confirmado\" e \"busca direta\"?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Confirmado indica que o município possui um link oficial para seu portal geográfico ou urbanístico já validado e cadastrado no Zonea. Busca direta significa que o município está cadastrado na base, mas o link para o portal específico ainda não foi confirmado ou vinculado." }
+      },
+      {
+        "@type": "Question",
+        "name": "O que acontece se o município que procurei não tiver um link cadastrado?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nesses casos, o sistema informa de forma transparente que o portal oficial para aquela localidade ainda não foi confirmado na base de dados, evitando redirecionar o usuário para fontes não verificadas." }
+      },
+      {
+        "@type": "Question",
+        "name": "Quais regiões o Zonea atende no momento?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O foco inicial é a Região Metropolitana de Belo Horizonte (RMBH). Atualmente, o sistema conta com 34 municípios cadastrados da RMBH em sua base de dados." }
+      },
+      {
+        "@type": "Question",
+        "name": "Quais municípios já possuem portais oficiais vinculados?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Até o momento, os links diretos estão disponíveis para Belo Horizonte (BHGeo), Betim (Cartografia), Contagem (SIGM), Nova Lima (GeoPNL), Ribeirão das Neves (GeoNeves) e Santa Luzia." }
+      },
+      {
+        "@type": "Question",
+        "name": "As informações visualizadas são de responsabilidade do Zonea?",
+        "acceptedAnswer": { "@type": "Answer", "text": "O Zonea facilita o acesso, mas não substitui as fontes oficiais. Quando você acessa um dado, o sistema redireciona ou orienta você para o portal da prefeitura ou órgão responsável, garantindo que a informação venha direto da fonte." }
+      },
+      {
+        "@type": "Question",
+        "name": "Posso pesquisar por endereço, CEP ou lote?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Essas funcionalidades, assim como a busca por bairro ou índice cadastral, representam possibilidades de evolução e estão no roadmap do projeto (Fase 4), mas ainda não estão implementadas na versão atual." }
+      },
+      {
+        "@type": "Question",
+        "name": "O Zonea terá mapas interativos próprios?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim, a visão de longo prazo inclui a evolução para uma plataforma de inteligência territorial com mapas interativos, camadas geográficas e ferramentas de análise de dados (Fase 3 e 5), integrando serviços como WMS e WFS." }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -33,6 +102,7 @@
       <nav id="navLinks" class="nav-links">
         <a href="index.html" class="nav-link">Início</a>
         <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="conhecimento.html" class="nav-link">Conhecimento</a>
         <a href="faq.html" class="nav-link active">Dúvidas (FAQ)</a>
         <button type="button" id="btnLockToggle" class="btn-lock">
           <span>🔒 Acesso Restrito</span>
@@ -249,7 +319,7 @@
 
   <!-- BOTAO FLUTUANTE WHATSAPP -->
   <div class="whatsapp-float-container">
-    <span class="whatsapp-tooltip">Entre em contato conosco!</span>
+    <span class="whatsapp-tooltip">Seu município ainda não está no mapa? Fale com a equipe</span>
     <a href="https://api.whatsapp.com/send/?phone=5531992609970"
        target="_blank"
        rel="noopener noreferrer"

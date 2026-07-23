@@ -7,6 +7,12 @@
   <title>Zonea — Conectando você aos dados oficiais</title>
   <meta name="description"
     content="Plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados da Região Metropolitana de Belo Horizonte (RMBH).">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zonea — Informação urbanística direto da fonte">
+  <meta property="og:description"
+    content="Camada de descoberta de dados oficiais: consulte geoprocessamento, zoneamento e cartografia dos 34 municípios da RMBH direto da fonte.">
+  <meta property="og:image" content="img/logo.png">
+  <meta property="og:locale" content="pt_BR">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
@@ -21,7 +27,8 @@
         <div class="logo-icon">
           <img src="img/logo.png" width="40" alt="">
         </div>
-        <div <span class="logo-text">ZONEA</span>
+        <div>
+          <span class="logo-text">ZONEA</span>
           <span class="logo-sub">Conectando você aos dados oficiais</span>
         </div>
       </a>
@@ -36,6 +43,7 @@
       <nav id="navLinks" class="nav-links">
         <a href="index.html" class="nav-link active">Início</a>
         <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="conhecimento.html" class="nav-link">Conhecimento</a>
         <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
         <button type="button" id="btnLockToggle" class="btn-lock">
           <span>🔒 Acesso Restrito</span>
@@ -53,7 +61,7 @@
       </div>
 
       <h1 class="hero-title">
-        <span class="logo-text">Zonea</span> — <span>Conectando você aos dados oficiais</span>
+        Dados urbanísticos e geoprocessamento da RMBH, <span>direto da fonte oficial</span>
       </h1>
 
       <p class="hero-subtitle">
@@ -98,9 +106,15 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="municipio" placeholder="Ex: Belo Horizonte, Betim, Nova Lima, Contagem..."
-              spellcheck="false" />
-            <div id="suggestions" class="suggestions-dropdown"></div>
+            <input type="text" id="municipio" placeholder="Ex: Belo Horizonte, Betim, Contagem..."
+              spellcheck="false" aria-label="Buscar município da RMBH" role="combobox" aria-expanded="false"
+              aria-controls="suggestions" aria-autocomplete="list" autocomplete="off" />
+            <button type="button" id="clearMunicipio" class="input-clear-btn" aria-label="Limpar busca e resultado">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div id="suggestions" class="suggestions-dropdown" role="listbox"></div>
           </div>
         </div>
 
@@ -117,15 +131,16 @@
       <div class="quick-links">
         <span class="quick-access-title">Acesso Rápido aos Principais Polos:</span>
         <div class="quick-buttons">
-          <button type="button" class="quick-link-btn" data-muni="Belo Horizonte">Belo Horizonte</button>
-          <button type="button" class="quick-link-btn" data-muni="Contagem">Contagem</button>
-          <button type="button" class="quick-link-btn" data-muni="Betim">Betim</button>
+          <button type="button" class="quick-link-btn" data-muni="Belo Horizonte" aria-label="Consultar dados oficiais de Belo Horizonte">Belo Horizonte</button>
+          <button type="button" class="quick-link-btn" data-muni="Contagem" aria-label="Consultar dados oficiais de Contagem">Contagem</button>
+          <button type="button" class="quick-link-btn" data-muni="Betim" aria-label="Consultar dados oficiais de Betim">Betim</button>
         </div>
       </div>
     </section>
 
     <!-- PAINEL DE TRANSPARÊNCIA E PILARES INSTITUCIONAIS -->
-    <section class="transparency-section">
+    <section class="transparency-section" aria-labelledby="transparency-heading">
+      <h2 id="transparency-heading" class="visually-hidden">Por que confiar no Zonea</h2>
       <div class="transparency-card card">
         <div class="transparency-icon">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -176,7 +191,7 @@
 
   <!-- BOTAO FLUTUANTE WHATSAPP -->
   <div class="whatsapp-float-container">
-    <span class="whatsapp-tooltip">Entre em contato conosco!</span>
+    <span class="whatsapp-tooltip">Seu município ainda não está no mapa? Fale com a equipe</span>
     <a href="https://api.whatsapp.com/send/?phone=5531992609970" target="_blank" rel="noopener noreferrer"
       class="whatsapp-float-btn" aria-label="Atendimento via WhatsApp">
       <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"

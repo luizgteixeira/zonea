@@ -1,0 +1,12 @@
+{
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.defaultProfile.windows": "Zonea",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "liveServer.settings.root": "/",
+  "liveServer.settings.CustomBrowser": "chrome",
+  "files.exclude": {
+    "**/.git": true
+  }
+}
