@@ -337,6 +337,14 @@ main {
   text-transform: uppercase;
 }
 
+.metrics-updated {
+  margin: 10px auto 0;
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  color: var(--cor-cinza);
+  text-align: center;
+}
+
 /* 6. CARD DE CONSULTA TERRITORIAL */
 .search-card {
   background: var(--cor-branco);

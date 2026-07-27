@@ -204,7 +204,7 @@
   },
   {
     "nome": "Nova Lima",
-    "link": "https://novalima.mg.gov.br/cidadao/portal-servicos/servico/geopnl",
+    "link": "https://pmnl.maps.arcgis.com/apps/webappviewer/index.html?id=ff761e397b904ad4b164eb8a71cb7d86",
     "sistema": "GeoPNL Nova Lima",
     "confirmado": true,
     "regiao": "Sul",
@@ -245,7 +245,7 @@
   },
   {
     "nome": "Ribeirão das Neves",
-    "link": "https://ribeiraodasneves.mg.gov.br/src/pages/geoneves.html",
+    "link": "https://ribeiraodasneves.portal.geo360.com.br/icad/map/-44.09706337431789,-19.774924087777592,13/list",
     "sistema": "GeoNeves",
     "confirmado": true,
     "regiao": "Norte",

@@ -54,6 +54,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.href = buildWhatsappLink();
   });
 
+  // Métricas do Hero (Home): total de municípios e fontes oficiais auditadas
+  const metricTotal = document.getElementById('metricTotalMunicipios');
+  const metricAuditadas = document.getElementById('metricFontesAuditadas');
+  if (metricTotal) metricTotal.textContent = MUNICIPIOS.length;
+  if (metricAuditadas) metricAuditadas.textContent = MUNICIPIOS.filter(m => m.confirmado).length;
+
+  const metricsUpdated = document.getElementById('metricsUpdated');
+  if (metricsUpdated && CONFIG.atualizado_em) {
+    metricsUpdated.textContent = `Dados atualizados em ${CONFIG.atualizado_em}`;
+  }
+
   renderQuickLinks();
 
   // 3. MENU MOBILE
