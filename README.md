@@ -13,7 +13,7 @@ O **Zonea** é uma plataforma de consulta e exploração de dados territoriais, 
 O projeto busca reduzir a fragmentação de dados urbanísticos, conectando profissionais e cidadãos diretamente às bases públicas oficiais (WMS, WFS, GeoJSON, etc.) sem substituir os sistemas de origem.
 
 * **Foco Inicial:** Região Metropolitana de Belo Horizonte (RMBH).
-* **Cobertura:** 34 municípios cadastrados, com portais de alta prioridade já integrados (BHGeo, SIGM, GeoPNL, entre outros).
+* **Cobertura:** 34 municípios cadastrados, dos quais 6 com fontes oficiais auditadas (portal e sistema de referência geográfica confirmados: BHGeo, GeoBetim, SIGM Contagem, GeoPNL, GeoNeves e Geo Santa Luzia).
 * **Público-alvo:** Profissionais de planejamento urbano, arquitetos, engenheiros, analistas territoriais e cidadãos interessados em dados municipais.
 
 ---
@@ -24,7 +24,9 @@ O projeto busca reduzir a fragmentação de dados urbanísticos, conectando prof
 * **Botão de Limpar:** Reseta o campo de busca e o resultado exibido (portal confirmado ou pendente) com um clique.
 * **Acesso Rápido:** Atalhos para os municípios com portal já confirmado, gerados dinamicamente a partir de `data/municipios.json`.
 * **Status de Transparência:** Diferenciação visual entre **"Portal Confirmado"** (link validado) e **"Busca Direta"** (município cadastrado, mas sem link validado no código atual).
-* **Central de Conhecimento:** Glossário técnico interativo com os principais conceitos de geoprocessamento e padrões OGC (WMS, WFS, GeoServer, ArcGIS REST, GeoJSON, SIG).
+* **Métricas em Tempo Real:** Cards da Home (total de municípios e fontes oficiais auditadas) calculados dinamicamente a partir do catálogo, com selo de última atualização (`data/config.json`).
+* **Sistema de Referência Geográfica:** Municípios com fonte auditada registram o datum/CRS documentado (ex.: SIRGAS 2000, EPSG:31983) e a forma como foi verificado, exibido junto aos detalhes técnicos de cada resultado de busca.
+* **Central de Conhecimento:** Glossário técnico interativo com os principais conceitos de geoprocessamento, padrões OGC e sistemas de referência (WMS, WFS, GeoServer, ArcGIS REST, GeoJSON, SIG, Datum/SIRGAS 2000, CRS/EPSG, UTM).
 * **Acesso por Licença:** Camada de ativação de acesso à Home, validada no cliente — fale com a equipe via WhatsApp para obter uma chave de teste.
 * **Acessibilidade:** Navegação por teclado, `aria-label`/`aria-expanded` sincronizados nos componentes interativos e respeito a `prefers-reduced-motion`.
 * **Suporte Integrado:** Botão flutuante do **WhatsApp** (número centralizado em `data/config.json`) para contato direto e suporte técnico.
@@ -65,8 +67,8 @@ O projeto utiliza uma arquitetura de frontend estático, preparada para evoluç�
 ├── js/
 │   └── script.js      # Busca, autocomplete, licença e integrações
 ├── data/
-│   ├── municipios.json  # Catálogo dos 34 municípios da RMBH
-│   └── config.json      # Configurações institucionais (ex.: WhatsApp)
+│   ├── municipios.json  # Catálogo dos 34 municípios da RMBH (link, sistema, sistema_referencia)
+│   └── config.json      # Configurações institucionais (WhatsApp, data de atualização)
 ├── img/               # Ativos visuais e cartográficos
 └── README.md
 ```
