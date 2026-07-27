@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Zonea — Ferramenta de Poligonal</title>
+  <meta name="description" content="Desenhe automaticamente a poligonal do seu imóvel a partir de coordenadas UTM, distância e azimute — com cálculo de área, perímetro e erro de fechamento.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zonea — Ferramenta de Poligonal">
+  <meta property="og:description"
+    content="Informe coordenadas UTM e dados de caminhamento (distância/azimute) e o Zonea desenha a poligonal, calcula área, perímetro e erro de fechamento automaticamente.">
+  <meta property="og:image" content="img/logo.png">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <img src="img/logo.png" width="40" alt="">
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">Conectando você aos dados oficiais</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="conhecimento.html" class="nav-link">Conhecimento</a>
+        <a href="poligonal.html" class="nav-link active">Poligonal</a>
+        <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Acesso Restrito</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO DA FERRAMENTA -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Ferramenta Exclusiva Zonea
+      </div>
+
+      <h1 class="hero-title">
+        Ferramenta de <span class="logo-text">Poligonal</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Informe as coordenadas UTM do ponto inicial e os dados de distância/azimute de cada segmento — o Zonea desenha a poligonal, calcula área, perímetro e verifica o erro de fechamento automaticamente.
+      </p>
+
+      <div class="hero-concept">
+        SIRGAS 2000 · UTM Zona 23S
+      </div>
+    </section>
+
+    <!-- AVISO LEGAL -->
+    <section style="max-width: 1000px; margin: 0 auto 32px;">
+      <div class="status-message warn visible">
+        ⚠️ <strong>Ferramenta de apoio, não substitui ART/RRT:</strong> os resultados desta calculadora são uma pré-visualização para conferência. Para submissão oficial à prefeitura, a poligonal deve ser assinada por profissional habilitado (CREA/CAU), conforme a legislação do município.
+      </div>
+    </section>
+
+    <!-- FERRAMENTA -->
+    <section class="poligonal-grid">
+
+      <!-- COLUNA: FORMULÁRIO -->
+      <div class="poligonal-form-col">
+
+        <div class="servico-card card poligonal-card">
+          <h2 class="poligonal-card-title">1. Ponto Inicial (E, N)</h2>
+          <div class="form-row">
+            <div class="form-group-inline">
+              <label for="initialE" class="form-label">Coordenada E (Este)</label>
+              <input type="text" id="initialE" placeholder="Ex: 610046.398" inputmode="decimal">
+            </div>
+            <div class="form-group-inline">
+              <label for="initialN" class="form-label">Coordenada N (Norte)</label>
+              <input type="text" id="initialN" placeholder="Ex: 7000120.235" inputmode="decimal">
+            </div>
+          </div>
+          <button type="button" id="btnSetInitial" class="btn-submit poligonal-btn">Definir Ponto Inicial</button>
+        </div>
+
+        <div class="servico-card card poligonal-card">
+          <h2 class="poligonal-card-title">2. Adicionar Segmento (Distância + Azimute)</h2>
+          <div class="form-group">
+            <label for="segDistancia" class="form-label">Distância (metros)</label>
+            <input type="text" id="segDistancia" placeholder="Ex: 45.720" inputmode="decimal" disabled>
+          </div>
+          <div class="form-row form-row-3">
+            <div class="form-group-inline">
+              <label for="azGrau" class="form-label">Azimute — Graus</label>
+              <input type="text" id="azGrau" placeholder="189" inputmode="decimal" disabled>
+            </div>
+            <div class="form-group-inline">
+              <label for="azMin" class="form-label">Minutos</label>
+              <input type="text" id="azMin" placeholder="1" inputmode="decimal" disabled>
+            </div>
+            <div class="form-group-inline">
+              <label for="azSeg" class="form-label">Segundos</label>
+              <input type="text" id="azSeg" placeholder="24.32" inputmode="decimal" disabled>
+            </div>
+          </div>
+          <button type="button" id="btnAddPoint" class="btn-submit poligonal-btn" disabled>Adicionar Ponto</button>
+        </div>
+
+        <div class="poligonal-actions">
+          <button type="button" id="btnClosePolygon" class="result-cta primary" disabled>
+            <span>Fechar Poligonal e Calcular →</span>
+          </button>
+          <button type="button" id="btnResetPoligonal" class="btn-secondary">Limpar Tudo</button>
+        </div>
+
+        <div id="poligonalStatus" class="status-message"></div>
+      </div>
+
+      <!-- COLUNA: VISUALIZAÇÃO E RESULTADOS -->
+      <div class="poligonal-view-col">
+        <div class="servico-card card poligonal-card poligonal-svg-card">
+          <h2 class="poligonal-card-title">Visualização</h2>
+          <div class="poligonal-svg-wrapper">
+            <svg id="poligonalSvg" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </div>
+
+        <div class="servico-card card poligonal-card">
+          <h2 class="poligonal-card-title">Resultados</h2>
+          <div class="poligonal-results-grid">
+            <div class="metric-item card">
+              <span class="metric-value" id="resultArea">—</span>
+              <span class="metric-label">Área (m²)</span>
+            </div>
+            <div class="metric-item card">
+              <span class="metric-value" id="resultPerimetro">—</span>
+              <span class="metric-label">Perímetro (m)</span>
+            </div>
+            <div class="metric-item card">
+              <span class="metric-value" id="resultFechamento">—</span>
+              <span class="metric-label">Erro de Fechamento (m)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABELA DE PONTOS -->
+    <section style="max-width: 1000px; margin: 0 auto 48px;">
+      <div style="border-bottom: 2px solid var(--cor-azul-suave); padding-bottom: 12px; margin-bottom: 24px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro);">Pontos Inseridos</h2>
+        <p style="font-size: 13px; color: var(--cor-cinza);">Coordenadas UTM (SIRGAS 2000 / EPSG:31983) calculadas a partir dos dados informados.</p>
+      </div>
+      <div class="data-table-wrapper card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Ponto</th>
+              <th scope="col">E (Este)</th>
+              <th scope="col">N (Norte)</th>
+              <th scope="col">Distância do anterior</th>
+              <th scope="col">Azimute</th>
+            </tr>
+          </thead>
+          <tbody id="pointsTableBody">
+            <tr id="pointsTableEmptyRow">
+              <td colspan="5" style="text-align: center; color: var(--cor-cinza);">Nenhum ponto inserido ainda. Comece definindo o ponto inicial.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Dúvidas sobre a poligonal? Fale com a equipe</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script src="js/poligonal.js"></script>
+</body>
+</html>

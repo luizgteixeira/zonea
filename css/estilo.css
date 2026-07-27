@@ -345,6 +345,211 @@ main {
   text-align: center;
 }
 
+/* 8. TABELA DE DADOS (reutilizável — usada na Ferramenta de Poligonal) */
+.data-table-wrapper {
+  padding: 0;
+  overflow-x: auto;
+  border-radius: var(--raio-borda-lg);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 560px;
+}
+
+.data-table thead th {
+  background: var(--cor-azul-suave);
+  color: var(--cor-azul);
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--cor-azul-borda);
+}
+
+.data-table tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--cor-cinza-borda);
+  color: var(--cor-cinza-escuro);
+  vertical-align: top;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody td:first-child {
+  font-family: var(--fonte-mono);
+  font-weight: 700;
+  color: var(--cor-verde);
+  text-align: center;
+  width: 48px;
+}
+
+.data-table code {
+  font-family: var(--fonte-mono);
+  font-size: 12.5px;
+  background: var(--cor-cinza-claro);
+  color: var(--cor-azul-hover);
+  padding: 2px 6px;
+  border-radius: var(--raio-borda-sm);
+}
+
+/* 9. FERRAMENTA DE POLIGONAL */
+.poligonal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto 32px;
+}
+
+.poligonal-form-col,
+.poligonal-view-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.poligonal-card {
+  padding: 20px;
+}
+
+.poligonal-card-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 14px;
+}
+
+.poligonal-card input[type="text"] {
+  padding: 10px 12px;
+  font-family: var(--fonte-mono);
+  font-size: 13.5px;
+}
+
+.poligonal-card input[type="text"]:disabled {
+  background-color: var(--cor-cinza-claro);
+  color: var(--cor-cinza);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row-3 {
+  gap: 8px;
+}
+
+.form-group-inline {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.poligonal-btn {
+  width: 100%;
+}
+
+.poligonal-btn:disabled {
+  background-color: var(--cor-cinza-borda);
+  color: var(--cor-cinza);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.poligonal-btn:disabled:hover {
+  background-color: var(--cor-cinza-borda);
+  transform: none;
+}
+
+.poligonal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.poligonal-actions .result-cta {
+  flex: 1;
+  justify-content: center;
+}
+
+.poligonal-actions .result-cta:disabled {
+  background: var(--cor-cinza-borda);
+  color: var(--cor-cinza);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  flex: 1;
+  background: var(--cor-branco);
+  color: var(--cor-cinza-escuro);
+  border: 1px solid var(--cor-cinza-borda);
+  padding: 12px 20px;
+  font-family: var(--fonte-principal);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--raio-borda-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--cor-cinza-claro);
+  border-color: var(--cor-cinza);
+}
+
+.poligonal-svg-wrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--cor-cinza-claro);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+  overflow: hidden;
+}
+
+#poligonalSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.poligonal-results-grid {
+  display: flex;
+  gap: 12px;
+}
+
+.poligonal-results-grid .metric-item {
+  flex: 1;
+  padding: 14px 8px;
+}
+
+.poligonal-results-grid .metric-value {
+  font-size: 1.2rem;
+}
+
+.poligonal-results-grid .metric-value.warn-value {
+  color: var(--cor-alerta-texto);
+}
+
+@media (max-width: 860px) {
+  .poligonal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .poligonal-results-grid {
+    flex-direction: column;
+  }
+}
+
 /* 6. CARD DE CONSULTA TERRITORIAL */
 .search-card {
   background: var(--cor-branco);
