@@ -1,41 +1,39 @@
 /* ============================================================
    ZONEA — Ferramenta de Poligonal
-   Cálculo de vértices (E/N) a partir de distância + azimute,
-   renderização SVG, área (Shoelace), perímetro e erro de fechamento.
+   Tabela editável (digitação célula a célula ou colar do Excel),
+   cálculo em cadeia (azimute/distância → ΔE/ΔN), área (Shoelace),
+   perímetro, erro de fechamento e renderização SVG.
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const initialE = document.getElementById('initialE');
-  const initialN = document.getElementById('initialN');
-  const btnSetInitial = document.getElementById('btnSetInitial');
-
-  const segDistancia = document.getElementById('segDistancia');
-  const azGrau = document.getElementById('azGrau');
-  const azMin = document.getElementById('azMin');
-  const azSeg = document.getElementById('azSeg');
-  const btnAddPoint = document.getElementById('btnAddPoint');
-
+  const tbody = document.getElementById('poligonalTableBody');
+  const btnAddRow = document.getElementById('btnAddRow');
   const btnClosePolygon = document.getElementById('btnClosePolygon');
   const btnResetPoligonal = document.getElementById('btnResetPoligonal');
   const poligonalStatus = document.getElementById('poligonalStatus');
 
   const svg = document.getElementById('poligonalSvg');
-  const pointsTableBody = document.getElementById('pointsTableBody');
 
   const resultArea = document.getElementById('resultArea');
   const resultPerimetro = document.getElementById('resultPerimetro');
   const resultFechamento = document.getElementById('resultFechamento');
 
-  if (!btnSetInitial) return; // página sem a ferramenta — não faz nada
+  if (!tbody) return; // página sem a ferramenta — não faz nada
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const CLOSURE_TOLERANCE_M = 0.05; // 5 cm
 
-  // Estado: points[0] é o ponto inicial (sem segmento associado).
-  // points[i] (i>=1) tem um "segment" correspondente com {distancia, azDecimal, azLabel}.
-  let points = [];
-  let segments = [];
+  // rows[0] = ponto inicial (initialEStr/initialNStr).
+  // rows[i>=1] = segmento a partir do ponto anterior (azimuteStr/distanciaStr).
+  let rows = [emptyRow()];
+  let computed = [];   // computed[i] = { E, N, valid }
+  let fieldFlags = []; // fieldFlags[i] = { azimuteInvalid, distanciaInvalid, initialEInvalid, initialNInvalid }
 
+  function emptyRow() {
+    return { azimuteStr: '', distanciaStr: '', initialEStr: '', initialNStr: '' };
+  }
+
+  // ---------- PARSERS ----------
   function parseNumber(value) {
     if (value === null || value === undefined) return NaN;
     const normalized = String(value).trim().replace(',', '.');
@@ -43,31 +41,38 @@ document.addEventListener('DOMContentLoaded', () => {
     return Number(normalized);
   }
 
-  function showStatus(state, html) {
-    if (!poligonalStatus) return;
-    poligonalStatus.className = `status-message ${state} visible`;
-    poligonalStatus.innerHTML = html;
+  function parseAzimuthFlexible(raw) {
+    if (raw === null || raw === undefined) return NaN;
+    const str = String(raw).trim();
+    if (str === '') return NaN;
+
+    // 1) DMS com símbolos: 189°1'24.32"
+    let m = str.match(/^(-?\d+)\s*°\s*(\d+)\s*['’]\s*([\d.,]+)\s*["”]?$/);
+    if (m) {
+      const g = parseFloat(m[1]), mi = parseFloat(m[2]), s = parseFloat(m[3].replace(',', '.'));
+      if ([g, mi, s].every(Number.isFinite)) return g + mi / 60 + s / 3600;
+    }
+
+    // 2) Trinca separada por espaço: 189 1 24.32
+    const tokens = str.split(/\s+/);
+    if (tokens.length === 3) {
+      const g = parseFloat(tokens[0]), mi = parseFloat(tokens[1]), s = parseFloat(tokens[2].replace(',', '.'));
+      if ([g, mi, s].every(Number.isFinite)) return g + mi / 60 + s / 3600;
+    }
+
+    // 3) Valor único = graus decimais
+    if (tokens.length === 1) {
+      const dec = parseFloat(tokens[0].replace(',', '.'));
+      if (Number.isFinite(dec)) return dec;
+    }
+
+    return NaN;
   }
 
-  function clearStatus() {
-    if (!poligonalStatus) return;
-    poligonalStatus.className = 'status-message';
-    poligonalStatus.innerHTML = '';
-  }
-
-  function formatAzimuthLabel(grau, min, seg) {
-    return `${grau}°${min}'${seg.toFixed(2)}"`;
-  }
-
-  function azimuthToRadians(grau, min, seg) {
-    const decimal = grau + (min / 60) + (seg / 3600);
-    return decimal * (Math.PI / 180);
-  }
-
-  function nextPointFromPolar(prev, distancia, azimuthRad) {
-    const deltaE = distancia * Math.sin(azimuthRad);
-    const deltaN = distancia * Math.cos(azimuthRad);
-    return { E: prev.E + deltaE, N: prev.N + deltaN };
+  // ---------- MATEMÁTICA ----------
+  function nextPointFromPolar(prev, distancia, azimuthDeg) {
+    const rad = azimuthDeg * (Math.PI / 180);
+    return { E: prev.E + distancia * Math.sin(rad), N: prev.N + distancia * Math.cos(rad) };
   }
 
   function shoelaceArea(pts) {
@@ -88,27 +93,178 @@ document.addEventListener('DOMContentLoaded', () => {
     return value.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   }
 
-  // ---------- RENDER: TABELA DE PONTOS ----------
-  function renderTable() {
-    if (!pointsTableBody) return;
-    pointsTableBody.innerHTML = '';
+  // ---------- ESTADO: RECALCULA A CADEIA INTEIRA ----------
+  function recompute() {
+    computed = [];
+    fieldFlags = [];
 
-    if (points.length === 0) {
-      pointsTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--cor-cinza);">Nenhum ponto inserido ainda. Comece definindo o ponto inicial.</td></tr>`;
-      return;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+
+      if (i === 0) {
+        const Estr = row.initialEStr.trim();
+        const Nstr = row.initialNStr.trim();
+        const E = parseNumber(row.initialEStr);
+        const N = parseNumber(row.initialNStr);
+        const valid = Number.isFinite(E) && Number.isFinite(N);
+
+        computed.push({ E: valid ? E : null, N: valid ? N : null, valid });
+        fieldFlags.push({
+          initialEInvalid: Estr !== '' && !Number.isFinite(E),
+          initialNInvalid: Nstr !== '' && !Number.isFinite(N),
+        });
+      } else {
+        const prev = computed[i - 1];
+        const azStr = row.azimuteStr.trim();
+        const distStr = row.distanciaStr.trim();
+        const azDecimal = parseAzimuthFlexible(row.azimuteStr);
+        const distancia = parseNumber(row.distanciaStr);
+        const azOk = Number.isFinite(azDecimal) && azDecimal >= 0 && azDecimal < 360;
+        const distOk = Number.isFinite(distancia) && distancia > 0;
+        const selfValid = azOk && distOk;
+        const valid = prev.valid && selfValid;
+
+        if (valid) {
+          const pt = nextPointFromPolar(prev, distancia, azDecimal);
+          computed.push({ E: pt.E, N: pt.N, valid: true });
+        } else {
+          computed.push({ E: null, N: null, valid: false });
+        }
+
+        fieldFlags.push({
+          azimuteInvalid: azStr !== '' && !azOk,
+          distanciaInvalid: distStr !== '' && !distOk,
+        });
+      }
     }
+  }
 
-    points.forEach((p, i) => {
-      const seg = segments[i]; // undefined para i === 0
+  // ---------- STATUS ----------
+  function showStatus(state, html) {
+    if (!poligonalStatus) return;
+    poligonalStatus.className = `status-message ${state} visible`;
+    poligonalStatus.innerHTML = html;
+  }
+
+  function clearStatus() {
+    if (!poligonalStatus) return;
+    poligonalStatus.className = 'status-message';
+    poligonalStatus.innerHTML = '';
+  }
+
+  // ---------- RENDER: CÉLULAS DA TABELA ----------
+  function makeInputCell({ field, col, rowIndex, value, disabled, placeholder, invalid }) {
+    const td = document.createElement('td');
+    if (col) td.dataset.col = col;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'cell-input' + (invalid ? ' input-invalid' : '');
+    input.dataset.field = field;
+    input.value = value;
+    input.placeholder = placeholder || '';
+    input.autocomplete = 'off';
+    input.spellcheck = false;
+    if (disabled) input.disabled = true;
+    td.appendChild(input);
+    return td;
+  }
+
+  function makeComputedCell(text) {
+    const td = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'cell-input computed-cell';
+    input.value = text;
+    input.readOnly = true;
+    input.tabIndex = -1;
+    td.appendChild(input);
+    return td;
+  }
+
+  function render() {
+    tbody.innerHTML = '';
+
+    rows.forEach((row, i) => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>P${i}</td>
-        <td>${formatNumber(p.E, 3)}</td>
-        <td>${formatNumber(p.N, 3)}</td>
-        <td>${seg ? formatNumber(seg.distancia, 3) + ' m' : '—'}</td>
-        <td>${seg ? seg.azLabel : '—'}</td>
-      `;
-      pointsTableBody.appendChild(tr);
+      tr.dataset.rowIndex = String(i);
+      const c = computed[i];
+      const flags = fieldFlags[i];
+      const isInitial = i === 0;
+
+      const tdIndex = document.createElement('td');
+      tdIndex.textContent = 'P' + i;
+      tr.appendChild(tdIndex);
+
+      tr.appendChild(makeInputCell({
+        field: 'azimute', col: 'azimute', rowIndex: i,
+        value: row.azimuteStr, disabled: isInitial,
+        placeholder: isInitial ? '—' : '189°1\'24.32"',
+        invalid: !isInitial && flags.azimuteInvalid,
+      }));
+
+      tr.appendChild(makeInputCell({
+        field: 'distancia', col: 'distancia', rowIndex: i,
+        value: row.distanciaStr, disabled: isInitial,
+        placeholder: isInitial ? '—' : '45.720',
+        invalid: !isInitial && flags.distanciaInvalid,
+      }));
+
+      if (isInitial) {
+        tr.appendChild(makeInputCell({
+          field: 'initialE', col: 'E', rowIndex: i,
+          value: row.initialEStr, placeholder: 'Ex: 610046.398',
+          invalid: flags.initialEInvalid,
+        }));
+        tr.appendChild(makeInputCell({
+          field: 'initialN', col: 'N', rowIndex: i,
+          value: row.initialNStr, placeholder: 'Ex: 7000120.235',
+          invalid: flags.initialNInvalid,
+        }));
+      } else {
+        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.E, 3) : '—'));
+        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.N, 3) : '—'));
+      }
+
+      const tdAction = document.createElement('td');
+      if (i > 0) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'row-remove-btn';
+        btn.dataset.action = 'remove';
+        btn.setAttribute('aria-label', 'Remover linha');
+        btn.textContent = '✕';
+        tdAction.appendChild(btn);
+      }
+      tr.appendChild(tdAction);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Atualização "ao vivo" (digitação): não recria os <input>, só ajusta
+  // valores calculados e classes de validação — preserva o foco/cursor.
+  function updateComputedDisplayAndValidity() {
+    const trs = tbody.querySelectorAll('tr');
+    trs.forEach((tr, i) => {
+      const c = computed[i];
+      const flags = fieldFlags[i];
+      const isInitial = i === 0;
+
+      const azInput = tr.querySelector('[data-field="azimute"]');
+      const distInput = tr.querySelector('[data-field="distancia"]');
+      if (azInput) azInput.classList.toggle('input-invalid', !isInitial && !!flags.azimuteInvalid);
+      if (distInput) distInput.classList.toggle('input-invalid', !isInitial && !!flags.distanciaInvalid);
+
+      if (isInitial) {
+        const eInput = tr.querySelector('[data-field="initialE"]');
+        const nInput = tr.querySelector('[data-field="initialN"]');
+        if (eInput) eInput.classList.toggle('input-invalid', !!flags.initialEInvalid);
+        if (nInput) nInput.classList.toggle('input-invalid', !!flags.initialNInvalid);
+      } else {
+        const computedInputs = tr.querySelectorAll('.computed-cell');
+        if (computedInputs[0]) computedInputs[0].value = c.valid ? formatNumber(c.E, 3) : '—';
+        if (computedInputs[1]) computedInputs[1].value = c.valid ? formatNumber(c.N, 3) : '—';
+      }
     });
   }
 
@@ -116,6 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSvg(closureEdge) {
     if (!svg) return;
     while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    const points = computed.filter(c => c.valid).map(c => ({ E: c.E, N: c.N }));
 
     const viewW = 480;
     const viewH = 360;
@@ -129,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       text.setAttribute('fill', '#94A3B8');
       text.setAttribute('font-size', '13');
       text.setAttribute('font-family', 'monospace');
-      text.textContent = 'Defina o ponto inicial para começar';
+      text.textContent = 'Preencha o ponto inicial para começar';
       svg.appendChild(text);
       return;
     }
@@ -143,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rangeN = maxN - minN || 1;
     const scale = Math.min((viewW - pad * 2) / rangeE, (viewH - pad * 2) / rangeN);
 
-    // centraliza o desenho na área útil
     const drawnW = rangeE * scale;
     const drawnH = rangeN * scale;
     const offsetX = pad + ((viewW - pad * 2) - drawnW) / 2;
@@ -151,11 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toSvg(p) {
       const x = (p.E - minE) * scale + offsetX;
-      const y = (viewH) - ((p.N - minN) * scale + offsetY); // inverte N para "cima" na tela
+      const y = viewH - ((p.N - minN) * scale + offsetY);
       return { x, y };
     }
 
-    // polígono preenchido (se houver pelo menos 3 pontos)
     if (points.length >= 3) {
       const poly = document.createElementNS(SVG_NS, 'polygon');
       poly.setAttribute('points', points.map(p => { const s = toSvg(p); return `${s.x},${s.y}`; }).join(' '));
@@ -164,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
       svg.appendChild(poly);
     }
 
-    // linhas entre os pontos inseridos (na ordem em que foram criados)
     if (points.length >= 2) {
       const line = document.createElementNS(SVG_NS, 'polyline');
       line.setAttribute('points', points.map(p => { const s = toSvg(p); return `${s.x},${s.y}`; }).join(' '));
@@ -174,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
       svg.appendChild(line);
     }
 
-    // aresta de fechamento (último ponto -> primeiro), tracejada
     if (closureEdge && points.length >= 3) {
       const a = toSvg(points[points.length - 1]);
       const b = toSvg(points[0]);
@@ -189,7 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
       svg.appendChild(closeLine);
     }
 
-    // vértices
     points.forEach((p, i) => {
       const s = toSvg(p);
       const circle = document.createElementNS(SVG_NS, 'circle');
@@ -212,101 +365,129 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function renderAll(closureEdge) {
-    renderTable();
-    renderSvg(closureEdge);
-  }
-
   // ---------- ESTADO DOS BOTÕES ----------
-  function updateFormState() {
-    const hasInitial = points.length >= 1;
-    segDistancia.disabled = !hasInitial;
-    azGrau.disabled = !hasInitial;
-    azMin.disabled = !hasInitial;
-    azSeg.disabled = !hasInitial;
-    btnAddPoint.disabled = !hasInitial;
-    btnClosePolygon.disabled = points.length < 3;
-    btnSetInitial.textContent = hasInitial ? 'Redefinir Ponto Inicial' : 'Definir Ponto Inicial';
+  function updateButtons() {
+    const last = computed[computed.length - 1];
+    btnClosePolygon.disabled = !(rows.length >= 3 && last && last.valid);
   }
 
-  // ---------- HANDLERS ----------
-  btnSetInitial.addEventListener('click', () => {
-    const E = parseNumber(initialE.value);
-    const N = parseNumber(initialN.value);
+  function renderFull() {
+    recompute();
+    render();
+    renderSvg();
+    updateButtons();
+  }
 
-    if (!Number.isFinite(E) || !Number.isFinite(N)) {
-      showStatus('error', '❌ Informe valores numéricos válidos para E e N.');
-      return;
-    }
+  function setFieldValue(rowIndex, field, value) {
+    const row = rows[rowIndex];
+    if (!row) return;
+    if (field === 'azimute') row.azimuteStr = value;
+    else if (field === 'distancia') row.distanciaStr = value;
+    else if (field === 'initialE') row.initialEStr = value;
+    else if (field === 'initialN') row.initialNStr = value;
+  }
 
-    points = [{ E, N }];
-    segments = [undefined];
-    resultArea.textContent = '—';
-    resultPerimetro.textContent = '—';
-    resultFechamento.textContent = '—';
-    resultFechamento.classList.remove('warn-value');
-
-    showStatus('ok', '✓ Ponto inicial definido. Agora adicione os segmentos (distância + azimute).');
-    updateFormState();
-    renderAll();
+  // ---------- EVENTOS: DIGITAÇÃO AO VIVO ----------
+  tbody.addEventListener('input', (e) => {
+    const input = e.target;
+    if (!input.classList.contains('cell-input') || input.disabled || input.readOnly) return;
+    const rowIndex = Number(input.closest('tr').dataset.rowIndex);
+    setFieldValue(rowIndex, input.dataset.field, input.value);
+    recompute();
+    updateComputedDisplayAndValidity();
+    renderSvg();
+    updateButtons();
   });
 
-  btnAddPoint.addEventListener('click', () => {
-    const distancia = parseNumber(segDistancia.value);
-    const grau = parseNumber(azGrau.value);
-    const min = parseNumber(azMin.value);
-    const seg = parseNumber(azSeg.value);
+  // ---------- EVENTOS: COLAR (EXCEL) ----------
+  tbody.addEventListener('paste', (e) => {
+    const input = e.target;
+    if (!input.classList.contains('cell-input') || input.disabled || input.readOnly) return;
 
-    if (!Number.isFinite(distancia) || distancia <= 0) {
-      showStatus('error', '❌ Informe uma distância válida (maior que zero).');
-      return;
-    }
-    if (!Number.isFinite(grau) || grau < 0 || grau >= 360) {
-      showStatus('error', '❌ Graus do azimute devem estar entre 0 e 359.');
-      return;
-    }
-    if (!Number.isFinite(min) || min < 0 || min >= 60) {
-      showStatus('error', '❌ Minutos do azimute devem estar entre 0 e 59.');
-      return;
-    }
-    if (!Number.isFinite(seg) || seg < 0 || seg >= 60) {
-      showStatus('error', '❌ Segundos do azimute devem estar entre 0 e 59,99.');
-      return;
-    }
+    const clipboard = e.clipboardData || window.clipboardData;
+    const text = clipboard ? clipboard.getData('text') : '';
+    if (!text) return;
 
-    const prev = points[points.length - 1];
-    const azimuthRad = azimuthToRadians(grau, min, seg);
-    const novoPonto = nextPointFromPolar(prev, distancia, azimuthRad);
+    const hasMultiple = text.includes('\t') || text.includes('\n');
+    if (!hasMultiple) return; // valor único: deixa o navegador colar normalmente
 
-    points.push(novoPonto);
-    segments.push({ distancia, azDecimal: grau + (min / 60) + (seg / 3600), azLabel: formatAzimuthLabel(grau, min, seg) });
+    e.preventDefault();
 
-    segDistancia.value = '';
-    azGrau.value = '';
-    azMin.value = '';
-    azSeg.value = '';
-    segDistancia.focus();
+    const startRowIndex = Number(input.closest('tr').dataset.rowIndex);
+    const startField = input.dataset.field;
 
-    const distToStart = distanceBetween(novoPonto, points[0]);
-    if (points.length >= 3 && distToStart <= CLOSURE_TOLERANCE_M) {
-      showStatus('ok', `✓ Ponto P${points.length - 1} adicionado — está a ${distToStart.toFixed(3)} m do ponto inicial. A poligonal já pode ser fechada.`);
-    } else {
-      showStatus('ok', `✓ Ponto P${points.length - 1} adicionado.`);
-    }
+    const gridRows = text.replace(/\r/g, '').split('\n').filter(r => r.length > 0);
+    const grid = gridRows.map(r => r.split('\t').map(c => c.trim()));
 
-    updateFormState();
-    renderAll();
+    grid.forEach((cols, j) => {
+      const targetIndex = startRowIndex + j;
+      while (targetIndex >= rows.length) rows.push(emptyRow());
+      const isInitial = targetIndex === 0;
+
+      if (cols.length >= 6) {
+        if (isInitial) {
+          rows[targetIndex].initialEStr = cols[4] || '';
+          rows[targetIndex].initialNStr = cols[5] || '';
+        } else {
+          rows[targetIndex].azimuteStr = cols[2] || '';
+          rows[targetIndex].distanciaStr = cols[3] || '';
+        }
+      } else if (cols.length >= 4) {
+        if (isInitial) {
+          rows[targetIndex].initialEStr = cols[2] || '';
+          rows[targetIndex].initialNStr = cols[3] || '';
+        } else {
+          rows[targetIndex].azimuteStr = cols[0] || '';
+          rows[targetIndex].distanciaStr = cols[1] || '';
+        }
+      } else if (cols.length >= 2) {
+        if (isInitial) {
+          rows[targetIndex].initialEStr = cols[0] || '';
+          rows[targetIndex].initialNStr = cols[1] || '';
+        } else {
+          rows[targetIndex].azimuteStr = cols[0] || '';
+          rows[targetIndex].distanciaStr = cols[1] || '';
+        }
+      } else if (cols.length === 1) {
+        setFieldValue(targetIndex, startField, cols[0]);
+      }
+    });
+
+    renderFull();
+    showStatus('ok', `✓ ${grid.length} linha(s) importada(s) da área de transferência.`);
+  });
+
+  // ---------- EVENTOS: REMOVER LINHA ----------
+  tbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.row-remove-btn');
+    if (!btn) return;
+    const rowIndex = Number(btn.closest('tr').dataset.rowIndex);
+    if (rowIndex === 0) return;
+    rows.splice(rowIndex, 1);
+    renderFull();
+  });
+
+  // ---------- EVENTOS: AÇÕES ----------
+  btnAddRow.addEventListener('click', () => {
+    rows.push(emptyRow());
+    renderFull();
   });
 
   btnClosePolygon.addEventListener('click', () => {
-    if (points.length < 3) {
-      showStatus('error', '❌ Insira pelo menos 3 pontos para fechar a poligonal.');
+    recompute();
+    const last = computed[computed.length - 1];
+    if (!(rows.length >= 3 && last && last.valid)) {
+      showStatus('error', '❌ Revise as linhas destacadas em vermelho, ou adicione mais pontos (mínimo de 3) antes de fechar a poligonal.');
       return;
     }
 
-    const area = shoelaceArea(points);
-    const perimetro = segments.reduce((sum, s) => sum + (s ? s.distancia : 0), 0);
-    const erroFechamento = distanceBetween(points[points.length - 1], points[0]);
+    const pts = computed.map(c => ({ E: c.E, N: c.N }));
+    const area = shoelaceArea(pts);
+    const perimetro = rows.slice(1).reduce((sum, row) => {
+      const d = parseNumber(row.distanciaStr);
+      return sum + (Number.isFinite(d) ? d : 0);
+    }, 0);
+    const erroFechamento = distanceBetween(pts[pts.length - 1], pts[0]);
     const fechou = erroFechamento <= CLOSURE_TOLERANCE_M;
 
     resultArea.textContent = formatNumber(area, 2);
@@ -320,32 +501,24 @@ document.addEventListener('DOMContentLoaded', () => {
       showStatus('warn', `⚠️ <strong>Poligonal com erro de fechamento de ${erroFechamento.toFixed(3)} m</strong> — acima da tolerância recomendada (${CLOSURE_TOLERANCE_M} m). Revise as distâncias e azimutes informados, ou adicione mais um segmento para aproximar o ponto final do ponto inicial.`);
     }
 
-    renderAll({ ok: fechou });
+    renderSvg({ ok: fechou });
   });
 
   btnResetPoligonal.addEventListener('click', () => {
-    if (points.length === 0) return;
+    const hasData = rows.length > 1 || rows[0].initialEStr || rows[0].initialNStr;
+    if (!hasData) return;
     if (!confirm('Deseja limpar todos os pontos inseridos e recomeçar?')) return;
 
-    points = [];
-    segments = [];
-    initialE.value = '';
-    initialN.value = '';
-    segDistancia.value = '';
-    azGrau.value = '';
-    azMin.value = '';
-    azSeg.value = '';
+    rows = [emptyRow()];
     resultArea.textContent = '—';
     resultPerimetro.textContent = '—';
     resultFechamento.textContent = '—';
     resultFechamento.classList.remove('warn-value');
 
     clearStatus();
-    updateFormState();
-    renderAll();
+    renderFull();
   });
 
   // Estado inicial
-  updateFormState();
-  renderAll();
+  renderFull();
 });

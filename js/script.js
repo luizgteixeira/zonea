@@ -12,9 +12,10 @@ function hasValidToken() {
   return VALID_ACCESS_TOKENS.has(token) || legacyAccess;
 }
 
-// Guard de Redirecionamento da Home
+// Guard de Redirecionamento de Páginas com Acesso Restrito (Home + Poligonal)
 const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-if (isHomePage && !hasValidToken()) {
+const isGatedPage = isHomePage || window.location.pathname.endsWith('poligonal.html');
+if (isGatedPage && !hasValidToken()) {
   window.location.href = 'servicos.html?access_required=1';
 }
 
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('access_required')) {
-        showActivationMessage('warn', '⚠️ <strong>Aviso de Acesso Restrito:</strong> A consulta aos geodados dos 34 municípios exige uma chave de licença ativa. Digite a senha no campo acima para liberar o acesso ao painel.');
+        showActivationMessage('warn', '⚠️ <strong>Aviso de Acesso Restrito:</strong> A consulta aos geodados dos 34 municípios e a Ferramenta de Poligonal exigem uma chave de licença ativa. Digite a senha no campo acima para liberar o acesso ao painel.');
       }
 
       function executeActivation() {

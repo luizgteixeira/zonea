@@ -63,7 +63,7 @@
       </h1>
 
       <p class="hero-subtitle">
-        Informe as coordenadas UTM do ponto inicial e os dados de distância/azimute de cada segmento — o Zonea desenha a poligonal, calcula área, perímetro e verifica o erro de fechamento automaticamente.
+        Preencha a tabela com o ponto inicial e os dados de distância/azimute de cada segmento — ou cole direto de uma planilha Excel — e o Zonea desenha a poligonal, calcula área, perímetro e verifica o erro de fechamento automaticamente.
       </p>
 
       <div class="hero-concept">
@@ -78,112 +78,119 @@
       </div>
     </section>
 
-    <!-- FERRAMENTA -->
-    <section class="poligonal-grid">
-
-      <!-- COLUNA: FORMULÁRIO -->
-      <div class="poligonal-form-col">
-
-        <div class="servico-card card poligonal-card">
-          <h2 class="poligonal-card-title">1. Ponto Inicial (E, N)</h2>
-          <div class="form-row">
-            <div class="form-group-inline">
-              <label for="initialE" class="form-label">Coordenada E (Este)</label>
-              <input type="text" id="initialE" placeholder="Ex: 610046.398" inputmode="decimal">
-            </div>
-            <div class="form-group-inline">
-              <label for="initialN" class="form-label">Coordenada N (Norte)</label>
-              <input type="text" id="initialN" placeholder="Ex: 7000120.235" inputmode="decimal">
-            </div>
-          </div>
-          <button type="button" id="btnSetInitial" class="btn-submit poligonal-btn">Definir Ponto Inicial</button>
-        </div>
-
-        <div class="servico-card card poligonal-card">
-          <h2 class="poligonal-card-title">2. Adicionar Segmento (Distância + Azimute)</h2>
-          <div class="form-group">
-            <label for="segDistancia" class="form-label">Distância (metros)</label>
-            <input type="text" id="segDistancia" placeholder="Ex: 45.720" inputmode="decimal" disabled>
-          </div>
-          <div class="form-row form-row-3">
-            <div class="form-group-inline">
-              <label for="azGrau" class="form-label">Azimute — Graus</label>
-              <input type="text" id="azGrau" placeholder="189" inputmode="decimal" disabled>
-            </div>
-            <div class="form-group-inline">
-              <label for="azMin" class="form-label">Minutos</label>
-              <input type="text" id="azMin" placeholder="1" inputmode="decimal" disabled>
-            </div>
-            <div class="form-group-inline">
-              <label for="azSeg" class="form-label">Segundos</label>
-              <input type="text" id="azSeg" placeholder="24.32" inputmode="decimal" disabled>
-            </div>
-          </div>
-          <button type="button" id="btnAddPoint" class="btn-submit poligonal-btn" disabled>Adicionar Ponto</button>
-        </div>
-
-        <div class="poligonal-actions">
-          <button type="button" id="btnClosePolygon" class="result-cta primary" disabled>
-            <span>Fechar Poligonal e Calcular →</span>
-          </button>
-          <button type="button" id="btnResetPoligonal" class="btn-secondary">Limpar Tudo</button>
-        </div>
-
-        <div id="poligonalStatus" class="status-message"></div>
-      </div>
-
-      <!-- COLUNA: VISUALIZAÇÃO E RESULTADOS -->
-      <div class="poligonal-view-col">
-        <div class="servico-card card poligonal-card poligonal-svg-card">
-          <h2 class="poligonal-card-title">Visualização</h2>
-          <div class="poligonal-svg-wrapper">
-            <svg id="poligonalSvg" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid meet"></svg>
-          </div>
-        </div>
-
-        <div class="servico-card card poligonal-card">
-          <h2 class="poligonal-card-title">Resultados</h2>
-          <div class="poligonal-results-grid">
-            <div class="metric-item card">
-              <span class="metric-value" id="resultArea">—</span>
-              <span class="metric-label">Área (m²)</span>
-            </div>
-            <div class="metric-item card">
-              <span class="metric-value" id="resultPerimetro">—</span>
-              <span class="metric-label">Perímetro (m)</span>
-            </div>
-            <div class="metric-item card">
-              <span class="metric-value" id="resultFechamento">—</span>
-              <span class="metric-label">Erro de Fechamento (m)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TABELA DE PONTOS -->
-    <section style="max-width: 1000px; margin: 0 auto 48px;">
+    <!-- ORIENTAÇÕES: VERIFICAÇÃO DO SISTEMA DE REFERÊNCIA -->
+    <section style="max-width: 1000px; margin: 0 auto 32px;">
       <div style="border-bottom: 2px solid var(--cor-azul-suave); padding-bottom: 12px; margin-bottom: 24px;">
-        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro);">Pontos Inseridos</h2>
-        <p style="font-size: 13px; color: var(--cor-cinza);">Coordenadas UTM (SIRGAS 2000 / EPSG:31983) calculadas a partir dos dados informados.</p>
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro);">
+          Antes de Começar: Verifique o Datum do Documento
+        </h2>
+        <p style="font-size: 13px; color: var(--cor-cinza);">
+          Esta ferramenta assume coordenadas em <strong>SIRGAS 2000 / UTM zona 23S</strong>. Confira o sistema de referência do memorial descritivo ou planta que você recebeu antes de preencher os dados abaixo.
+        </p>
       </div>
-      <div class="data-table-wrapper card">
+
+      <div class="data-table-wrapper card" style="margin-bottom: 16px;">
         <table class="data-table">
           <thead>
             <tr>
-              <th scope="col">Ponto</th>
-              <th scope="col">E (Este)</th>
-              <th scope="col">N (Norte)</th>
-              <th scope="col">Distância do anterior</th>
-              <th scope="col">Azimute</th>
+              <th scope="col">Passo</th>
+              <th scope="col">Verificação</th>
             </tr>
           </thead>
-          <tbody id="pointsTableBody">
-            <tr id="pointsTableEmptyRow">
-              <td colspan="5" style="text-align: center; color: var(--cor-cinza);">Nenhum ponto inserido ainda. Comece definindo o ponto inicial.</td>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Confira no documento qual é o <strong>Datum</strong> (sistema de referência): <strong>SIRGAS 2000</strong> (referencial geocêntrico para as Américas) ou <strong>WGS84</strong> (sistema global). Se não for nenhum dos dois, vá direto ao passo 4.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Se for <strong>SIRGAS 2000</strong>, confirme que as coordenadas estão referenciadas ao <strong>Meridiano Central 45° WGr</strong> (fuso UTM 23S — o padrão usado por esta ferramenta).</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Se for <strong>WGS84</strong>, as coordenadas precisam ser convertidas para SIRGAS 2000 antes de preencher o formulário abaixo (veja o passo 4).</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Se o Datum for antigo (ex.: Córrego Alegre, SAD69) ou WGS84, acione a <strong>PRODABEL</strong> via <strong>SDM</strong> para realizar a conversão para SIRGAS 2000.</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="status-message ok visible">
+        ℹ️ Se o memorial descritivo trouxer as coordenadas em <strong>Latitude/Longitude</strong> (graus, minutos e segundos) em vez de UTM, converta para E/N antes de preencher a ferramenta abaixo.
+      </div>
+    </section>
+
+    <!-- RECONSTITUIR A POLIGONAL: TABELA EDITÁVEL -->
+    <section style="max-width: 1000px; margin: 0 auto 32px;">
+      <div style="border-bottom: 2px solid var(--cor-azul-suave); padding-bottom: 12px; margin-bottom: 24px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro);">
+          Reconstituir a Poligonal a partir do Memorial Descritivo
+        </h2>
+        <p style="font-size: 13px; color: var(--cor-cinza);">
+          A primeira linha é o ponto inicial (coordenadas <strong>E, N</strong>). As linhas seguintes são os segmentos do caminhamento (<strong>Azimute + Distância</strong>) — E/N são calculados automaticamente. Digite célula por célula ou <strong>cole direto de uma planilha Excel</strong>.
+        </p>
+      </div>
+
+      <div class="data-table-wrapper card" style="margin-bottom: 12px;">
+        <table class="data-table poligonal-edit-table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Azimute</th>
+              <th scope="col">Distância (m)</th>
+              <th scope="col">E (m)</th>
+              <th scope="col">N (m)</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="poligonalTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="poligonal-table-toolbar">
+        <button type="button" id="btnAddRow" class="btn-secondary">+ Adicionar Linha</button>
+        <button type="button" id="btnClosePolygon" class="result-cta primary" disabled>
+          <span>Fechar Poligonal e Calcular →</span>
+        </button>
+        <button type="button" id="btnResetPoligonal" class="btn-secondary">Limpar Tudo</button>
+      </div>
+
+      <div id="poligonalStatus" class="status-message"></div>
+
+      <p style="font-size: 12.5px; color: var(--cor-cinza); margin-top: 16px;">
+        Formatos de azimute aceitos: <code>189°1'24.32"</code> ou decimal <code>189.5</code>. Ao colar do Excel, a ferramenta reconhece 2, 4 ou 6 colunas (incluindo o formato completo do memorial: Vértice Inicial, Vértice Final, Azimute, Distância, E, N).
+        <br>📺 Recurso externo: <a href="https://www.youtube.com/watch?v=cmZdcBv2AyM" target="_blank" rel="noopener noreferrer">Importar coordenadas do Excel para o AutoCAD</a> (vídeo de @agrimensurabrasil).
+      </p>
+    </section>
+
+    <!-- VISUALIZAÇÃO E RESULTADOS -->
+    <section class="poligonal-results-section">
+      <div class="servico-card card poligonal-card poligonal-svg-card">
+        <h2 class="poligonal-card-title">Visualização</h2>
+        <div class="poligonal-svg-wrapper">
+          <svg id="poligonalSvg" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
+
+      <div class="servico-card card poligonal-card">
+        <h2 class="poligonal-card-title">Resultados</h2>
+        <div class="poligonal-results-grid">
+          <div class="metric-item card">
+            <span class="metric-value" id="resultArea">—</span>
+            <span class="metric-label">Área (m²)</span>
+          </div>
+          <div class="metric-item card">
+            <span class="metric-value" id="resultPerimetro">—</span>
+            <span class="metric-label">Perímetro (m)</span>
+          </div>
+          <div class="metric-item card">
+            <span class="metric-value" id="resultFechamento">—</span>
+            <span class="metric-label">Erro de Fechamento (m)</span>
+          </div>
+        </div>
       </div>
     </section>
   </main>

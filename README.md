@@ -27,8 +27,8 @@ O projeto busca reduzir a fragmentação de dados urbanísticos, conectando prof
 * **Métricas em Tempo Real:** Cards da Home (total de municípios e fontes oficiais auditadas) calculados dinamicamente a partir do catálogo, com selo de última atualização (`data/config.json`).
 * **Sistema de Referência Geográfica:** Municípios com fonte auditada registram o datum/CRS documentado (ex.: SIRGAS 2000, EPSG:31983) e a forma como foi verificado, exibido junto aos detalhes técnicos de cada resultado de busca.
 * **Central de Conhecimento:** Glossário técnico interativo com os principais conceitos de geoprocessamento, padrões OGC e sistemas de referência (WMS, WFS, GeoServer, ArcGIS REST, GeoJSON, SIG, Datum/SIRGAS 2000, CRS/EPSG, UTM).
-* **Ferramenta de Poligonal (diferencial Zonea):** requerentes informam o ponto inicial (coordenadas UTM E/N) e os segmentos seguintes (distância + azimute) e o Zonea desenha a poligonal automaticamente em SVG, calculando área (Shoelace), perímetro e erro de fechamento em tempo real. Inclui aviso de que não substitui ART/RRT de profissional habilitado. Ver `poligonal.html`.
-* **Acesso por Licença:** Camada de ativação de acesso à Home, validada no cliente — fale com a equipe via WhatsApp para obter uma chave de teste.
+* **Ferramenta de Poligonal (diferencial Zonea):** tabela editável — requerente digita célula a célula ou **cola direto de uma planilha Excel** (reconhece 2, 4 ou 6 colunas, incluindo o formato completo do memorial descritivo). A 1ª linha é o ponto inicial (E, N); as seguintes são segmentos (Azimute + Distância) encadeados, com E/N calculados automaticamente. O Zonea desenha a poligonal em SVG e calcula área (Shoelace), perímetro e erro de fechamento em tempo real, com validação célula a célula (linhas com erro ficam destacadas e não travam o restante da tabela). Inclui orientações de verificação de Datum (SIRGAS 2000/WGS84/conversão via PRODABEL) e aviso de que não substitui ART/RRT de profissional habilitado. Ver `poligonal.html`.
+* **Acesso por Licença:** Camada de ativação de acesso à Home **e à Ferramenta de Poligonal**, validada no cliente — fale com a equipe via WhatsApp para obter uma chave de teste.
 * **Acessibilidade:** Navegação por teclado, `aria-label`/`aria-expanded` sincronizados nos componentes interativos e respeito a `prefers-reduced-motion`.
 * **Suporte Integrado:** Botão flutuante do **WhatsApp** (número centralizado em `data/config.json`) para contato direto e suporte técnico.
 
@@ -68,7 +68,7 @@ O projeto utiliza uma arquitetura de frontend estático, preparada para evoluç�
 │   └── estilo.css     # Design System e regras visuais
 ├── js/
 │   ├── script.js      # Busca, autocomplete, licença e integrações
-│   └── poligonal.js   # Motor de cálculo (azimute→coordenada, área, perímetro, fechamento) e render SVG
+│   └── poligonal.js   # Tabela editável (digitação/colar do Excel), motor de cálculo (azimute→coordenada, área, perímetro, fechamento) e render SVG
 ├── data/
 │   ├── municipios.json  # Catálogo dos 34 municípios da RMBH (link, sistema, sistema_referencia)
 │   └── config.json      # Configurações institucionais (WhatsApp, data de atualização)
@@ -90,7 +90,7 @@ python -m http.server 8000
 npx serve .
 ```
 
-Depois acesse `http://localhost:8000/servicos.html` (a Home exige uma chave de licença ativa — peça uma à equipe).
+Depois acesse `http://localhost:8000/servicos.html` (a Home e a Ferramenta de Poligonal exigem uma chave de licença ativa — peça uma à equipe).
 
 ---
 
