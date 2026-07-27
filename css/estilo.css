@@ -564,6 +564,21 @@ main {
   color: var(--cor-alerta-texto);
 }
 
+.poligonal-results-grid .metric-value.stale {
+  opacity: 0.4;
+}
+
+.results-stale-notice {
+  margin: 12px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cor-alerta-texto);
+}
+
+.results-stale-notice[hidden] {
+  display: none;
+}
+
 @media (max-width: 860px) {
   .poligonal-results-section {
     grid-template-columns: 1fr;
@@ -734,6 +749,12 @@ input[type="text"]:focus {
   background-color: var(--cor-cinza-claro);
   color: var(--cor-cinza);
   border: 1px solid var(--cor-cinza-borda);
+}
+
+.tag.indisponivel {
+  background-color: var(--cor-alerta-bg);
+  color: var(--cor-alerta-texto);
+  border: 1px solid var(--cor-alerta-borda);
 }
 
 .btn-submit {
@@ -1064,6 +1085,10 @@ input[type="text"]:focus {
 
 .faq-item.roadmap-item {
   border-left: 4px solid var(--cor-verde);
+}
+
+.faq-question-heading {
+  margin: 0;
 }
 
 .faq-question {

@@ -289,6 +289,8 @@
     "link": "https://geo.santaluzia.mg.gov.br",
     "sistema": "Geo Santa Luzia",
     "confirmado": true,
+    "indisponivel": true,
+    "indisponivel_desde": "27/07/2026",
     "regiao": "Norte",
     "pop": "220.000 hab",
     "area": "235 km²",

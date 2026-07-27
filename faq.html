@@ -13,6 +13,8 @@
   <meta property="og:image" content="img/logo.png">
   <meta property="og:locale" content="pt_BR">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/estilo.css">
   <script type="application/ld+json">
   {
@@ -199,31 +201,37 @@
         </h2>
 
         <div class="faq-item card open">
-          <button type="button" class="faq-question" aria-expanded="true">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-1" aria-expanded="true" aria-controls="faq-a-1">
             <span>O que é o <span class="logo-text">Zonea</span>?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-1">
             O <span class="logo-text">Zonea</span> é uma plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados. Nosso objetivo é facilitar a descoberta e o acesso a informações oficiais disponibilizadas por municípios e órgãos públicos, funcionando como uma camada de organização e acesso direto à fonte.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2">
             <span>Qual é o objetivo principal da plataforma?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-2">
             O projeto busca reduzir a dificuldade de localizar sistemas de geoprocessamento, mapas e legislações que muitas vezes estão espalhados em diferentes portais institucionais. O <span class="logo-text">Zonea</span> segue o princípio: "Consulte. Compreenda. Planeje".
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3">
             <span>O <span class="logo-text">Zonea</span> é um portal imobiliário?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-3">
             Não. O <span class="logo-text">Zonea</span> possui caráter institucional, tecnológico e orientado a dados oficiais. Ele não deve ser confundido com catálogos de imóveis, anúncios ou plataformas de venda de terrenos.
           </div>
         </div>
@@ -239,32 +247,38 @@
         </h2>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-4" aria-expanded="false" aria-controls="faq-a-4">
             <span>Como realizo uma busca?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-4">
             Na página inicial, basta digitar o nome do município desejado no campo de consulta. O sistema possui uma função de autocomplete que sugere cidades cadastradas enquanto você digita, ignorando acentos ou diferenças entre maiúsculas e minúsculas.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-5" aria-expanded="false" aria-controls="faq-a-5">
             <span>O que significam os indicadores "confirmado" e "busca direta"?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-5">
             <strong>"Confirmado":</strong> indica que o município possui um link oficial para seu portal geográfico ou urbanístico já validado e cadastrado no <span class="logo-text">Zonea</span>.<br><br>
             <strong>"Busca direta":</strong> significa que o município está cadastrado na nossa base, mas o link para o portal específico ainda não foi confirmado ou vinculado no código atual.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-6" aria-expanded="false" aria-controls="faq-a-6">
             <span>O que acontece se o município que procurei não tiver um link cadastrado?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-6">
             Nesses casos, o sistema informará de forma transparente que o portal oficial para aquela localidade ainda não foi confirmado na base de dados, evitando redirecionar o usuário para fontes não verificadas.
           </div>
         </div>
@@ -282,51 +296,61 @@
         </h2>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-7" aria-expanded="false" aria-controls="faq-a-7">
             <span>Quais regiões o <span class="logo-text">Zonea</span> atende no momento?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-7">
             O foco inicial é a Região Metropolitana de Belo Horizonte (RMBH). Atualmente, o sistema conta com 34 municípios cadastrados da RMBH em sua base de dados.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-8" aria-expanded="false" aria-controls="faq-a-8">
             <span>Quais municípios já possuem portais oficiais vinculados?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-8">
             Até o momento, os links diretos estão disponíveis para: Belo Horizonte (BHGeo), Betim (Cartografia), Contagem (SIGM), Nova Lima (GeoPNL), Ribeirão das Neves (GeoNeves) e Santa Luzia.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-9" aria-expanded="false" aria-controls="faq-a-9">
             <span>As informações visualizadas são de responsabilidade do <span class="logo-text">Zonea</span>?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-9">
             O <span class="logo-text">Zonea</span> facilita o acesso, mas não substitui as fontes oficiais. Quando você acessa um dado, o sistema redireciona ou orienta você para o portal da prefeitura ou órgão responsável, garantindo que a informação venha direto da fonte.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-10" aria-expanded="false" aria-controls="faq-a-10">
             <span>Como é verificada a veracidade dos links dos portais oficiais?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-10">
             Cada portal passa por uma auditoria técnica antes de ser marcado como "Confirmado": verificamos se o link leva direto ao sistema de geoprocessamento oficial (não a uma página institucional genérica) e, sempre que possível, inspecionamos o <code>GetCapabilities</code> do serviço WMS/WFS ou o metadado do servidor ArcGIS REST para confirmar o sistema de referência geográfica utilizado. Esse processo fica documentado por município no campo técnico da nossa base de dados.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-11" aria-expanded="false" aria-controls="faq-a-11">
             <span>O que significa o selo "Fonte Auditada"?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-11">
             Indica que o <span class="logo-text">Zonea</span> já validou tecnicamente o link do portal oficial de geoprocessamento daquele município — não é uma simples busca no Google, é uma checagem direta na fonte (serviço WMS/WFS/ArcGIS do próprio geoportal). Hoje, alguns dos 34 municípios da RMBH têm esse selo; os demais estão em processo de catalogação.
           </div>
         </div>
@@ -342,40 +366,46 @@
         </h2>
 
         <div class="faq-item roadmap-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-12" aria-expanded="false" aria-controls="faq-a-12">
             <span>
               Posso pesquisar por endereço, CEP ou lote?
               <span class="roadmap-badge">ROADMAP (FASE 4)</span>
             </span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-12">
             Essas funcionalidades, assim como a busca por bairro ou índice cadastral, representam possibilidades de evolução e estão no roadmap do projeto (Fase 4), mas ainda não estão implementadas na versão atual.
           </div>
         </div>
 
         <div class="faq-item roadmap-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-13" aria-expanded="false" aria-controls="faq-a-13">
             <span>
               O <span class="logo-text">Zonea</span> terá mapas interativos próprios?
               <span class="roadmap-badge">ROADMAP (FASE 3 E 5)</span>
             </span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-13">
             Já lançamos o primeiro passo nessa direção: a <a href="poligonal.html">Ferramenta de Poligonal</a>, que desenha automaticamente a poligonal de um imóvel a partir de coordenadas UTM, com cálculo de área, perímetro e erro de fechamento. A visão de longo prazo continua sendo uma plataforma completa de inteligência territorial, com camadas geográficas (WMS/WFS) sobrepostas em mapa e ferramentas de análise espacial (Fase 3 e 5).
           </div>
         </div>
 
         <div class="faq-item roadmap-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-14" aria-expanded="false" aria-controls="faq-a-14">
             <span>
               O <span class="logo-text">Zonea</span> terá cobertura nacional?
               <span class="roadmap-badge">ROADMAP (FASE 6)</span>
             </span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-14">
             É o objetivo de longo prazo (Fase 6 do nosso roadmap). Por enquanto, o foco total está na Região Metropolitana de Belo Horizonte (RMBH), para garantir qualidade e verificação técnica antes de expandir para outras regiões do Brasil.
           </div>
         </div>
@@ -392,31 +422,37 @@
         </h2>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-15" aria-expanded="false" aria-controls="faq-a-15">
             <span>O que são os serviços WMS e WFS?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-15">
             São padrões abertos (OGC) usados pelos geoportais municipais para compartilhar mapas pela internet. O <strong>WMS</strong> (Web Map Service) entrega uma imagem já renderizada do mapa — ótimo para visualização, mas sem acesso aos dados por trás. O <strong>WFS</strong> (Web Feature Service) entrega as feições vetoriais (pontos, linhas, polígonos) com seus atributos, permitindo consultar e analisar os dados diretamente. Veja mais no nosso <a href="conhecimento.html">glossário técnico</a>.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-16" aria-expanded="false" aria-controls="faq-a-16">
             <span>O que é o Datum SIRGAS 2000?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-16">
             É o sistema de referência geodésico oficial do Brasil desde 2015, usado para garantir que as coordenadas de um mapa correspondam à posição real no território. A maioria dos geoportais da RMBH que auditamos usa o SIRGAS 2000 (especificamente a projeção UTM zona 23S), mas nem todos — por isso cada município confirmado no <span class="logo-text">Zonea</span> tem seu sistema de referência documentado individualmente, em vez de assumirmos um padrão único para todos.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-17" aria-expanded="false" aria-controls="faq-a-17">
             <span>O que é um código EPSG?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-17">
             É o catálogo numérico internacional usado para identificar um sistema de referência de coordenadas (CRS) de forma inequívoca. Por exemplo, o código <strong>EPSG:31983</strong> identifica "SIRGAS 2000 / UTM zona 23S", o sistema mais comum entre os geoportais que auditamos na RMBH.
           </div>
         </div>
@@ -437,21 +473,25 @@
         </h2>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-18" aria-expanded="false" aria-controls="faq-a-18">
             <span>Como posso sugerir a inclusão de um novo portal ou município?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-18">
             É só falar com a nossa equipe pelo botão do WhatsApp, disponível em todas as páginas do site. Encaminhe o nome do município e, se souber, o link do sistema de geoprocessamento — nossa equipe faz a auditoria técnica e inclui na base assim que confirmado.
           </div>
         </div>
 
         <div class="faq-item card">
-          <button type="button" class="faq-question" aria-expanded="false">
+          <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-19" aria-expanded="false" aria-controls="faq-a-19">
             <span>O que fazer se um link oficial estiver fora do ar?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <div class="faq-answer">
+          </h3>
+          <div class="faq-answer" id="faq-a-19">
             Como o <span class="logo-text">Zonea</span> redireciona para sistemas geridos pelas prefeituras, a disponibilidade depende diretamente delas — já identificamos casos de subdomínios de geoportais temporariamente fora do ar durante nossas auditorias. Se isso acontecer, nos avise pelo WhatsApp: revalidamos o link e sinalizamos a indisponibilidade na nossa base até o portal voltar.
           </div>
         </div>

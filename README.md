@@ -1,112 +1,99 @@
+![Logo do Zonea](img/logo.png)
 
 # Zonea — Inteligência Territorial
 
-> **Slogan:** Informação urbanística direto da fonte.
-> **Princípio:** Consulte. Compreenda. Planeje.
-
-O **Zonea** é uma plataforma de consulta e exploração de dados territoriais, urbanísticos e georreferenciados. Ele atua como uma **camada de descoberta e organização**, facilitando o acesso a informações oficiais distribuídas em diversos portais municipais e sistemas de geoprocessamento.
+**Informação urbanística direto da fonte.** Consulte. Compreenda. Planeje.
 
 ---
 
-## 🗺️ Propósito e Escopo
+## O que é o Zonea?
 
-O projeto busca reduzir a fragmentação de dados urbanísticos, conectando profissionais e cidadãos diretamente às bases públicas oficiais (WMS, WFS, GeoJSON, etc.) sem substituir os sistemas de origem.
+O **Zonea** ajuda você a encontrar, rapidamente, os dados oficiais de mapas e zoneamento de um município — sem precisar caçar em dezenas de sites diferentes de prefeitura.
 
-* **Foco Inicial:** Região Metropolitana de Belo Horizonte (RMBH).
-* **Cobertura:** 34 municípios cadastrados, dos quais 6 com fontes oficiais auditadas (portal e sistema de referência geográfica confirmados: BHGeo, GeoBetim, SIGM Contagem, GeoPNL, GeoNeves e Geo Santa Luzia).
-* **Público-alvo:** Profissionais de planejamento urbano, arquitetos, engenheiros, analistas territoriais e cidadãos interessados em dados municipais.
+Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu próprio "geoportal" (o site onde ela publica mapas, zoneamento e informações do território), e esses portais são difíceis de achar e nem sempre funcionam bem. O Zonea funciona como um **ponto de partida único**: você digita o nome do município e ele te leva direto para a fonte oficial correta — sem inventar dados, sem substituir a prefeitura, só facilitando o caminho até lá.
 
----
-
-## 🚀 Funcionalidades Atuais
-
-* **Busca Inteligente:** Autocomplete acessível (padrão ARIA combobox), com normalização de strings (ignora acentos e maiúsculas) e navegação completa por teclado (setas, Enter, Esc).
-* **Botão de Limpar:** Reseta o campo de busca e o resultado exibido (portal confirmado ou pendente) com um clique.
-* **Acesso Rápido:** Atalhos para os municípios com portal já confirmado, gerados dinamicamente a partir de `data/municipios.json`.
-* **Status de Transparência:** Diferenciação visual entre **"Portal Confirmado"** (link validado) e **"Busca Direta"** (município cadastrado, mas sem link validado no código atual).
-* **Métricas em Tempo Real:** Cards da Home (total de municípios e fontes oficiais auditadas) calculados dinamicamente a partir do catálogo, com selo de última atualização (`data/config.json`).
-* **Sistema de Referência Geográfica:** Municípios com fonte auditada registram o datum/CRS documentado (ex.: SIRGAS 2000, EPSG:31983) e a forma como foi verificado, exibido junto aos detalhes técnicos de cada resultado de busca.
-* **Central de Conhecimento:** Glossário técnico interativo com os principais conceitos de geoprocessamento, padrões OGC e sistemas de referência (WMS, WFS, GeoServer, ArcGIS REST, GeoJSON, SIG, Datum/SIRGAS 2000, CRS/EPSG, UTM).
-* **Ferramenta de Poligonal (diferencial Zonea):** tabela editável — requerente digita célula a célula ou **cola direto de uma planilha Excel** (reconhece 2, 4 ou 6 colunas, incluindo o formato completo do memorial descritivo). A 1ª linha é o ponto inicial (E, N); as seguintes são segmentos (Azimute + Distância) encadeados, com E/N calculados automaticamente. O Zonea desenha a poligonal em SVG e calcula área (Shoelace), perímetro e erro de fechamento em tempo real, com validação célula a célula (linhas com erro ficam destacadas e não travam o restante da tabela). Inclui orientações de verificação de Datum (SIRGAS 2000/WGS84/conversão via PRODABEL) e aviso de que não substitui ART/RRT de profissional habilitado. Ver `poligonal.html`.
-* **Acesso por Licença:** Camada de ativação de acesso à Home **e à Ferramenta de Poligonal**, validada no cliente — fale com a equipe via WhatsApp para obter uma chave de teste.
-* **Acessibilidade:** Navegação por teclado, `aria-label`/`aria-expanded` sincronizados nos componentes interativos e respeito a `prefers-reduced-motion`.
-* **Suporte Integrado:** Botão flutuante do **WhatsApp** (número centralizado em `data/config.json`) para contato direto e suporte técnico.
+* **Onde atuamos hoje:** Região Metropolitana de Belo Horizonte (RMBH), 34 municípios.
+* **O que já está confirmado:** 6 desses municípios têm o portal e o sistema de coordenadas verificados por nós (Belo Horizonte, Betim, Contagem, Nova Lima, Ribeirão das Neves e Santa Luzia). Os outros ainda estão em processo de checagem.
+* **Para quem é:** arquitetos, engenheiros, urbanistas, e qualquer pessoa que precise consultar informações territoriais de um município da região.
 
 ---
 
-## 🎨 Design System e Identidade
+## O que dá pra fazer no site hoje
 
-A interface do Zonea foi projetada para transmitir **confiança, precisão e tecnologia**, utilizando uma estética limpa inspirada em cartografia.
+* **Buscar um município e ir direto à fonte oficial** — digite o nome (o campo até corrige acentos e maiúsculas/minúsculas) e o Zonea mostra o link confirmado do geoportal daquela cidade, junto com um resumo do que tem disponível lá.
+* **Saber se o dado é confiável** — cada resultado mostra se o portal já foi auditado por nós ("Fonte Auditada") ou se ainda está em fase de checagem ("Busca Direta"). E se um portal cair fora do ar, o Zonea avisa isso na tela, em vez de simplesmente te mandar para um link quebrado.
+* **Aprender os termos técnicos** — uma página de glossário explica, em linguagem simples, conceitos como WMS, WFS, Datum, SIRGAS 2000 e outros termos que aparecem nos portais de geoprocessamento.
+* **Desenhar uma poligonal automaticamente** — nossa ferramenta mais nova. Em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo.
+* **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-* **Cores Oficiais:** Azul (#1E5AA8) e Verde (#2E8B57).
-* **Tipografia:** `Plus Jakarta Sans` para conteúdos institucionais e `JetBrains Mono` para dados técnicos e microtipografia.
-* **Estética Técnica:** Fundo sutil composto por **linhas de coordenadas geográficas** e uma marca d'água cartográfica leve (WebP), desativada em telas pequenas para poupar banda.
-
----
-
-## 🛠️ Tecnologias e Padrões
-
-O projeto utiliza uma arquitetura de frontend estático, preparada para evoluções em geoprocessamento:
-
-* **Frontend:** HTML5 semântico, CSS3 (Variables, Grid, Flexbox) e Vanilla JavaScript — sem dependências ou build step.
-* **Dados desacoplados:** Catálogo de municípios (`data/municipios.json`) e configurações institucionais (`data/config.json`) carregados via `fetch`, fora da lógica de interface.
-* **SEO:** Open Graph em todas as páginas e dados estruturados `FAQPage` (JSON-LD) na página de dúvidas.
-* **Geotecnologias (Roadmap):** Suporte planejado para GeoJSON, WFS, WMS, ArcGIS REST Services e integração com GeoServer.
+Algumas páginas do site (a busca principal e a ferramenta de poligonal) pedem uma chave de acesso — é só pedir pra nossa equipe pelo WhatsApp.
 
 ---
 
-## 🏗️ Estrutura do Projeto
+## Como o site foi construído (para quem for mexer no código)
+
+O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", sem nenhum framework nem etapa de compilação. Isso significa que qualquer editor de texto e um navegador já bastam para trabalhar nele.
+
+* As informações dos municípios ficam num arquivo separado (`data/municipios.json`), fora do código da página — assim dá pra atualizar os dados sem mexer no visual do site.
+* O visual (cores, fontes, espaçamentos) é centralizado num único arquivo de estilo (`css/estilo.css`), então mudar a identidade visual do site inteiro é uma questão de editar um lugar só.
+* Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo).
+
+---
+
+## Mapa dos arquivos do projeto
 
 ```text
 /
-├── index.html         # Painel de consulta principal (acesso por licença)
-├── servicos.html      # Módulos, casos de uso e ativação de licença
-├── conhecimento.html  # Central de Conhecimento — glossário técnico SIG
-├── poligonal.html     # Ferramenta de Poligonal — desenho automático via UTM/azimute
-├── faq.html           # Dúvidas frequentes (com schema FAQPage)
+├── index.html         # Página principal — busca de municípios (pede chave de acesso)
+├── servicos.html      # Sobre o Zonea, casos de uso e ativação de acesso
+├── conhecimento.html  # Glossário com os termos técnicos explicados
+├── poligonal.html     # Ferramenta que desenha a poligonal automaticamente (pede chave de acesso)
+├── faq.html           # Perguntas frequentes
 ├── css/
-│   └── estilo.css     # Design System e regras visuais
+│   └── estilo.css     # Todo o visual do site (cores, fontes, layout)
 ├── js/
-│   ├── script.js      # Busca, autocomplete, licença e integrações
-│   └── poligonal.js   # Tabela editável (digitação/colar do Excel), motor de cálculo (azimute→coordenada, área, perímetro, fechamento) e render SVG
+│   ├── script.js      # Busca, menu, chave de acesso e outras funções gerais
+│   └── poligonal.js   # Lógica da ferramenta de poligonal (cálculos e desenho)
 ├── data/
-│   ├── municipios.json  # Catálogo dos 34 municípios da RMBH (link, sistema, sistema_referencia)
-│   └── config.json      # Configurações institucionais (WhatsApp, data de atualização)
-├── img/               # Ativos visuais e cartográficos
-└── README.md
+│   ├── municipios.json  # Lista dos 34 municípios e seus dados
+│   └── config.json      # Configurações gerais (ex: número do WhatsApp)
+├── img/                # Logo, ícones e imagens
+└── README.md           # Este arquivo
 ```
 
 ---
 
-## ▶️ Como executar localmente
+## Como rodar o site no seu computador
 
-O projeto não tem build step, mas os dados são carregados via `fetch`, então **abrir os arquivos `.html` direto no navegador (`file://`) não funciona** — o navegador bloqueia a requisição por CORS. Sirva a pasta com um servidor estático simples:
+O site busca os dados de município num arquivo separado enquanto a página carrega. Por causa disso, **não dá pra simplesmente abrir o arquivo `.html` clicando duas vezes** — o navegador bloqueia esse tipo de carregamento por segurança. É preciso "servir" a pasta com um servidor local simples. Duas opções fáceis:
 
 ```bash
-# Python
+# Se você tem Python instalado
 python -m http.server 8000
 
-# Node (sem instalação)
+# Ou, com Node.js, sem precisar instalar nada
 npx serve .
 ```
 
-Depois acesse `http://localhost:8000/servicos.html` (a Home e a Ferramenta de Poligonal exigem uma chave de licença ativa — peça uma à equipe).
+Depois, acesse `http://localhost:8000/servicos.html` no navegador (a página principal e a ferramenta de poligonal pedem uma chave de acesso — peça uma à equipe).
 
 ---
 
-## 🗺️ Roadmap de Evolução
+## Para onde o projeto está indo
 
-1. **Fase 1 — Fundação:** Estrutura inicial e catálogo da RMBH.
-2. **Fase 2 — Dados Territoriais:** Validação de portais e organização de metadados.
-3. **Fase 3 — Visualização:** Implementação de mapas interativos e camadas geográficas.
-4. **Fase 4 — Pesquisa Avançada:** Consultas por CEP, endereço, lote e índice cadastral.
-5. **Fase 5 — Inteligência Territorial:** Cruzamento de dados e relatórios automatizados.
-6. **Fase 6 — Expansão Nacional:** Cobertura de outras regiões brasileiras.
+1. **Fase 1 — Base:** estrutura do site e catálogo dos municípios da RMBH. ✅
+2. **Fase 2 — Dados confiáveis:** conferir e validar os portais de cada município. *(em andamento)*
+3. **Fase 3 — Mapas:** mostrar mapas e camadas geográficas dentro do próprio Zonea.
+4. **Fase 4 — Busca avançada:** encontrar informações por endereço, CEP ou número de lote.
+5. **Fase 5 — Inteligência territorial:** cruzar dados de diferentes fontes e gerar relatórios automáticos.
+6. **Fase 6 — Expansão:** levar o Zonea para outras regiões do Brasil, além da RMBH.
 
 ---
 
-## 📞 Contato e Desenvolvimento
+## Contato
 
-Desenvolvido por **[Luiz Gustavo](https://www.luizgustavodev.com/)**. Para parcerias, sugestões ou suporte, utilize o canal oficial via WhatsApp disponível na plataforma.
+Desenvolvido por **[Luiz Gustavo](https://www.luizgustavodev.com/)**.
 
-**Localização Técnica:** 19.9167° S, 43.9345° W · BELO HORIZONTE / MG.
+Dúvidas, parcerias ou sugestões? Fale com a gente pelo WhatsApp disponível em qualquer página do site.
+
+📍 Belo Horizonte / MG

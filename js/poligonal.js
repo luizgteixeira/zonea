@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultArea = document.getElementById('resultArea');
   const resultPerimetro = document.getElementById('resultPerimetro');
   const resultFechamento = document.getElementById('resultFechamento');
+  const resultsStaleNotice = document.getElementById('resultsStaleNotice');
 
   if (!tbody) return; // página sem a ferramenta — não faz nada
 
@@ -93,6 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return value.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   }
 
+  function setInvalid(input, invalid) {
+    if (!input) return;
+    input.classList.toggle('input-invalid', invalid);
+    input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+  }
+
   // ---------- ESTADO: RECALCULA A CADEIA INTEIRA ----------
   function recompute() {
     computed = [];
@@ -139,6 +146,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ---------- RESULTADOS: OBSOLESCÊNCIA ----------
+  // Se a tabela mudar depois de já termos calculado Área/Perímetro/Fechamento,
+  // os números antigos ficam esmaecidos + aviso, até o usuário recalcular.
+  function hasComputedResults() {
+    return resultArea.textContent !== '—';
+  }
+
+  function markResultsStale() {
+    if (!hasComputedResults()) return;
+    resultArea.classList.add('stale');
+    resultPerimetro.classList.add('stale');
+    resultFechamento.classList.add('stale');
+    if (resultsStaleNotice) resultsStaleNotice.hidden = false;
+  }
+
+  function clearResultsStale() {
+    resultArea.classList.remove('stale');
+    resultPerimetro.classList.remove('stale');
+    resultFechamento.classList.remove('stale');
+    if (resultsStaleNotice) resultsStaleNotice.hidden = true;
+  }
+
   // ---------- STATUS ----------
   function showStatus(state, html) {
     if (!poligonalStatus) return;
@@ -164,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     input.placeholder = placeholder || '';
     input.autocomplete = 'off';
     input.spellcheck = false;
+    input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
     if (disabled) input.disabled = true;
     td.appendChild(input);
     return td;
@@ -252,14 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const azInput = tr.querySelector('[data-field="azimute"]');
       const distInput = tr.querySelector('[data-field="distancia"]');
-      if (azInput) azInput.classList.toggle('input-invalid', !isInitial && !!flags.azimuteInvalid);
-      if (distInput) distInput.classList.toggle('input-invalid', !isInitial && !!flags.distanciaInvalid);
+      setInvalid(azInput, !isInitial && !!flags.azimuteInvalid);
+      setInvalid(distInput, !isInitial && !!flags.distanciaInvalid);
 
       if (isInitial) {
         const eInput = tr.querySelector('[data-field="initialE"]');
         const nInput = tr.querySelector('[data-field="initialN"]');
-        if (eInput) eInput.classList.toggle('input-invalid', !!flags.initialEInvalid);
-        if (nInput) nInput.classList.toggle('input-invalid', !!flags.initialNInvalid);
+        setInvalid(eInput, !!flags.initialEInvalid);
+        setInvalid(nInput, !!flags.initialNInvalid);
       } else {
         const computedInputs = tr.querySelectorAll('.computed-cell');
         if (computedInputs[0]) computedInputs[0].value = c.valid ? formatNumber(c.E, 3) : '—';
@@ -376,6 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
     renderSvg();
     updateButtons();
+    markResultsStale();
   }
 
   function setFieldValue(rowIndex, field, value) {
@@ -397,6 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateComputedDisplayAndValidity();
     renderSvg();
     updateButtons();
+    markResultsStale();
   });
 
   // ---------- EVENTOS: COLAR (EXCEL) ----------
@@ -490,6 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const erroFechamento = distanceBetween(pts[pts.length - 1], pts[0]);
     const fechou = erroFechamento <= CLOSURE_TOLERANCE_M;
 
+    clearResultsStale();
     resultArea.textContent = formatNumber(area, 2);
     resultPerimetro.textContent = formatNumber(perimetro, 2);
     resultFechamento.textContent = formatNumber(erroFechamento, 3);
@@ -514,6 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultPerimetro.textContent = '—';
     resultFechamento.textContent = '—';
     resultFechamento.classList.remove('warn-value');
+    clearResultsStale();
 
     clearStatus();
     renderFull();

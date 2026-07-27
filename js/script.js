@@ -36,6 +36,12 @@ function buildWhatsappLink(message) {
   return message ? `${base}&text=${encodeURIComponent(message)}` : base;
 }
 
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON)
   try {
@@ -271,7 +277,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateSelectedRow(rows) {
       rows.forEach((r, idx) => {
-        r.classList.toggle('selected', idx === activeIndex);
+        r.classList.toggle('active', idx === activeIndex);
       });
       input.setAttribute('aria-activedescendant', activeIndex >= 0 ? `suggestion-${activeIndex}` : '');
     }
@@ -305,17 +311,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const found = MUNICIPIOS.find(m => normalize(m.nome) === normalize(val));
       if (!found) {
-        statusEl.innerHTML = `<div class="status-message error visible">"${val}" não faz parte dos 34 municípios cadastrados da RMBH.</div>`;
+        statusEl.innerHTML = `<div class="status-message error visible">"${escapeHtml(val)}" não faz parte dos 34 municípios cadastrados da RMBH.</div>`;
         statusEl.className = 'status-message visible';
         return;
       }
 
       if (found.confirmado && found.link) {
+        const indisponivel = !!found.indisponivel;
+        const reportarHref = buildWhatsappLink(`Olá! Notei que o portal de ${found.nome} parece estar fora do ar no Zonea, gostaria de reportar / ser avisado quando voltar.`);
+
         statusEl.innerHTML = `
           <div class="result-card confirmed">
             <div class="result-card-head">
-              <span class="result-card-title">✓ Portal Oficial Confirmado — ${found.nome} (${found.sistema})</span>
+              <span class="result-card-title">${indisponivel ? '⚠️' : '✓'} Portal Oficial ${indisponivel ? 'Temporariamente Indisponível' : 'Confirmado'} — ${found.nome} (${found.sistema})</span>
               <span class="tag confirmado">FONTE AUDITADA</span>
+              ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
             </div>
 
             <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
@@ -325,10 +335,23 @@ document.addEventListener('DOMContentLoaded', async () => {
               ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${found.sistema_referencia}` : ''}
             </div>
 
+            ${indisponivel ? `
+            <div class="status-message warn visible" style="margin-top: 0; margin-bottom: 16px;">
+              ⚠️ <strong>Portal fora do ar no momento${found.indisponivel_desde ? ` (detectado em ${found.indisponivel_desde})` : ''}.</strong> Já auditamos e confirmamos este portal, mas a última checagem técnica não conseguiu resolver o endereço. O link abaixo pode não carregar até a prefeitura restabelecer o serviço.
+            </div>
+            ` : ''}
+
             <a href="${found.link}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
               <span>Acessar Portal Oficial (${found.sistema}) →</span>
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
             </a>
+
+            ${indisponivel ? `
+            <a href="${reportarHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp" style="margin-top: 10px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
+              <span>Avise-me quando o portal voltar</span>
+            </a>
+            ` : ''}
           </div>
         `;
         statusEl.className = 'status-message visible';
@@ -367,7 +390,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (faqQuestions.length > 0) {
     faqQuestions.forEach(btn => {
       btn.addEventListener('click', () => {
-        const item = btn.parentElement;
+        const item = btn.closest('.faq-item');
+        if (!item) return;
         const isOpen = item.classList.contains('open');
 
         const group = item.closest('.faq-group');
