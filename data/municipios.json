@@ -11,23 +11,25 @@
   },
   {
     "nome": "Belo Horizonte",
-    "link": "https://prefeitura.pbh.gov.br/bhgeo",
+    "link": "https://bhmap.pbh.gov.br/v2/mapa/idebhgeo#zoom=4&lat=7796883.98348&lon=609310.17459&baselayer=base",
     "sistema": "BHGeo / Prodabel",
     "confirmado": true,
     "regiao": "Central",
     "pop": "2.315.000 hab",
     "area": "331 km²",
-    "detalhes_tecnicos": "WebSIG completo BHGeo, Camadas WMS/WFS OGC, Lei de Uso do Solo 11.181/19, Limites Cadastrais e Zoneamento."
+    "detalhes_tecnicos": "WebSIG completo BHGeo, Camadas WMS/WFS OGC, Lei de Uso do Solo 11.181/19, Limites Cadastrais e Zoneamento.",
+    "sistema_referencia": "SIRGAS 2000 (EPSG:4674) / UTM 23S (EPSG:31983) — declarado no GetCapabilities do GeoServer (geoservicos.pbh.gov.br)"
   },
   {
     "nome": "Betim",
-    "link": "https://www.betim.mg.gov.br/portal/secretarias-paginas/308/cartografia/",
+    "link": "https://sistemas.betim.mg.gov.br/geoweb/plantasCadastrais",
     "sistema": "GeoBetim",
     "confirmado": true,
     "regiao": "Oeste",
     "pop": "411.000 hab",
     "area": "343 km²",
-    "detalhes_tecnicos": "GeoBetim, Base Cartográfica Oficial, Mapas de Zoneamento, Perímetros Urbanos e Áreas Industriais."
+    "detalhes_tecnicos": "GeoBetim, Base Cartográfica Oficial, Mapas de Zoneamento, Perímetros Urbanos e Áreas Industriais.",
+    "sistema_referencia": "Divergente entre mapas: mapa oficial de localização usa Datum Córrego Alegre 1970-72 (UTM); SIRGAS 2000 citado em outras bases — confirmação pendente"
   },
   {
     "nome": "Brumadinho",
@@ -77,7 +79,8 @@
     "regiao": "Oeste",
     "pop": "621.000 hab",
     "area": "195 km²",
-    "detalhes_tecnicos": "SIGM Contagem, Geoportal Vetorial, Camadas WMS de Loteamento, Parcelamento do Solo e Macrozoneamento."
+    "detalhes_tecnicos": "SIGM Contagem, Geoportal Vetorial, Camadas WMS de Loteamento, Parcelamento do Solo e Macrozoneamento.",
+    "sistema_referencia": "SIRGAS 2000 / UTM 23S (EPSG:31983) — confirmado via metadado spatialReference do ArcGIS REST Server"
   },
   {
     "nome": "Esmeraldas",
@@ -207,7 +210,8 @@
     "regiao": "Sul",
     "pop": "111.000 hab",
     "area": "516 km²",
-    "detalhes_tecnicos": "GeoPNL, WebSIG de Nova Lima, Consultas Cadastrais, Zoneamento Urbano e Parâmetros Construtivos."
+    "detalhes_tecnicos": "GeoPNL, WebSIG de Nova Lima, Consultas Cadastrais, Zoneamento Urbano e Parâmetros Construtivos.",
+    "sistema_referencia": "SIRGAS 2000 / UTM 23S (EPSG:31983) — confirmado via metadado spatialReference do ArcGIS FeatureServer (services3.arcgis.com)"
   },
   {
     "nome": "Nova União",
@@ -247,7 +251,8 @@
     "regiao": "Norte",
     "pop": "330.000 hab",
     "area": "155 km²",
-    "detalhes_tecnicos": "GeoNeves, Mapeamento do Uso do Solo, Infraestrutura Urbana e Camadas de Zoneamento."
+    "detalhes_tecnicos": "GeoNeves, Mapeamento do Uso do Solo, Infraestrutura Urbana e Camadas de Zoneamento.",
+    "sistema_referencia": "UTM 23S (indicado como \"UTM-23s\" no seletor de mapa base do portal ICAD/GeoNeves) — provável SIRGAS 2000, datum não declarado explicitamente na interface"
   },
   {
     "nome": "Rio Acima",
@@ -287,7 +292,8 @@
     "regiao": "Norte",
     "pop": "220.000 hab",
     "area": "235 km²",
-    "detalhes_tecnicos": "Geo Santa Luzia, WebSIG de Zoneamento, Cadastro Técnico Multifinalitário e Cartografia Digital."
+    "detalhes_tecnicos": "Geo Santa Luzia, WebSIG de Zoneamento, Cadastro Técnico Multifinalitário e Cartografia Digital.",
+    "sistema_referencia": "Não verificado — subdomínio geo.santaluzia.mg.gov.br está fora do ar (DNS não resolve) desde a checagem em 27/07/2026. Requer nova tentativa."
   },
   {
     "nome": "São Joaquim de Bicas",

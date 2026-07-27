@@ -310,6 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <div class="tech-details-box">
               📋 <strong>DETALHES TÉCNICOS:</strong> ${found.detalhes_tecnicos || 'Acesso liberado ao geoportal oficial.'}
+              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${found.sistema_referencia}` : ''}
             </div>
 
             <a href="${found.link}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
@@ -332,6 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <div class="tech-details-box">
               ⚙️ <strong>STATUS TÉCNICO:</strong> ${found.detalhes_tecnicos || 'Catalogação sob demanda via equipe técnica.'}
+              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${found.sistema_referencia}` : ''}
             </div>
 
             <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp">

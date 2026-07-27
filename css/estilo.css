@@ -7,6 +7,8 @@
 
 /* 1. VARIÁVEIS DO SISTEMA DE DESIGN */
 :root {
+  color-scheme: light;
+
   --cor-azul: #1E5AA8;
   /* Primária: Confiança, Tecnologia, Informação */
   --cor-azul-hover: #174887;
