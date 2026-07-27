@@ -27,6 +27,7 @@ O projeto busca reduzir a fragmentação de dados urbanísticos, conectando prof
 * **Métricas em Tempo Real:** Cards da Home (total de municípios e fontes oficiais auditadas) calculados dinamicamente a partir do catálogo, com selo de última atualização (`data/config.json`).
 * **Sistema de Referência Geográfica:** Municípios com fonte auditada registram o datum/CRS documentado (ex.: SIRGAS 2000, EPSG:31983) e a forma como foi verificado, exibido junto aos detalhes técnicos de cada resultado de busca.
 * **Central de Conhecimento:** Glossário técnico interativo com os principais conceitos de geoprocessamento, padrões OGC e sistemas de referência (WMS, WFS, GeoServer, ArcGIS REST, GeoJSON, SIG, Datum/SIRGAS 2000, CRS/EPSG, UTM).
+* **Ferramenta de Poligonal (diferencial Zonea):** requerentes informam o ponto inicial (coordenadas UTM E/N) e os segmentos seguintes (distância + azimute) e o Zonea desenha a poligonal automaticamente em SVG, calculando área (Shoelace), perímetro e erro de fechamento em tempo real. Inclui aviso de que não substitui ART/RRT de profissional habilitado. Ver `poligonal.html`.
 * **Acesso por Licença:** Camada de ativação de acesso à Home, validada no cliente — fale com a equipe via WhatsApp para obter uma chave de teste.
 * **Acessibilidade:** Navegação por teclado, `aria-label`/`aria-expanded` sincronizados nos componentes interativos e respeito a `prefers-reduced-motion`.
 * **Suporte Integrado:** Botão flutuante do **WhatsApp** (número centralizado em `data/config.json`) para contato direto e suporte técnico.
@@ -61,11 +62,13 @@ O projeto utiliza uma arquitetura de frontend estático, preparada para evoluç�
 ├── index.html         # Painel de consulta principal (acesso por licença)
 ├── servicos.html      # Módulos, casos de uso e ativação de licença
 ├── conhecimento.html  # Central de Conhecimento — glossário técnico SIG
+├── poligonal.html     # Ferramenta de Poligonal — desenho automático via UTM/azimute
 ├── faq.html           # Dúvidas frequentes (com schema FAQPage)
 ├── css/
 │   └── estilo.css     # Design System e regras visuais
 ├── js/
-│   └── script.js      # Busca, autocomplete, licença e integrações
+│   ├── script.js      # Busca, autocomplete, licença e integrações
+│   └── poligonal.js   # Motor de cálculo (azimute→coordenada, área, perímetro, fechamento) e render SVG
 ├── data/
 │   ├── municipios.json  # Catálogo dos 34 municípios da RMBH (link, sistema, sistema_referencia)
 │   └── config.json      # Configurações institucionais (WhatsApp, data de atualização)
