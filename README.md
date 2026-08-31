@@ -58,6 +58,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── municipios.json  # Lista dos 34 municípios e seus dados
 │   └── config.json      # Configurações gerais (ex: número do WhatsApp)
 ├── img/                # Logo, ícones e imagens
+├── marketing/          # Material de divulgação (stories exportados, prints) — não faz parte do site em si
 └── README.md           # Este arquivo
 ```
 

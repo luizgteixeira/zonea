@@ -37,9 +37,8 @@ function buildWhatsappLink(message) {
 }
 
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  const ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  return String(str ?? '').replace(/[&<>"']/g, (ch) => ENTITIES[ch]);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -236,8 +235,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       suggestionsEl.innerHTML = matches.map((m, i) => `
-        <div class="suggestion-row" role="option" id="suggestion-${i}" data-nome="${m.nome}" data-index="${i}">
-          <span>${m.nome}</span>
+        <div class="suggestion-row" role="option" id="suggestion-${i}" data-nome="${escapeHtml(m.nome)}" data-index="${i}">
+          <span>${escapeHtml(m.nome)}</span>
           <span class="tag ${m.confirmado ? 'confirmado' : 'busca-direta'}">
             ${m.confirmado ? 'Confirmado' : 'Busca Direta'}
           </span>
@@ -323,7 +322,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         statusEl.innerHTML = `
           <div class="result-card confirmed">
             <div class="result-card-head">
-              <span class="result-card-title">${indisponivel ? '⚠️' : '✓'} Portal Oficial ${indisponivel ? 'Temporariamente Indisponível' : 'Confirmado'} — ${found.nome} (${found.sistema})</span>
+              <span class="result-card-title">${indisponivel ? '⚠️' : '✓'} Portal Oficial ${indisponivel ? 'Temporariamente Indisponível' : 'Confirmado'} — ${escapeHtml(found.nome)} (${escapeHtml(found.sistema)})</span>
               <span class="tag confirmado">FONTE AUDITADA</span>
               ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
             </div>
@@ -331,18 +330,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
 
             <div class="tech-details-box">
-              📋 <strong>DETALHES TÉCNICOS:</strong> ${found.detalhes_tecnicos || 'Acesso liberado ao geoportal oficial.'}
-              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${found.sistema_referencia}` : ''}
+              📋 <strong>DETALHES TÉCNICOS:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Acesso liberado ao geoportal oficial.'}
+              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
             </div>
 
             ${indisponivel ? `
             <div class="status-message warn visible" style="margin-top: 0; margin-bottom: 16px;">
-              ⚠️ <strong>Portal fora do ar no momento${found.indisponivel_desde ? ` (detectado em ${found.indisponivel_desde})` : ''}.</strong> Já auditamos e confirmamos este portal, mas a última checagem técnica não conseguiu resolver o endereço. O link abaixo pode não carregar até a prefeitura restabelecer o serviço.
+              ⚠️ <strong>Portal fora do ar no momento${found.indisponivel_desde ? ` (detectado em ${escapeHtml(found.indisponivel_desde)})` : ''}.</strong> Já auditamos e confirmamos este portal, mas a última checagem técnica não conseguiu resolver o endereço. O link abaixo pode não carregar até a prefeitura restabelecer o serviço.
             </div>
             ` : ''}
 
-            <a href="${found.link}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
-              <span>Acessar Portal Oficial (${found.sistema}) →</span>
+            <a href="${escapeHtml(found.link)}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
+              <span>Acessar Portal Oficial (${escapeHtml(found.sistema)}) →</span>
               <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
             </a>
 
@@ -360,15 +359,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         statusEl.innerHTML = `
           <div class="result-card pending">
             <div class="result-card-head">
-              <span class="result-card-title">📍 Catalogação Técnica em Andamento — ${found.nome}</span>
+              <span class="result-card-title">📍 Catalogação Técnica em Andamento — ${escapeHtml(found.nome)}</span>
               <span class="tag busca-direta">BUSCA DIRETA</span>
             </div>
 
             <p class="result-card-desc">Portal oficial em fase de catalogação técnica. Necessita de acesso prioritário? Entre em contato com nossa equipe.</p>
 
             <div class="tech-details-box">
-              ⚙️ <strong>STATUS TÉCNICO:</strong> ${found.detalhes_tecnicos || 'Catalogação sob demanda via equipe técnica.'}
-              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${found.sistema_referencia}` : ''}
+              ⚙️ <strong>STATUS TÉCNICO:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Catalogação sob demanda via equipe técnica.'}
+              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
             </div>
 
             <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp">
@@ -441,7 +440,7 @@ function renderQuickLinks() {
 
   const destaque = MUNICIPIOS.filter(m => m.confirmado).slice(0, 4);
   quickLinksEl.innerHTML = destaque
-    .map(m => `<button type="button" class="quick-link-btn" data-muni="${m.nome}" aria-label="Consultar dados oficiais de ${m.nome}">${m.nome}</button>`)
+    .map(m => `<button type="button" class="quick-link-btn" data-muni="${escapeHtml(m.nome)}" aria-label="Consultar dados oficiais de ${escapeHtml(m.nome)}">${escapeHtml(m.nome)}</button>`)
     .join('');
 
   // delegação de evento: sobrevive a re-renderizações da lista

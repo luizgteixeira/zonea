@@ -212,7 +212,40 @@
         </div>
 
         <div class="servico-card card">
-          <span class="servico-num">02. VISOR TERRITORIAL RMBH</span>
+          <span class="servico-num">02. REFERÊNCIA GEODÉSICA</span>
+          <h3 class="servico-title">Ficha Técnica de Referência</h3>
+          <p class="servico-desc">Para cada portal auditado, documentamos o Datum e o código EPSG confirmado
+            diretamente na fonte oficial — para você já saber em qual sistema de referência trabalhar no QGIS
+            ou ArcGIS antes de baixar os dados.</p>
+          <ul class="beneficios-list">
+            <li>Datum e EPSG documentados por município confirmado</li>
+            <li>Baseado em inspeção do GetCapabilities ou metadado da fonte, não em suposição</li>
+            <li>Sinalização clara quando o sistema de referência está divergente ou não confirmado</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 2: EM DESENVOLVIMENTO (ROADMAP) -->
+    <section style="margin-bottom: 48px;">
+      <div
+        style="border-bottom: 2px solid var(--cor-azul-suave); padding-bottom: 12px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro);">
+            Em Desenvolvimento
+          </h2>
+          <p style="font-size: 13px; color: var(--cor-cinza);">
+            Próximos passos do roadmap de inteligência territorial — ainda não disponíveis na versão atual.
+          </p>
+        </div>
+        <span class="roadmap-badge" style="font-size: 11px; padding: 4px 12px; margin-left: 0; border-radius: var(--raio-borda-pill);">
+          ROADMAP (FASE 3)
+        </span>
+      </div>
+
+      <div class="servicos-grid">
+        <div class="servico-card future-card card">
+          <span class="servico-num">VISOR TERRITORIAL RMBH</span>
           <h3 class="servico-title">Mapa da RMBH</h3>
           <p class="servico-desc">Visor vetorial dos limites e regiões metropolitanas com painel lateral dinâmico de
             dados populacionais e territoriais.</p>
@@ -220,18 +253,6 @@
             <li>Navegação interativa por polígonos municipais</li>
             <li>Parâmetros populacionais e área geográfica em km²</li>
             <li>Identificação do órgão responsável pelo dado</li>
-          </ul>
-        </div>
-
-        <div class="servico-card card">
-          <span class="servico-num">03. INTEROPERABILIDADE WMS/OGC</span>
-          <h3 class="servico-title">Parâmetros de Conexão GIS</h3>
-          <p class="servico-desc">Disponibilização das URLs para integração de camadas de geodados públicos diretamente
-            em softwares GIS como QGIS e ArcGIS.</p>
-          <ul class="beneficios-list">
-            <li>Copiar de parâmetro de GetCapabilities WMS</li>
-            <li>Padronização em Datum SIRGAS 2000</li>
-            <li>Pronto para inclusão em projetos de geoprocessamento</li>
           </ul>
         </div>
       </div>
