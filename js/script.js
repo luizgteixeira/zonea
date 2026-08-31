@@ -3,20 +3,18 @@
    Script Principal Institucional, Gated Content & Decoupled Data
    ============================================================ */
 
-// 1. CHECAGEM DE TOKEN DE ACESSO (GATED CONTENT)
-const VALID_ACCESS_TOKENS = new Set(['luiz1701_active', 'active', 'true']);
-
-function hasValidToken() {
-  const token = localStorage.getItem('zonea_access_token');
-  const legacyAccess = localStorage.getItem('zonea_acesso_liberado') === 'true';
-  return VALID_ACCESS_TOKENS.has(token) || legacyAccess;
-}
-
-// Guard de Redirecionamento de Páginas com Acesso Restrito (Home + Poligonal)
+// 1. GUARD DE ACESSO (GATED CONTENT) — sessão real via Supabase Auth
+// Fase 1: exige apenas sessão válida (login). A checagem de assinatura ativa
+// (getAssinaturaAtiva(), definida em js/supabase-client.js) entra na Fase 2,
+// quando os dados sensíveis migrarem para trás de RLS.
 const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
 const isGatedPage = isHomePage || window.location.pathname.endsWith('poligonal.html');
-if (isGatedPage && !hasValidToken()) {
-  window.location.href = 'servicos.html?access_required=1';
+if (isGatedPage) {
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (!session) {
+      window.location.href = 'conta.html?access_required=1';
+    }
+  });
 }
 
 let MUNICIPIOS = [];
@@ -85,101 +83,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 4. HEADER BOTÃO DE BLOQUEIO / LICENÇA
+  // 4. HEADER BOTÃO DE SESSÃO — reflete sessão real do Supabase Auth
   const btnLockToggle = document.getElementById('btnLockToggle');
-  const btnClearToken = document.getElementById('btnClearToken');
-  function updateHeaderLockUI() {
+
+  function renderHeaderLockUI(session, ativa) {
     if (!btnLockToggle) return;
-    if (hasValidToken()) {
+    if (session && ativa) {
       btnLockToggle.classList.add('unlocked');
       btnLockToggle.innerHTML = '<span>🔓 Assinante Ativo</span>';
-      btnLockToggle.title = 'Sessão institucional ativa. Clique para encerrar.';
+      btnLockToggle.title = 'Assinatura ativa. Clique para encerrar sessão.';
+    } else if (session) {
+      btnLockToggle.classList.remove('unlocked');
+      btnLockToggle.innerHTML = '<span>🔒 Assinatura Pendente</span>';
+      btnLockToggle.title = 'Sua conta ainda não tem assinatura ativa. Clique para gerenciar.';
     } else {
       btnLockToggle.classList.remove('unlocked');
-      btnLockToggle.innerHTML = '<span>🔒 Acesso Restrito</span>';
-      btnLockToggle.title = 'Clique para ativar sua licença.';
+      btnLockToggle.innerHTML = '<span>🔒 Entrar</span>';
+      btnLockToggle.title = 'Clique para entrar ou criar sua conta.';
     }
   }
 
   if (btnLockToggle) {
-    btnLockToggle.addEventListener('click', () => {
-      if (hasValidToken()) {
-        if (confirm('Deseja encerrar sua sessão de assinante no Zonea?')) {
-          localStorage.removeItem('zonea_access_token');
-          localStorage.removeItem('zonea_acesso_liberado');
+    btnLockToggle.addEventListener('click', async () => {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        if (confirm('Deseja encerrar sua sessão no Zonea?')) {
+          await supabaseClient.auth.signOut();
           window.location.href = 'servicos.html';
         }
       } else {
-        window.location.href = 'servicos.html#unlock-card';
-      }
-    });
-  }
-  updateHeaderLockUI();
-
-  // 5. ÁREA DE ATIVAÇÃO NA PÁGINA DE SERVIÇOS
-  const tokenInput = document.getElementById('tokenInput');
-  const btnActivateToken = document.getElementById('btnActivateToken');
-  const activationMessage = document.getElementById('activationMessage');
-  const accessStatusBadge = document.getElementById('access-status-badge');
-
-  function showActivationMessage(state, html) {
-    if (!activationMessage) return;
-    activationMessage.className = `activation-message ${state}`;
-    activationMessage.style.display = 'block';
-    activationMessage.innerHTML = html;
-  }
-
-  if (btnClearToken) {
-    btnClearToken.addEventListener('click', () => {
-      if (tokenInput) tokenInput.value = '';
-      if (activationMessage) {
-        activationMessage.style.display = 'none';
-        activationMessage.innerHTML = '';
+        window.location.href = 'conta.html';
       }
     });
   }
 
-  if (tokenInput && btnActivateToken) {
-    if (hasValidToken()) {
-      if (accessStatusBadge) {
-        accessStatusBadge.textContent = '🔓 LICENÇA ATIVA';
-        accessStatusBadge.style.background = '#D4EDDA';
-        accessStatusBadge.style.color = '#155724';
-        accessStatusBadge.style.borderColor = '#C3E6CB';
-      }
-      tokenInput.value = 'luiz1701';
-      tokenInput.disabled = true;
-      btnActivateToken.innerHTML = '<span>Acessar Painel (Início) →</span>';
-      btnActivateToken.style.backgroundColor = 'var(--cor-verde)';
-      btnActivateToken.onclick = () => { window.location.href = 'index.html'; };
-    } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('access_required')) {
-        showActivationMessage('warn', '⚠️ <strong>Aviso de Acesso Restrito:</strong> A consulta aos geodados dos 34 municípios e a Ferramenta de Poligonal exigem uma chave de licença ativa. Digite a senha no campo acima para liberar o acesso ao painel.');
-      }
-
-      function executeActivation() {
-        const pwd = tokenInput.value.trim();
-        if (pwd === 'luiz1701') {
-          localStorage.setItem('zonea_access_token', 'luiz1701_active');
-          localStorage.setItem('zonea_acesso_liberado', 'true');
-          showActivationMessage('ok', '✓ <strong>Acesso Autorizado!</strong> Licença validada com sucesso. Redirecionando para o painel de consulta...');
-          setTimeout(() => {
-            window.location.href = 'index.html';
-          }, 800);
-        } else {
-          showActivationMessage('error', '❌ <strong>Chave Incorreta:</strong> Confira sua licença ou fale com nossa equipe via WhatsApp para receber uma chave de acesso.');
-        }
-      }
-
-      btnActivateToken.addEventListener('click', executeActivation);
-      tokenInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          executeActivation();
-        }
-      });
-    }
+  {
+    const { session, ativa } = await getAssinaturaAtiva();
+    renderHeaderLockUI(session, ativa);
   }
 
   // 6. AUTOCOMPLETE E FORMULÁRIO DE CONSULTA (HOME)

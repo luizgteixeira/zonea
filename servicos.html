@@ -50,7 +50,7 @@
         <a href="poligonal.html" class="nav-link">Poligonal</a>
         <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
         <button type="button" id="btnLockToggle" class="btn-lock">
-          <span>🔒 Acesso Restrito</span>
+          <span>🔒 Entrar</span>
         </button>
       </nav>
     </div>
@@ -134,50 +134,27 @@
       </div>
     </section>
 
-    <!-- ÁREA DE ATIVAÇÃO DE ACESSO INSTITUCIONAL / GATED TOKEN -->
-    <section class="access-activation-section card" id="unlock-card"
-      style="margin-bottom: 48px; padding: 24px; border: 1.5px solid var(--cor-azul-borda); border-radius: 12px; background: var(--cor-branco);">
-      <div
-        style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div
-            style="width: 44px; height: 44px; border-radius: 10px; background: var(--cor-azul-suave); color: var(--cor-azul); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0110 0v4"></path>
-            </svg>
-          </div>
-          <div>
-            <h2 style="font-size: 18px; font-weight: 800; color: var(--cor-cinza-escuro); margin: 0;">Ativação de Acesso
-              ao Painel Zonea</h2>
-            <p style="font-size: 13px; color: var(--cor-cinza); margin: 2px 0 0 0;">Insira sua chave de licença
-              institucional para desbloquear o painel de geoinformações dos 34 municípios da RMBH e a Ferramenta de Poligonal.</p>
-          </div>
-        </div>
-        <span id="access-status-badge"
-          style="font-family: var(--fonte-mono); font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: var(--raio-borda-pill); background: #FFF3CD; color: #856404; border: 1px solid #FFEEBA;">
-          🔒 ACESSO BLOQUEADO
-        </span>
-      </div>
-
-      <div class="access-form-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-        <input type="password" id="tokenInput" placeholder="Informe a chave de licença"
-          style="flex: 1; min-width: 260px; padding: 12px 16px; font-size: 14px; border: 1px solid var(--cor-cinza-borda); border-radius: 8px; outline: none; transition: border-color 0.2s ease;">
-        <button type="button" id="btnActivateToken"
-          style="padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer; background-color: var(--cor-azul); color: #FFFFFF; border: none; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; transition: background-color 0.2s ease, transform 0.1s ease;">
-          <span>Validar Chave & Acessar</span>
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
+    <!-- CHAMADA PARA ACESSO À CONTA -->
+    <section class="card"
+      style="margin-bottom: 48px; padding: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div
+          style="width: 44px; height: 44px; border-radius: 10px; background: var(--cor-azul-suave); color: var(--cor-azul); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0110 0v4"></path>
           </svg>
-        </button>
-        <!-- NOVO BOTÃO DE LIMPAR -->
-        <button type="button" id="btnClearToken"
-          style="padding: 12px 18px; font-size: 14px; font-weight: 600; cursor: pointer; background-color: transparent; color: var(--cor-cinza); border: 1px solid var(--cor-cinza-borda); border-radius: 8px; transition: background-color 0.2s ease, color 0.2s ease;">
-          Limpar
-        </button>
+        </div>
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800; color: var(--cor-cinza-escuro); margin: 0;">Acesso ao Painel
+            Zonea</h2>
+          <p style="font-size: 13px; color: var(--cor-cinza); margin: 2px 0 0 0;">Entre com sua conta para consultar os
+            34 municípios da RMBH e usar a Ferramenta de Poligonal.</p>
+        </div>
       </div>
-
-      <div id="activationMessage" class="activation-message"></div>
+      <a href="conta.html" class="btn-submit" style="width: auto; padding: 12px 24px; text-decoration: none;">
+        <span>Entrar ou Criar Conta →</span>
+      </a>
     </section>
 
     <!-- SEÇÃO 1: FUNCIONALIDADES DISPONÍVEIS ATUALMENTE -->
@@ -284,6 +261,8 @@
     </a>
   </div>
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/script.js"></script>
 </body>
 

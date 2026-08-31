@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Zonea — Minha Conta</title>
+  <meta name="description" content="Entre ou crie sua conta Zonea para consultar os dados oficiais de geoprocessamento da RMBH e usar a Ferramenta de Poligonal.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Zonea — Minha Conta">
+  <meta property="og:description" content="Entre ou crie sua conta para acessar o painel de geoinformações do Zonea.">
+  <meta property="og:image" content="img/logo.png">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="robots" content="noindex">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <img src="img/logo.png" width="40" alt="">
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">Conectando você aos dados oficiais</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="conhecimento.html" class="nav-link">Conhecimento</a>
+        <a href="poligonal.html" class="nav-link">Poligonal</a>
+        <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Entrar</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero-section" style="margin-bottom: 32px;">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Área do Assinante
+      </div>
+
+      <h1 class="hero-title">
+        Minha <span class="logo-text">Conta</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Entre ou crie sua conta para acessar a consulta de municípios e a Ferramenta de Poligonal.
+      </p>
+    </section>
+
+    <!-- CARD DE LOGIN / CADASTRO -->
+    <section class="search-card card" id="authCard" style="max-width: 440px;">
+      <div class="search-title">
+        <span>Acesso à Conta</span>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="cat-btn active" id="tabLogin" data-tab="login">Entrar</button>
+        <button type="button" class="cat-btn" id="tabSignup" data-tab="signup">Criar Conta</button>
+      </div>
+
+      <form id="loginForm" autocomplete="off">
+        <div class="form-group">
+          <label for="loginEmail" class="form-label">E-mail</label>
+          <input type="email" id="loginEmail" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Senha</label>
+          <input type="password" id="loginPassword" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-submit">
+          <span>Entrar</span>
+        </button>
+        <button type="button" id="btnForgotPassword" class="auth-link-btn">Esqueci minha senha</button>
+      </form>
+
+      <form id="signupForm" autocomplete="off" hidden>
+        <div class="form-group">
+          <label for="signupEmail" class="form-label">E-mail</label>
+          <input type="email" id="signupEmail" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="signupPassword" class="form-label">Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="signupPassword" required minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn-submit">
+          <span>Criar Conta</span>
+        </button>
+      </form>
+
+      <form id="resetForm" autocomplete="off" hidden>
+        <div class="form-group">
+          <label for="resetEmail" class="form-label">Informe seu e-mail para redefinir a senha</label>
+          <input type="email" id="resetEmail" required autocomplete="email">
+        </div>
+        <button type="submit" class="btn-submit">
+          <span>Enviar link de redefinição</span>
+        </button>
+        <button type="button" id="btnBackToLogin" class="auth-link-btn">Voltar para o login</button>
+      </form>
+
+      <div id="authStatus" class="status-message"></div>
+    </section>
+
+    <!-- CARD DE STATUS DA ASSINATURA (visível só quando logado) -->
+    <section class="search-card card" id="accountStatusCard" style="max-width: 440px;" hidden>
+      <div class="search-title">
+        <span>Status da Assinatura</span>
+      </div>
+
+      <div class="account-status-row">
+        <span id="accountEmail" style="font-size: 14px; color: var(--cor-cinza-escuro); font-weight: 600;"></span>
+        <span id="subscriptionBadge" class="tag"></span>
+      </div>
+
+      <p id="subscriptionDetails" style="font-size: 13px; color: var(--cor-cinza); margin-bottom: 16px;"></p>
+
+      <a id="btnWhatsappActivate" href="#" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp" style="margin-bottom: 12px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
+        <span>Solicitar ativação via WhatsApp</span>
+      </a>
+
+      <button type="button" id="btnSignOut" class="btn-secondary" style="width: 100%;">Encerrar sessão</button>
+    </section>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Dúvidas sobre sua conta? Fale com a equipe</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

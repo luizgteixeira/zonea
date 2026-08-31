@@ -639,7 +639,9 @@ main {
   position: relative;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="email"],
+input[type="password"] {
   width: 100%;
   background-color: var(--cor-cinza-claro);
   border: 1px solid var(--cor-cinza-borda);
@@ -652,10 +654,20 @@ input[type="text"] {
   font-family: var(--fonte-principal);
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
   border-color: var(--cor-azul);
   background-color: var(--cor-branco);
   box-shadow: 0 0 0 3px rgba(30, 90, 168, 0.12);
+}
+
+/* Campos de conta (login/cadastro) não têm ícone à esquerda como a busca de município */
+#loginForm input[type="email"],
+#loginForm input[type="password"],
+#signupForm input[type="email"],
+#signupForm input[type="password"] {
+  padding: 14px 16px;
 }
 
 .input-icon {
@@ -1026,6 +1038,41 @@ input[type="text"]:focus {
   font-size: 13px;
   color: var(--cor-cinza);
   line-height: 1.5;
+}
+
+/* Tabs de Entrar/Criar Conta (página conta.html) — reaproveita o estilo de .cat-btn */
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.auth-link-btn {
+  display: block;
+  margin-top: 14px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--cor-azul);
+  font-family: var(--fonte-principal);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.auth-link-btn:hover {
+  color: var(--cor-azul-hover);
+}
+
+.account-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 /* 8. FAQ ACCORDION E CATEGORIAS */
