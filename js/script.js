@@ -40,7 +40,7 @@ function escapeHtml(str) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON)
+  // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON — campos públicos)
   try {
     const [municipiosRes, configRes] = await Promise.all([
       fetch('data/municipios.json'),
@@ -51,6 +51,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (configRes.ok) CONFIG = await configRes.json();
   } catch (err) {
     console.error('Erro ao carregar dados iniciais do Zonea:', err);
+  }
+
+  // Sessão/assinatura do usuário — calculada uma única vez e reaproveitada
+  // tanto para os dados protegidos (abaixo) quanto para o header (item 4).
+  const assinatura = await getAssinaturaAtiva();
+
+  // 2b. DADOS PROTEGIDOS (link, sistema, detalhes técnicos) — só para assinante
+  // ativo, vindos do Supabase (tabela municipios_protegido, atrás de RLS) em
+  // vez do arquivo estático, que só tem os campos públicos.
+  if (assinatura.ativa) {
+    try {
+      const { data: protegidos, error } = await supabaseClient
+        .from('municipios_protegido')
+        .select('slug, link, sistema, detalhes_tecnicos, sistema_referencia, indisponivel, indisponivel_desde');
+      if (error) throw error;
+      const porSlug = new Map(protegidos.map(p => [p.slug, p]));
+      MUNICIPIOS = MUNICIPIOS.map(m => ({ ...m, ...(porSlug.get(m.slug) || {}) }));
+    } catch (err) {
+      console.error('Erro ao carregar dados protegidos do Zonea:', err);
+    }
   }
 
   // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página
@@ -117,10 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  {
-    const { session, ativa } = await getAssinaturaAtiva();
-    renderHeaderLockUI(session, ativa);
-  }
+  renderHeaderLockUI(assinatura.session, assinatura.ativa);
 
   // 6. AUTOCOMPLETE E FORMULÁRIO DE CONSULTA (HOME)
   const input = document.getElementById('municipio');
@@ -291,6 +308,26 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span>Avise-me quando o portal voltar</span>
             </a>
             ` : ''}
+          </div>
+        `;
+        statusEl.className = 'status-message visible';
+      } else if (found.confirmado) {
+        // Município já auditado pelo Zonea, mas os campos protegidos (link,
+        // detalhes técnicos) não vieram — ou a assinatura não está ativa, ou
+        // houve erro ao buscá-los no Supabase (ver console).
+        statusEl.innerHTML = `
+          <div class="result-card confirmed">
+            <div class="result-card-head">
+              <span class="result-card-title">🔒 Portal Auditado — ${escapeHtml(found.nome)}</span>
+              <span class="tag confirmado">FONTE AUDITADA</span>
+            </div>
+
+            <p class="result-card-desc">O Zonea já auditou o portal oficial de ${escapeHtml(found.nome)}, mas os detalhes completos (link direto e dados técnicos) exigem uma assinatura ativa.</p>
+
+            <a href="conta.html" class="result-cta primary">
+              <span>Ativar Assinatura →</span>
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
           </div>
         `;
         statusEl.className = 'status-message visible';
