@@ -4,17 +4,32 @@
    ============================================================ */
 
 // 1. GUARD DE ACESSO (GATED CONTENT) — sessão real via Supabase Auth
-// Fase 1: exige apenas sessão válida (login). A checagem de assinatura ativa
-// (getAssinaturaAtiva(), definida em js/supabase-client.js) entra na Fase 2,
-// quando os dados sensíveis migrarem para trás de RLS.
-const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-const isGatedPage = isHomePage || window.location.pathname.endsWith('poligonal.html');
+// A Home (index.html) é livre pra qualquer visitante: a busca funciona sem
+// conta, com uma consulta grátis a um município confirmado por visitante
+// (ver getDeviceId()/get-preview-municipio mais abaixo) — os dados sensíveis
+// continuam protegidos por RLS no Supabase, não por esse redirecionamento.
+// Só a Poligonal (ferramenta paga) continua exigindo login.
+const isGatedPage = window.location.pathname.endsWith('poligonal.html');
 if (isGatedPage) {
-  supabaseClient.auth.getSession().then(({ data: { session } }) => {
-    if (!session) {
+  getAssinaturaAtiva().then(({ ativa }) => {
+    if (!ativa) {
       window.location.href = 'conta.html?access_required=1';
     }
   });
+}
+
+// Identificador anônimo por visitante (só um UUID aleatório guardado no
+// navegador) — usado exclusivamente pra controlar a consulta gratuita de
+// município confirmado (1 por visitante). Não é autenticação nem substitui
+// login: é só a chave que a Edge Function get-preview-municipio usa pra
+// saber se esse navegador já usou a cortesia.
+function getDeviceId() {
+  let id = localStorage.getItem('zonea_device_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('zonea_device_id', id);
+  }
+  return id;
 }
 
 let MUNICIPIOS = [];
@@ -256,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 7. SUBMISSÃO DO FORMULÁRIO & REFINAMENTO DE RESULTADOS
   if (form && input && statusEl) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const val = input.value.trim();
       if (!val) {
@@ -265,11 +280,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const found = MUNICIPIOS.find(m => normalize(m.nome) === normalize(val));
+      let found = MUNICIPIOS.find(m => normalize(m.nome) === normalize(val));
       if (!found) {
         statusEl.innerHTML = `<div class="status-message error visible">"${escapeHtml(val)}" não faz parte dos 34 municípios cadastrados da RMBH.</div>`;
         statusEl.className = 'status-message visible';
         return;
+      }
+
+      let previaGratisConcedidaAgora = false;
+
+      // Município já confirmado, mas ainda não temos os dados protegidos em memória
+      // (visitante sem assinatura ativa) — tenta a consulta gratuita (1 por visitante,
+      // controlada no servidor via Edge Function, não pelo navegador).
+      if (found.confirmado && !found.link) {
+        statusEl.innerHTML = '<div class="status-message ok visible">Consultando fonte oficial...</div>';
+        statusEl.className = 'status-message visible';
+        try {
+          const { data, error } = await supabaseClient.functions.invoke('get-preview-municipio', {
+            body: { deviceId: getDeviceId(), slug: found.slug },
+          });
+          if (!error && data?.allowed && data.municipio) {
+            found = { ...found, ...data.municipio };
+            previaGratisConcedidaAgora = true;
+          }
+        } catch (err) {
+          console.error('Erro ao consultar prévia gratuita do Zonea:', err);
+        }
       }
 
       if (found.confirmado && found.link) {
@@ -283,6 +319,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="tag confirmado">FONTE AUDITADA</span>
               ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
             </div>
+
+            ${previaGratisConcedidaAgora ? `
+            <div class="status-message ok visible" style="margin-top: 0; margin-bottom: 16px;">
+              🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="conta.html">crie sua conta e assine</a>.
+            </div>
+            ` : ''}
 
             <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
 

@@ -670,6 +670,36 @@ input[type="password"]:focus {
   padding: 14px 16px;
 }
 
+/* Campos de senha reservam espaço à direita para o botão de mostrar/ocultar */
+#loginForm input[type="password"],
+#signupForm input[type="password"] {
+  padding-right: 44px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cor-cinza);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus-visible {
+  background-color: var(--cor-cinza-borda);
+  color: var(--cor-cinza-escuro);
+}
+
 .input-icon {
   position: absolute;
   left: 14px;

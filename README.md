@@ -26,7 +26,7 @@ Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu própr
 * **Desenhar uma poligonal automaticamente** — nossa ferramenta mais nova. Em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo.
 * **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-Algumas páginas do site (a busca principal e a ferramenta de poligonal) pedem login — crie sua conta gratuitamente em `conta.html` e assine direto ali (Pix, boleto ou cartão, via Mercado Pago) para liberar o acesso.
+A busca de município é livre pra qualquer visitante, sem precisar de conta — inclusive dá pra ver o link real de **um município confirmado gratuitamente**, como prévia. Pra continuar acessando outros municípios confirmados e usar a Ferramenta de Poligonal, é preciso criar conta em `conta.html` e assinar (Pix, boleto ou cartão, via Mercado Pago).
 
 ---
 
@@ -39,6 +39,8 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo).
 * **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`.
 * **Dados sensíveis por município** (link do portal, detalhes técnicos, sistema de referência) não estão mais em `data/municipios.json` — moraram para a tabela `municipios_protegido` no Supabase, protegida por Row Level Security: só é lida por quem está logado **e** com assinatura ativa. O `municipios.json` público só tem os campos que já eram de conhecimento geral (nome, se está confirmado, região, população, área).
+* **Consulta gratuita**: a Home não exige login. Quando um visitante sem assinatura busca um município confirmado, `js/script.js` chama a Edge Function `get-preview-municipio`, que libera os dados reais **uma única vez por visitante** — controlado no servidor pela tabela `anon_preview_usado`, usando um ID anônimo gerado no navegador (`getDeviceId()`, só um UUID em `localStorage`, não é autenticação). Depois da primeira vez, volta a pedir assinatura.
+* A **Poligonal** (`poligonal.html`) exige sessão **e** assinatura ativa (não só login) — é a ferramenta paga.
 * **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
 
 ---
@@ -47,10 +49,10 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 
 ```text
 /
-├── index.html         # Página principal — busca de municípios (exige login)
+├── index.html         # Página principal — busca de municípios (livre, com 1 consulta grátis por visitante)
 ├── servicos.html      # Sobre o Zonea, casos de uso e chamada para criar conta
 ├── conhecimento.html  # Glossário com os termos técnicos explicados
-├── poligonal.html     # Ferramenta que desenha a poligonal automaticamente (exige login)
+├── poligonal.html     # Ferramenta que desenha a poligonal automaticamente (exige assinatura ativa)
 ├── faq.html           # Perguntas frequentes
 ├── conta.html          # Cadastro, login e status da assinatura
 ├── css/
@@ -64,10 +66,13 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── municipios.json  # Lista pública dos 34 municípios (campos sensíveis vivem no Supabase)
 │   └── config.json      # Configurações gerais (ex: número do WhatsApp)
 ├── supabase/
-│   ├── migrations/0001_init.sql          # Schema do banco (tabelas + Row Level Security)
+│   ├── migrations/
+│   │   ├── 0001_init.sql                     # Schema inicial (tabelas + Row Level Security)
+│   │   └── 0002_preview_gratis.sql           # Tabela de controle da consulta gratuita
 │   └── functions/
-│       ├── create-mp-preference/index.ts # Gera o link de pagamento (Mercado Pago Checkout Pro)
-│       └── mp-webhook/index.ts           # Recebe a confirmação de pagamento e ativa a assinatura
+│       ├── create-mp-preference/index.ts     # Gera o link de pagamento (Mercado Pago Checkout Pro)
+│       ├── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
+│       └── get-preview-municipio/index.ts    # Libera a consulta gratuita (1 por visitante anônimo)
 ├── scripts/
 │   └── migrate-municipios.mjs    # Script único de importação de municipios.json para o Supabase
 ├── img/                # Logo, ícones e imagens
@@ -89,7 +94,7 @@ python -m http.server 8000
 npx serve .
 ```
 
-Depois, acesse `http://localhost:8000/servicos.html` no navegador (a página principal e a ferramenta de poligonal exigem login — crie uma conta em `conta.html`).
+Depois, acesse `http://localhost:8000/servicos.html` no navegador (a busca de município é livre; a ferramenta de poligonal exige assinatura ativa — crie uma conta em `conta.html`).
 
 ---
 

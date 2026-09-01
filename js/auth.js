@@ -16,6 +16,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!loginForm) return; // página sem os elementos de conta — não faz nada
 
+  // Botão de mostrar/ocultar senha (login e cadastro)
+  document.querySelectorAll('.password-toggle-btn').forEach((btn) => {
+    const input = document.getElementById(btn.getAttribute('data-target'));
+    const iconEye = btn.querySelector('.icon-eye');
+    const iconEyeOff = btn.querySelector('.icon-eye-off');
+    if (!input) return;
+    btn.addEventListener('click', () => {
+      const visivel = input.type === 'text';
+      input.type = visivel ? 'password' : 'text';
+      btn.setAttribute('aria-pressed', String(!visivel));
+      btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Ocultar senha');
+      if (iconEye) iconEye.hidden = !visivel;
+      if (iconEyeOff) iconEyeOff.hidden = visivel;
+    });
+  });
+
   function showAuthStatus(state, text) {
     authStatus.className = `status-message ${state} visible`;
     authStatus.textContent = text;
@@ -166,6 +182,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const noSession = await renderAccountState();
   const urlParams = new URLSearchParams(window.location.search);
   if (noSession && urlParams.has('access_required')) {
-    showAuthStatus('warn', 'A consulta aos municípios e a Ferramenta de Poligonal exigem login com assinatura ativa. Entre ou crie sua conta abaixo.');
+    showAuthStatus('warn', 'A Ferramenta de Poligonal exige assinatura ativa. Entre ou crie sua conta abaixo para assinar.');
   }
 });
