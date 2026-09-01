@@ -5,7 +5,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "liveServer.settings.root": "/",
-  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.CustomBrowser": "microsoft-edge",
   "files.exclude": {
     "**/.git": true
   }

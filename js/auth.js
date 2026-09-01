@@ -91,6 +91,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const accountActionStatus = document.getElementById('accountActionStatus');
+  function showAccountActionStatus(state, text) {
+    if (!accountActionStatus) return;
+    accountActionStatus.className = `status-message ${state} visible`;
+    accountActionStatus.textContent = text;
+  }
+
+  const btnAssinar = document.getElementById('btnAssinar');
+  if (btnAssinar) {
+    btnAssinar.addEventListener('click', async () => {
+      const label = btnAssinar.querySelector('span');
+      const textoOriginal = label.textContent;
+      btnAssinar.disabled = true;
+      label.textContent = 'Gerando link de pagamento...';
+      try {
+        const { data, error } = await supabaseClient.functions.invoke('create-mp-preference');
+        if (error || !data?.init_point) throw error || new Error('Resposta sem init_point');
+        window.location.href = data.init_point;
+      } catch (err) {
+        console.error('Erro ao iniciar pagamento:', err);
+        showAccountActionStatus('error', 'Não foi possível iniciar o pagamento agora. Tente novamente em um instante ou fale com a equipe pelo WhatsApp.');
+        btnAssinar.disabled = false;
+        label.textContent = textoOriginal;
+      }
+    });
+  }
+
   // Retorna true se não há sessão ativa (usado para decidir se mostra o aviso de access_required)
   async function renderAccountState() {
     const { session, ativa, profile } = await getAssinaturaAtiva();
@@ -110,6 +137,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const badge = document.getElementById('subscriptionBadge');
     const details = document.getElementById('subscriptionDetails');
     const btnWhatsapp = document.getElementById('btnWhatsappActivate');
+    const btnAssinarEl = document.getElementById('btnAssinar');
+    if (accountActionStatus) accountActionStatus.className = 'status-message';
 
     if (ativa) {
       badge.textContent = 'ASSINATURA ATIVA';
@@ -121,12 +150,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? `Sua assinatura é válida até ${expira}.`
         : 'Sua assinatura está ativa.';
       btnWhatsapp.style.display = 'none';
+      if (btnAssinarEl) btnAssinarEl.style.display = 'none';
     } else {
       badge.textContent = 'SEM ASSINATURA ATIVA';
       badge.className = 'tag busca-direta';
-      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. Fale com a equipe para ativar seu acesso.';
-      btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de ativar minha assinatura.`);
+      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. Assine para liberar a consulta e a Ferramenta de Poligonal.';
+      btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de saber sobre outras formas de pagamento.`);
       btnWhatsapp.style.display = '';
+      if (btnAssinarEl) btnAssinarEl.style.display = '';
     }
 
     return false;

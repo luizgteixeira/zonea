@@ -26,7 +26,7 @@ Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu própr
 * **Desenhar uma poligonal automaticamente** — nossa ferramenta mais nova. Em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo.
 * **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-Algumas páginas do site (a busca principal e a ferramenta de poligonal) pedem login — crie sua conta gratuitamente em `conta.html` e fale com a equipe pelo WhatsApp para ativar sua assinatura.
+Algumas páginas do site (a busca principal e a ferramenta de poligonal) pedem login — crie sua conta gratuitamente em `conta.html` e assine direto ali (Pix, boleto ou cartão, via Mercado Pago) para liberar o acesso.
 
 ---
 
@@ -37,7 +37,9 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * As informações públicas dos municípios ficam num arquivo separado (`data/municipios.json`), fora do código da página — assim dá pra atualizar os dados sem mexer no visual do site.
 * O visual (cores, fontes, espaçamentos) é centralizado num único arquivo de estilo (`css/estilo.css`), então mudar a identidade visual do site inteiro é uma questão de editar um lugar só.
 * Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo).
-* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout na página `conta.html`. Hoje a conta controla o *acesso* às páginas restritas (Home e Poligonal); os dados sensíveis de cada município (link do portal, detalhes técnicos) ainda estão em `data/municipios.json` — a migração deles para trás de assinatura paga no banco é o próximo passo (ver roadmap).
+* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`.
+* **Dados sensíveis por município** (link do portal, detalhes técnicos, sistema de referência) não estão mais em `data/municipios.json` — moraram para a tabela `municipios_protegido` no Supabase, protegida por Row Level Security: só é lida por quem está logado **e** com assinatura ativa. O `municipios.json` público só tem os campos que já eram de conhecimento geral (nome, se está confirmado, região, população, área).
+* **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
 
 ---
 
@@ -59,10 +61,13 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── supabase-client.js   # Inicialização do client Supabase (usado em toda página)
 │   └── auth.js               # Cadastro/login/logout, usado só em conta.html
 ├── data/
-│   ├── municipios.json  # Lista pública dos 34 municípios (dados sensíveis migram para o Supabase — ver roadmap)
+│   ├── municipios.json  # Lista pública dos 34 municípios (campos sensíveis vivem no Supabase)
 │   └── config.json      # Configurações gerais (ex: número do WhatsApp)
 ├── supabase/
-│   └── migrations/0001_init.sql  # Schema do banco (tabelas + Row Level Security)
+│   ├── migrations/0001_init.sql          # Schema do banco (tabelas + Row Level Security)
+│   └── functions/
+│       ├── create-mp-preference/index.ts # Gera o link de pagamento (Mercado Pago Checkout Pro)
+│       └── mp-webhook/index.ts           # Recebe a confirmação de pagamento e ativa a assinatura
 ├── scripts/
 │   └── migrate-municipios.mjs    # Script único de importação de municipios.json para o Supabase
 ├── img/                # Logo, ícones e imagens
