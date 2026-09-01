@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Como calcular área e perímetro de uma poligonal — Zonea</title>
+  <meta name="description" content="Passo a passo de como transformar azimute e distância em coordenadas, e como calcular a área (Shoelace) e o perímetro de uma poligonal topográfica.">
+  <link rel="canonical" href="https://zonea.com.br/conhecimento/calcular-area-perimetro-poligonal.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Como calcular área e perímetro de uma poligonal">
+  <meta property="og:description" content="Passo a passo de como transformar azimute e distância em coordenadas, e como calcular a área (Shoelace) e o perímetro de uma poligonal topográfica.">
+  <meta property="og:image" content="https://zonea.com.br/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/estilo.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Como calcular área e perímetro de uma poligonal a partir de azimute e distância",
+    "description": "Passo a passo de como transformar azimute e distância em coordenadas, e como calcular a área (Shoelace) e o perímetro de uma poligonal topográfica.",
+    "author": { "@type": "Organization", "name": "Zonea" },
+    "publisher": { "@type": "Organization", "name": "Zonea", "logo": { "@type": "ImageObject", "url": "https://zonea.com.br/img/logo.webp" } },
+    "datePublished": "2026-09-01",
+    "dateModified": "2026-09-01",
+    "mainEntityOfPage": "https://zonea.com.br/conhecimento/calcular-area-perimetro-poligonal.html"
+  }
+  </script>
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <img src="../img/logo.webp" width="40" alt="">
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">Conectando você aos dados oficiais</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="../index.html" class="nav-link">Início</a>
+        <a href="../servicos.html" class="nav-link">Serviços</a>
+        <a href="../mapa.html" class="nav-link">Mapa</a>
+        <a href="../conhecimento.html" class="nav-link active">Conhecimento</a>
+        <a href="../poligonal.html" class="nav-link">Poligonal</a>
+        <a href="../faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Entrar</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="article-container">
+      <a href="../conhecimento.html" class="article-back">← Central de Conhecimento</a>
+
+      <span class="tag confirmado">GUIA PRÁTICO · POLIGONAL</span>
+      <h1 class="article-title">Como calcular área e perímetro de uma poligonal a partir de azimute e distância</h1>
+      <p class="article-subtitle">
+        Se você tem um caderno de campo (ou uma planilha) com azimute e distância de cada segmento, dá pra chegar na área e no perímetro sem nenhum software de CAD — só com trigonometria básica. Veja o caminho completo, com um exemplo numérico do início ao fim.
+      </p>
+      <div class="article-meta">Zonea · Atualizado em 1 de setembro de 2026 · leitura de ~6 min</div>
+
+      <div class="article-body">
+        <p>
+          Uma <strong>poligonal</strong> é o contorno de um imóvel ou área descrito como uma sequência fechada de segmentos: você parte de um ponto inicial (com coordenadas conhecidas) e, pra cada vértice seguinte, sabe apenas o <strong>azimute</strong> (a direção, em graus, medida a partir do Norte, no sentido horário) e a <strong>distância</strong> até o próximo ponto. É assim que um caderno de campo de levantamento topográfico costuma registrar os dados — e é exatamente o que a <a href="../poligonal.html">Ferramenta de Poligonal do Zonea</a> recebe como entrada.
+        </p>
+
+        <h2>1. De azimute/distância para coordenadas (E, N)</h2>
+        <p>
+          O primeiro passo é transformar cada segmento polar (azimute + distância) num deslocamento cartesiano, em coordenadas UTM — E (Este) e N (Norte). A fórmula é direta:
+        </p>
+        <p>
+          <code>ΔE = distância × sen(azimute)</code><br>
+          <code>ΔN = distância × cos(azimute)</code>
+        </p>
+        <p>
+          Some esse deslocamento ao ponto anterior pra achar o próximo: <code>E₂ = E₁ + ΔE</code> e <code>N₂ = N₁ + ΔN</code>. Repita isso pra cada segmento, sempre usando o ponto recém-calculado como referência do próximo — é um cálculo em cadeia, onde cada vértice depende do anterior.
+        </p>
+        <div class="article-callout">
+          ⚠️ <strong>Atenção com a unidade do azimute.</strong> A fórmula espera graus decimais (ex.: 189.024°). Se o seu caderno de campo estiver em graus/minutos/segundos (ex.: 189°01'24"), converta antes: minutos ÷ 60 + segundos ÷ 3600, somado aos graus inteiros.
+        </div>
+
+        <h2>2. Área — fórmula de Shoelace (Gauss)</h2>
+        <p>
+          Com todos os vértices já em coordenadas (E, N), a área do polígono fechado sai da fórmula de Shoelace (também chamada de fórmula da área de Gauss):
+        </p>
+        <p>
+          <code>Área = ½ |Σ (Eᵢ × Nᵢ₊₁ − Eᵢ₊₁ × Nᵢ)|</code>
+        </p>
+        <p>
+          Na prática: percorra os vértices em ordem (o último "volta" pro primeiro), multiplique cruzado cada par consecutivo, some tudo, divida por dois e tire o valor absoluto. Funciona pra qualquer polígono simples (sem lados que se cruzam), não só pra formas regulares.
+        </p>
+
+        <h2>3. Perímetro</h2>
+        <p>
+          Esse é o mais simples dos três: some a distância de cada segmento informado no caderno de campo. Não precisa recalcular a partir das coordenadas — a distância já é um dado de entrada.
+        </p>
+
+        <h2>Exemplo numérico completo</h2>
+        <p>
+          Um quadrado de 100 m de lado, rotacionado 45° (ou seja, "andando na diagonal" em relação aos eixos E/N), partindo do ponto inicial E=1000, N=1000:
+        </p>
+        <table>
+          <thead>
+            <tr><th>Segmento</th><th>Azimute</th><th>Distância</th><th>Ponto resultante (E, N)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Inicial</td><td>—</td><td>—</td><td>1000,000 / 1000,000</td></tr>
+            <tr><td>1</td><td>45°</td><td>100 m</td><td>1070,711 / 1070,711</td></tr>
+            <tr><td>2</td><td>135°</td><td>100 m</td><td>1141,421 / 1000,000</td></tr>
+            <tr><td>3</td><td>225°</td><td>100 m</td><td>1070,711 / 929,289</td></tr>
+            <tr><td>4</td><td>315°</td><td>100 m</td><td>1000,000 / 1000,000</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Aplicando Shoelace nesses quatro pontos: <strong>área = 10.000 m²</strong> — exatamente 100 × 100, como esperado de um quadrado. Somando os quatro segmentos: <strong>perímetro = 400 m</strong>. E o ponto final bate perfeitamente com o inicial, então o <strong>erro de fechamento é 0 m</strong> (na prática, com medições reais de campo, raramente é exatamente zero — veja o próximo artigo sobre isso).
+        </p>
+
+        <div class="article-callout">
+          💡 Fazer isso à mão pra um polígono de 4 lados é rápido. Pra 10, 15 vértices, o risco de erro de digitação ou de sinal cresce rápido — foi exatamente pra isso que criamos a <a href="../poligonal.html">Ferramenta de Poligonal</a>: você digita (ou cola do Excel) os mesmos dados de azimute/distância e ela calcula área, perímetro e erro de fechamento automaticamente, além de desenhar o polígono.
+        </div>
+      </div>
+
+      <div class="article-relacionados">
+        <h2>Continue lendo</h2>
+        <ul>
+          <li><a href="erro-fechamento-poligonal.html">Erro de fechamento em poligonal topográfica: o que é e como corrigir</a></li>
+          <li><a href="memorial-descritivo.html">Memorial descritivo: o que é, quando é exigido e como montar um</a></li>
+        </ul>
+      </div>
+
+      <section class="tool-callout card" style="margin-top: 32px; padding: 28px; text-align: center;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro); margin-bottom: 8px;">
+          Calcule sua poligonal automaticamente
+        </h2>
+        <p style="font-size: 14px; color: var(--cor-cinza); max-width: 560px; margin: 0 auto 20px;">
+          Informe as coordenadas do ponto inicial e o azimute/distância de cada segmento — o Zonea calcula área, perímetro e erro de fechamento, e desenha o polígono.
+        </p>
+        <a href="../poligonal.html" class="result-cta primary" style="display: inline-flex;">
+          <span>Abrir Ferramenta de Poligonal →</span>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+      </div>
+      <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
+        📍 VOCÊ: <strong id="visitorCoords">—</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Seu município ainda não está no mapa? Fale com a equipe</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

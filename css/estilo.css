@@ -1655,6 +1655,171 @@ footer,
   color: var(--cor-verde-hover);
 }
 
+/* 16. PÁGINAS DE ARTIGO (conhecimento/*.html) */
+.article-container {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  padding: 0 24px;
+}
+
+.article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-azul);
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.article-back:hover {
+  text-decoration: underline;
+}
+
+.article-title {
+  font-family: var(--fonte-principal);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--cor-cinza-escuro);
+  margin: 14px 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.article-subtitle {
+  font-size: 1.05rem;
+  color: var(--cor-cinza);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.article-meta {
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  color: var(--cor-cinza);
+  margin-bottom: 32px;
+}
+
+.article-body {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--cor-cinza-escuro);
+}
+
+.article-body h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin: 36px 0 14px;
+}
+
+.article-body h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--cor-cinza-escuro);
+  margin: 24px 0 10px;
+}
+
+.article-body p {
+  margin-bottom: 16px;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 0 0 16px 22px;
+}
+
+.article-body li {
+  margin-bottom: 8px;
+}
+
+.article-body strong {
+  color: var(--cor-cinza-escuro);
+}
+
+.article-body a {
+  color: var(--cor-azul);
+}
+
+.article-body code {
+  font-family: var(--fonte-mono);
+  font-size: 0.9em;
+  background: var(--cor-cinza-claro);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 20px;
+  font-size: 14px;
+}
+
+.article-body th,
+.article-body td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--cor-cinza-borda);
+}
+
+.article-body th {
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  color: var(--cor-cinza);
+  text-transform: uppercase;
+}
+
+.article-callout {
+  margin: 28px 0;
+  padding: 16px 18px;
+  background: var(--cor-azul-suave);
+  border: 1px solid var(--cor-azul-borda);
+  border-left: 4px solid var(--cor-azul);
+  border-radius: var(--raio-borda-md);
+  font-size: 14px;
+  color: var(--cor-cinza-escuro);
+}
+
+.article-relacionados {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cor-cinza-borda);
+}
+
+.article-relacionados h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 12px;
+}
+
+.article-relacionados ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.article-relacionados a {
+  color: var(--cor-azul);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.article-relacionados a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .article-title {
+    font-size: 1.6rem;
+  }
+}
+
 /* 13. RESPONSIVIDADE */
 @media (max-width: 768px) {
   .header-container {

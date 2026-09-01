@@ -13,7 +13,7 @@ const isGatedPage = window.location.pathname.endsWith('poligonal.html');
 if (isGatedPage) {
   getAssinaturaAtiva().then(({ ativa }) => {
     if (!ativa) {
-      window.location.href = 'conta.html?access_required=1';
+      window.location.href = '/conta.html?access_required=1';
     }
   });
 }
@@ -86,7 +86,7 @@ function renderMunicipioCard(found, container, opts = {}) {
 
         ${previaGratisConcedidaAgora ? `
         <div class="status-message ok visible" style="margin-top: 0; margin-bottom: 16px;">
-          🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="conta.html">crie sua conta e assine</a>.
+          🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="/conta.html">crie sua conta e assine</a>.
         </div>
         ` : ''}
 
@@ -130,7 +130,7 @@ function renderMunicipioCard(found, container, opts = {}) {
 
         <p class="result-card-desc">O Zonea já auditou o portal oficial de ${escapeHtml(found.nome)}, mas os detalhes completos (link direto e dados técnicos) exigem uma assinatura ativa.</p>
 
-        <a href="conta.html" class="result-cta primary">
+        <a href="/conta.html" class="result-cta primary">
           <span>Ativar Assinatura →</span>
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
@@ -214,9 +214,12 @@ document.addEventListener('submit', async (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON — campos públicos)
   try {
+    // Caminho absoluto a partir da raiz — script.js também é usado por páginas
+    // dentro de subpastas (ex. conhecimento/*.html), onde um caminho relativo
+    // resolveria errado (ex. conhecimento/data/... em vez de data/...).
     const [municipiosRes, configRes] = await Promise.all([
-      fetch('data/municipios.json'),
-      fetch('data/config.json'),
+      fetch('/data/municipios.json'),
+      fetch('/data/config.json'),
     ]);
     if (!municipiosRes.ok) throw new Error(`Erro HTTP: ${municipiosRes.status}`);
     MUNICIPIOS = await municipiosRes.json();
@@ -354,10 +357,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (session) {
         if (confirm('Deseja encerrar sua sessão no Zonea?')) {
           await supabaseClient.auth.signOut();
-          window.location.href = 'servicos.html';
+          window.location.href = '/servicos.html';
         }
       } else {
-        window.location.href = 'conta.html';
+        window.location.href = '/conta.html';
       }
     });
   }
