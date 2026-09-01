@@ -36,6 +36,14 @@ let MUNICIPIOS = [];
 let CONFIG = { whatsapp: '5531992609970' }; // fallback caso data/config.json não carregue
 let dadosCarregadosComSucesso = true; // vira false se o fetch de municipios.json falhar
 
+// Promise que resolve quando MUNICIPIOS já está carregado e mesclado com os dados
+// protegidos (ver DOMContentLoaded abaixo). script.js e mapa.js escutam
+// DOMContentLoaded separadamente — sem isso, mapa.js poderia ler MUNICIPIOS antes
+// dele estar pronto. Páginas que precisam de MUNICIPIOS fora da busca (ex. o mapa)
+// devem fazer `await window.zoneaDadosProntos;` antes de usá-lo.
+let resolverZoneaDadosProntos;
+window.zoneaDadosProntos = new Promise((resolve) => { resolverZoneaDadosProntos = resolve; });
+
 function normalize(str) {
   // remove marcas diacríticas (acentos) resultantes da decomposição NFD:
   // ocupam a faixa Unicode 0x0300–0x036F (Combining Diacritical Marks)
@@ -53,6 +61,106 @@ function buildWhatsappLink(message) {
 function escapeHtml(str) {
   const ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   return String(str ?? '').replace(/[&<>"']/g, (ch) => ENTITIES[ch]);
+}
+
+// Renderiza o card de resultado de um município (confirmado com dados / confirmado
+// bloqueado / ainda não confirmado) dentro de `container`. Usado pela busca da Home
+// e pelo mapa (js/mapa.js) — é a mesma decisão de estado nos dois lugares, baseada
+// só em `found.confirmado`/`found.link` (que já vêm com o merge de municipios_protegido
+// aplicado, quando houver). `opts.previaGratisConcedidaAgora` só é usado pela busca.
+function renderMunicipioCard(found, container, opts = {}) {
+  const { previaGratisConcedidaAgora = false } = opts;
+  let html;
+
+  if (found.confirmado && found.link) {
+    const indisponivel = !!found.indisponivel;
+    const reportarHref = buildWhatsappLink(`Olá! Notei que o portal de ${found.nome} parece estar fora do ar no Zonea, gostaria de reportar / ser avisado quando voltar.`);
+
+    html = `
+      <div class="result-card confirmed">
+        <div class="result-card-head">
+          <span class="result-card-title">${indisponivel ? '⚠️' : '✓'} Portal Oficial ${indisponivel ? 'Temporariamente Indisponível' : 'Confirmado'} — ${escapeHtml(found.nome)} (${escapeHtml(found.sistema)})</span>
+          <span class="tag confirmado">FONTE AUDITADA</span>
+          ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
+        </div>
+
+        ${previaGratisConcedidaAgora ? `
+        <div class="status-message ok visible" style="margin-top: 0; margin-bottom: 16px;">
+          🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="conta.html">crie sua conta e assine</a>.
+        </div>
+        ` : ''}
+
+        <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
+
+        <div class="tech-details-box">
+          📋 <strong>DETALHES TÉCNICOS:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Acesso liberado ao geoportal oficial.'}
+          ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
+        </div>
+
+        ${indisponivel ? `
+        <div class="status-message warn visible" style="margin-top: 0; margin-bottom: 16px;">
+          ⚠️ <strong>Portal fora do ar no momento${found.indisponivel_desde ? ` (detectado em ${escapeHtml(found.indisponivel_desde)})` : ''}.</strong> Já auditamos e confirmamos este portal, mas a última checagem técnica não conseguiu resolver o endereço. O link abaixo pode não carregar até a prefeitura restabelecer o serviço.
+        </div>
+        ` : ''}
+
+        <a href="${escapeHtml(found.link)}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
+          <span>Acessar Portal Oficial (${escapeHtml(found.sistema)}) →</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+
+        ${indisponivel ? `
+        <a href="${reportarHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp" style="margin-top: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
+          <span>Avise-me quando o portal voltar</span>
+        </a>
+        ` : ''}
+      </div>
+    `;
+  } else if (found.confirmado) {
+    // Município já auditado pelo Zonea, mas os campos protegidos (link,
+    // detalhes técnicos) não vieram — ou a assinatura não está ativa, ou
+    // houve erro ao buscá-los no Supabase (ver console).
+    html = `
+      <div class="result-card confirmed">
+        <div class="result-card-head">
+          <span class="result-card-title">🔒 Portal Auditado — ${escapeHtml(found.nome)}</span>
+          <span class="tag confirmado">FONTE AUDITADA</span>
+        </div>
+
+        <p class="result-card-desc">O Zonea já auditou o portal oficial de ${escapeHtml(found.nome)}, mas os detalhes completos (link direto e dados técnicos) exigem uma assinatura ativa.</p>
+
+        <a href="conta.html" class="result-cta primary">
+          <span>Ativar Assinatura →</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+    `;
+  } else {
+    const whatsappHref = buildWhatsappLink(`Olá! Necessito de acesso prioritário e catalogação técnica do município de ${found.nome} no Zonea.`);
+    html = `
+      <div class="result-card pending">
+        <div class="result-card-head">
+          <span class="result-card-title">📍 Catalogação Técnica em Andamento — ${escapeHtml(found.nome)}</span>
+          <span class="tag busca-direta">BUSCA DIRETA</span>
+        </div>
+
+        <p class="result-card-desc">Portal oficial em fase de catalogação técnica. Necessita de acesso prioritário? Entre em contato com nossa equipe.</p>
+
+        <div class="tech-details-box">
+          ⚙️ <strong>STATUS TÉCNICO:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Catalogação sob demanda via equipe técnica.'}
+          ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
+        </div>
+
+        <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
+          <span>Solicitar Acesso Prioritário via WhatsApp</span>
+        </a>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+  container.className = 'status-message visible';
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -74,21 +182,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   // tanto para os dados protegidos (abaixo) quanto para o header (item 4).
   const assinatura = await getAssinaturaAtiva();
 
-  // 2b. DADOS PROTEGIDOS (link, sistema, detalhes técnicos) — só para assinante
-  // ativo, vindos do Supabase (tabela municipios_protegido, atrás de RLS) em
-  // vez do arquivo estático, que só tem os campos públicos.
-  if (assinatura.ativa) {
-    try {
-      const { data: protegidos, error } = await supabaseClient
-        .from('municipios_protegido')
-        .select('slug, link, sistema, detalhes_tecnicos, sistema_referencia, indisponivel, indisponivel_desde');
-      if (error) throw error;
-      const porSlug = new Map(protegidos.map(p => [p.slug, p]));
-      MUNICIPIOS = MUNICIPIOS.map(m => ({ ...m, ...(porSlug.get(m.slug) || {}) }));
-    } catch (err) {
-      console.error('Erro ao carregar dados protegidos do Zonea:', err);
-    }
+  // 2b. DADOS PROTEGIDOS (link, sistema, detalhes técnicos) — vindos do Supabase
+  // (tabela municipios_protegido, atrás de RLS) em vez do arquivo estático, que
+  // só tem os campos públicos. A consulta roda pra QUALQUER visitante — quem não
+  // tem assinatura ativa só recebe, pela própria RLS, a linha marcada como
+  // demonstração pública (Belo Horizonte); assinante ativo recebe todas. O
+  // JavaScript não precisa saber qual é a regra, só faz merge do que voltar.
+  try {
+    const { data: protegidos, error } = await supabaseClient
+      .from('municipios_protegido')
+      .select('slug, link, sistema, detalhes_tecnicos, sistema_referencia, indisponivel, indisponivel_desde');
+    if (error) throw error;
+    const porSlug = new Map(protegidos.map(p => [p.slug, p]));
+    MUNICIPIOS = MUNICIPIOS.map(m => ({ ...m, ...(porSlug.get(m.slug) || {}) }));
+  } catch (err) {
+    console.error('Erro ao carregar dados protegidos do Zonea:', err);
   }
+
+  resolverZoneaDadosProntos();
 
   // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página,
   // já com uma mensagem padrão pra equipe saber do que se trata.
@@ -365,95 +476,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-      if (found.confirmado && found.link) {
-        const indisponivel = !!found.indisponivel;
-        const reportarHref = buildWhatsappLink(`Olá! Notei que o portal de ${found.nome} parece estar fora do ar no Zonea, gostaria de reportar / ser avisado quando voltar.`);
-
-        statusEl.innerHTML = `
-          <div class="result-card confirmed">
-            <div class="result-card-head">
-              <span class="result-card-title">${indisponivel ? '⚠️' : '✓'} Portal Oficial ${indisponivel ? 'Temporariamente Indisponível' : 'Confirmado'} — ${escapeHtml(found.nome)} (${escapeHtml(found.sistema)})</span>
-              <span class="tag confirmado">FONTE AUDITADA</span>
-              ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
-            </div>
-
-            ${previaGratisConcedidaAgora ? `
-            <div class="status-message ok visible" style="margin-top: 0; margin-bottom: 16px;">
-              🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="conta.html">crie sua conta e assine</a>.
-            </div>
-            ` : ''}
-
-            <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
-
-            <div class="tech-details-box">
-              📋 <strong>DETALHES TÉCNICOS:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Acesso liberado ao geoportal oficial.'}
-              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
-            </div>
-
-            ${indisponivel ? `
-            <div class="status-message warn visible" style="margin-top: 0; margin-bottom: 16px;">
-              ⚠️ <strong>Portal fora do ar no momento${found.indisponivel_desde ? ` (detectado em ${escapeHtml(found.indisponivel_desde)})` : ''}.</strong> Já auditamos e confirmamos este portal, mas a última checagem técnica não conseguiu resolver o endereço. O link abaixo pode não carregar até a prefeitura restabelecer o serviço.
-            </div>
-            ` : ''}
-
-            <a href="${escapeHtml(found.link)}" target="_blank" rel="noopener noreferrer" class="result-cta primary">
-              <span>Acessar Portal Oficial (${escapeHtml(found.sistema)}) →</span>
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-            </a>
-
-            ${indisponivel ? `
-            <a href="${reportarHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp" style="margin-top: 10px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
-              <span>Avise-me quando o portal voltar</span>
-            </a>
-            ` : ''}
-          </div>
-        `;
-        statusEl.className = 'status-message visible';
-      } else if (found.confirmado) {
-        // Município já auditado pelo Zonea, mas os campos protegidos (link,
-        // detalhes técnicos) não vieram — ou a assinatura não está ativa, ou
-        // houve erro ao buscá-los no Supabase (ver console).
-        statusEl.innerHTML = `
-          <div class="result-card confirmed">
-            <div class="result-card-head">
-              <span class="result-card-title">🔒 Portal Auditado — ${escapeHtml(found.nome)}</span>
-              <span class="tag confirmado">FONTE AUDITADA</span>
-            </div>
-
-            <p class="result-card-desc">O Zonea já auditou o portal oficial de ${escapeHtml(found.nome)}, mas os detalhes completos (link direto e dados técnicos) exigem uma assinatura ativa.</p>
-
-            <a href="conta.html" class="result-cta primary">
-              <span>Ativar Assinatura →</span>
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </a>
-          </div>
-        `;
-        statusEl.className = 'status-message visible';
-      } else {
-        const whatsappHref = buildWhatsappLink(`Olá! Necessito de acesso prioritário e catalogação técnica do município de ${found.nome} no Zonea.`);
-        statusEl.innerHTML = `
-          <div class="result-card pending">
-            <div class="result-card-head">
-              <span class="result-card-title">📍 Catalogação Técnica em Andamento — ${escapeHtml(found.nome)}</span>
-              <span class="tag busca-direta">BUSCA DIRETA</span>
-            </div>
-
-            <p class="result-card-desc">Portal oficial em fase de catalogação técnica. Necessita de acesso prioritário? Entre em contato com nossa equipe.</p>
-
-            <div class="tech-details-box">
-              ⚙️ <strong>STATUS TÉCNICO:</strong> ${escapeHtml(found.detalhes_tecnicos) || 'Catalogação sob demanda via equipe técnica.'}
-              ${found.sistema_referencia ? `<br>🗺️ <strong>SISTEMA GEORREFERENCIADO:</strong> ${escapeHtml(found.sistema_referencia)}` : ''}
-            </div>
-
-            <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer" class="result-cta whatsapp">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
-              <span>Solicitar Acesso Prioritário via WhatsApp</span>
-            </a>
-          </div>
-        `;
-        statusEl.className = 'status-message visible';
-      }
+      renderMunicipioCard(found, statusEl, { previaGratisConcedidaAgora });
     });
   }
 
