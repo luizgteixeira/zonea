@@ -1378,172 +1378,6 @@ input[type="password"]:focus {
   }
 }
 
-/* 10. MAPA INTERATIVO & VISOR WEBSIG */
-.mapa-layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-}
-
-.mapa-frame {
-  background: var(--cor-cinza-escuro);
-  border-radius: var(--raio-borda-lg);
-  height: 540px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--cor-cinza-borda);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--cor-branco);
-}
-
-.svg-map {
-  width: 100%;
-  height: 100%;
-}
-
-.muni-path {
-  fill: #1E293B;
-  stroke: #334155;
-  stroke-width: 1.5;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.muni-path:hover,
-.muni-path.active {
-  fill: var(--cor-azul);
-  stroke: #60A5FA;
-  stroke-width: 2.5;
-}
-
-.muni-path.confirmado {
-  fill: #064E3B;
-  stroke: var(--cor-verde);
-}
-
-.muni-path.confirmado:hover,
-.muni-path.confirmado.active {
-  fill: #047857;
-  stroke: #34D399;
-}
-
-.map-controls {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(8px);
-  padding: 10px 14px;
-  border-radius: var(--raio-borda-md);
-  border: 1px solid #334155;
-  font-family: var(--fonte-mono);
-  font-size: 11px;
-  color: #94A3B8;
-}
-
-.side-panel {
-  background: var(--cor-branco);
-  border: 1px solid var(--cor-cinza-borda);
-  border-radius: var(--raio-borda-lg);
-  padding: 24px;
-  box-shadow: var(--sombra-subtil);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.ogc-box {
-  background: var(--cor-cinza-escuro);
-  color: #34D399;
-  font-family: var(--fonte-mono);
-  font-size: 11px;
-  padding: 12px;
-  border-radius: var(--raio-borda-md);
-  word-break: break-all;
-  border: 1px solid #1E293B;
-}
-
-/* 11. GATED OVERLAY & ACESSO RESTRITO */
-.gated-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  border-radius: var(--raio-borda-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  text-align: center;
-}
-
-.gated-badge {
-  font-family: var(--fonte-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--cor-azul);
-  background: var(--cor-azul-suave);
-  padding: 4px 12px;
-  border-radius: var(--raio-borda-pill);
-  border: 1px solid var(--cor-azul-borda);
-  margin-bottom: 12px;
-}
-
-.gated-title {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--cor-cinza-escuro);
-  margin-bottom: 8px;
-}
-
-.gated-desc {
-  font-size: 13px;
-  color: var(--cor-cinza);
-  max-width: 440px;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.gated-actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 420px;
-}
-
-.btn-gated-primary {
-  flex: 1;
-  background: var(--cor-azul);
-  color: var(--cor-branco);
-  border: none;
-  padding: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: var(--raio-borda-md);
-  cursor: pointer;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-gated-secondary {
-  flex: 1;
-  background: var(--cor-cinza-claro);
-  color: var(--cor-cinza-escuro);
-  border: 1px solid var(--cor-cinza-borda);
-  padding: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: var(--raio-borda-md);
-  cursor: pointer;
-}
-
 /* 12. FOOTER INSTITUCIONAL */
 footer,
 #main-footer {
@@ -1614,12 +1448,6 @@ footer,
 }
 
 /* 13. RESPONSIVIDADE */
-@media (max-width: 900px) {
-  .mapa-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 768px) {
   .header-container {
     position: relative;
@@ -1652,10 +1480,6 @@ footer,
   }
 
   .metrics-grid {
-    flex-direction: column;
-  }
-
-  .gated-actions {
     flex-direction: column;
   }
 

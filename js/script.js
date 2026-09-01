@@ -34,6 +34,7 @@ function getDeviceId() {
 
 let MUNICIPIOS = [];
 let CONFIG = { whatsapp: '5531992609970' }; // fallback caso data/config.json não carregue
+let dadosCarregadosComSucesso = true; // vira false se o fetch de municipios.json falhar
 
 function normalize(str) {
   // remove marcas diacríticas (acentos) resultantes da decomposição NFD:
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (configRes.ok) CONFIG = await configRes.json();
   } catch (err) {
     console.error('Erro ao carregar dados iniciais do Zonea:', err);
+    dadosCarregadosComSucesso = false;
   }
 
   // Sessão/assinatura do usuário — calculada uma única vez e reaproveitada
@@ -88,9 +90,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página
+  // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página,
+  // já com uma mensagem padrão pra equipe saber do que se trata.
   document.querySelectorAll('.whatsapp-float-btn').forEach(el => {
-    el.href = buildWhatsappLink();
+    el.href = buildWhatsappLink('Olá! Estou no site do Zonea e gostaria de tirar uma dúvida.');
   });
 
   // Métricas do Hero (Home): total de municípios e fontes oficiais auditadas
@@ -276,6 +279,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const val = input.value.trim();
       if (!val) {
         statusEl.innerHTML = '<div class="status-message warn visible">Informe um município da RMBH para consultar a fonte oficial.</div>';
+        statusEl.className = 'status-message visible';
+        return;
+      }
+
+      if (!dadosCarregadosComSucesso) {
+        statusEl.innerHTML = '<div class="status-message error visible">⚠️ Não foi possível carregar a base de municípios agora — parece um problema de conexão, não do município buscado. Recarregue a página e tente novamente.</div>';
         statusEl.className = 'status-message visible';
         return;
       }
