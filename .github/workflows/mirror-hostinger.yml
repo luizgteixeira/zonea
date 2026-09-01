@@ -1,0 +1,25 @@
+name: Espelhar para zonea-hostinger
+
+# Toda vez que a branch main deste repositório (zonea) recebe um push,
+# empurra o mesmo conteúdo para luizgteixeira/zonea-hostinger — o
+# repositório que a Hostinger usa como fonte de deploy do site.
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout com histórico completo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push para zonea-hostinger
+        env:
+          TOKEN: ${{ secrets.HOSTINGER_MIRROR_TOKEN }}
+        run: |
+          git push "https://x-access-token:${TOKEN}@github.com/luizgteixeira/zonea-hostinger.git" HEAD:main --force
