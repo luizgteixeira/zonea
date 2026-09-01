@@ -17,6 +17,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Evita que a credencial padrão do checkout (GITHUB_TOKEN, sem acesso
+          # a zonea-hostinger) sobreponha o token que usamos no push abaixo.
+          persist-credentials: false
 
       - name: Push para zonea-hostinger
         env:
