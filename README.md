@@ -1,4 +1,4 @@
-![Logo do Zonea](img/logo.png)
+![Logo do Zonea](img/logo.webp)
 
 # Zonea — Inteligência Territorial
 
