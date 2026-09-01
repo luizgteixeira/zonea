@@ -592,6 +592,9 @@ main {
 
   .poligonal-table-toolbar {
     flex-direction: column;
+    /* Reserva espaço à direita pro botão flutuante do WhatsApp (fixo no
+       canto inferior direito) não ficar em cima dos botões de ação. */
+    padding-right: 64px;
   }
 }
 

@@ -451,12 +451,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridRows = text.replace(/\r/g, '').split('\n').filter(r => r.length > 0);
     const grid = gridRows.map(r => r.split('\t').map(c => c.trim()));
 
+    // Só os formatos documentados (1, 2, 4 ou 6 colunas) são reconhecidos.
+    // Qualquer outra contagem (ex.: 3 ou 5 colunas) fica ambígua — tentar
+    // "adivinhar" o mapeamento arriscaria ler uma coluna errada (ex.: um
+    // rótulo de vértice sendo interpretado como azimute) sem avisar
+    // ninguém, então preferimos avisar e pular a linha.
+    let linhasIgnoradas = 0;
+
     grid.forEach((cols, j) => {
       const targetIndex = startRowIndex + j;
       while (targetIndex >= rows.length) rows.push(emptyRow());
       const isInitial = targetIndex === 0;
 
-      if (cols.length >= 6) {
+      if (cols.length === 6) {
         if (isInitial) {
           rows[targetIndex].initialEStr = cols[4] || '';
           rows[targetIndex].initialNStr = cols[5] || '';
@@ -464,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
           rows[targetIndex].azimuteStr = cols[2] || '';
           rows[targetIndex].distanciaStr = cols[3] || '';
         }
-      } else if (cols.length >= 4) {
+      } else if (cols.length === 4) {
         if (isInitial) {
           rows[targetIndex].initialEStr = cols[2] || '';
           rows[targetIndex].initialNStr = cols[3] || '';
@@ -472,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
           rows[targetIndex].azimuteStr = cols[0] || '';
           rows[targetIndex].distanciaStr = cols[1] || '';
         }
-      } else if (cols.length >= 2) {
+      } else if (cols.length === 2) {
         if (isInitial) {
           rows[targetIndex].initialEStr = cols[0] || '';
           rows[targetIndex].initialNStr = cols[1] || '';
@@ -482,11 +489,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else if (cols.length === 1) {
         setFieldValue(targetIndex, startField, cols[0]);
+      } else {
+        linhasIgnoradas++;
       }
     });
 
     renderFull();
-    showStatus('ok', `✓ ${grid.length} linha(s) importada(s) da área de transferência.`);
+
+    if (linhasIgnoradas > 0) {
+      const linhasOk = grid.length - linhasIgnoradas;
+      showStatus('warn', `⚠️ ${linhasOk} linha(s) importada(s), mas ${linhasIgnoradas} linha(s) tinham um número de colunas não reconhecido (use 1, 2, 4 ou 6 colunas) e foram ignoradas.`);
+    } else {
+      showStatus('ok', `✓ ${grid.length} linha(s) importada(s) da área de transferência.`);
+    }
   });
 
   // ---------- EVENTOS: REMOVER LINHA ----------
