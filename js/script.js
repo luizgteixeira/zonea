@@ -96,6 +96,54 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.href = buildWhatsappLink('Olá! Estou no site do Zonea e gostaria de tirar uma dúvida.');
   });
 
+  // Localização aproximada do visitante (por IP, sem pedir permissão nenhuma) —
+  // toque decorativo no rodapé, no mesmo espírito das coordenadas do Zonea.
+  // Guarda o resultado no localStorage por 30 dias: cada visitante só gera UMA
+  // chamada ao serviço externo, não uma a cada página vista, pra não pesar na
+  // cota gratuita do provedor. Falha em silêncio: sem resposta, o badge some.
+  const visitorLocationEl = document.getElementById('visitorLocation');
+  const visitorCoordsEl = document.getElementById('visitorCoords');
+  if (visitorLocationEl && visitorCoordsEl) {
+    const CACHE_KEY = 'zonea_visitor_location';
+    const CACHE_DIAS = 30;
+
+    function formatarLocalizacao(lat, lon, city, region) {
+      const latStr = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}`;
+      const lonStr = `${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'W'}`;
+      const local = [city, region].filter(Boolean).join(' / ');
+      return `${latStr}, ${lonStr}${local ? ' · ' + local.toUpperCase() : ''}`;
+    }
+
+    function mostrarTexto(texto) {
+      visitorCoordsEl.textContent = texto;
+      visitorLocationEl.hidden = false;
+    }
+
+    let cache = null;
+    try { cache = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch { /* cache inválido, ignora */ }
+
+    const cacheValido = cache && cache.texto && cache.timestamp
+      && (Date.now() - cache.timestamp) < CACHE_DIAS * 24 * 60 * 60 * 1000;
+
+    if (cacheValido) {
+      mostrarTexto(cache.texto);
+    } else {
+      fetch('https://get.geojs.io/v1/ip/geo.json')
+        .then(res => res.json())
+        .then(data => {
+          const lat = parseFloat(data.latitude);
+          const lon = parseFloat(data.longitude);
+          if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+          const texto = formatarLocalizacao(lat, lon, data.city, data.region);
+          mostrarTexto(texto);
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ texto, timestamp: Date.now() }));
+          } catch { /* localStorage indisponível (modo privado etc.) — sem problema, só não guarda */ }
+        })
+        .catch(() => { /* sem localização hoje — tudo bem, o resto do site funciona normalmente */ });
+    }
+  }
+
   // Métricas do Hero (Home): total de municípios e fontes oficiais auditadas
   const metricTotal = document.getElementById('metricTotalMunicipios');
   const metricAuditadas = document.getElementById('metricFontesAuditadas');

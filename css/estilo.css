@@ -1401,6 +1401,9 @@ footer,
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
+  /* Reserva espaço à direita pro botão flutuante do WhatsApp (fixo no
+     canto inferior direito) não ficar em cima do selo de coordenadas. */
+  padding-right: 64px;
 }
 
 .footer-credits {
@@ -1448,6 +1451,26 @@ footer,
   border-radius: var(--raio-borda-pill);
   letter-spacing: 0.05em;
   white-space: nowrap;
+}
+
+/* Localização aproximada do visitante (por IP) — linha discreta abaixo dos
+   créditos do rodapé; some por padrão ([hidden]) até a consulta terminar,
+   nunca bloqueia nem atrasa o carregamento da página. */
+.visitor-location {
+  width: 100%;
+  text-align: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  color: #94A3B8;
+  letter-spacing: 0.03em;
+}
+
+.visitor-location strong {
+  color: #60A5FA;
+  font-weight: 700;
 }
 
 /* 13. RESPONSIVIDADE */
