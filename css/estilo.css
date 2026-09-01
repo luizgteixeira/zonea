@@ -1558,6 +1558,103 @@ footer,
   }
 }
 
+/* 15. CAPTURA DE INTERESSE (card bloqueado — "avise-me antes de assinar") */
+.lead-capture {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--cor-cinza-borda);
+}
+
+.lead-capture summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-azul);
+  list-style: none;
+}
+
+.lead-capture summary::-webkit-details-marker {
+  display: none;
+}
+
+.lead-capture summary::before {
+  content: '+ ';
+}
+
+.lead-capture[open] summary::before {
+  content: '− ';
+}
+
+.lead-capture-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lead-capture-input {
+  width: 100%;
+  background-color: var(--cor-cinza-claro);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-sm);
+  padding: 10px 12px;
+  font-family: var(--fonte-principal);
+  font-size: 13px;
+  color: var(--cor-cinza-escuro);
+}
+
+.lead-capture-input:focus {
+  outline: none;
+  border-color: var(--cor-azul);
+}
+
+.lead-capture-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--cor-cinza);
+  cursor: pointer;
+}
+
+.lead-capture-consent input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.lead-capture-btn {
+  align-self: flex-start;
+  background-color: var(--cor-azul);
+  color: var(--cor-branco);
+  border: none;
+  border-radius: var(--raio-borda-sm);
+  padding: 8px 18px;
+  font-family: var(--fonte-principal);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.lead-capture-btn:hover {
+  background-color: var(--cor-azul-hover);
+}
+
+.lead-capture-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lead-capture-sucesso {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--cor-cinza-borda);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-verde-hover);
+}
+
 /* 13. RESPONSIVIDADE */
 @media (max-width: 768px) {
   .header-container {

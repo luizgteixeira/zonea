@@ -120,6 +120,7 @@ function renderMunicipioCard(found, container, opts = {}) {
     // Município já auditado pelo Zonea, mas os campos protegidos (link,
     // detalhes técnicos) não vieram — ou a assinatura não está ativa, ou
     // houve erro ao buscá-los no Supabase (ver console).
+    const jaEnviouLead = !!localStorage.getItem('zonea_lead_enviado');
     html = `
       <div class="result-card confirmed">
         <div class="result-card-head">
@@ -133,6 +134,20 @@ function renderMunicipioCard(found, container, opts = {}) {
           <span>Ativar Assinatura →</span>
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
+
+        ${!jaEnviouLead ? `
+        <details class="lead-capture">
+          <summary>Prefere ser avisado antes de assinar?</summary>
+          <form class="lead-capture-form" data-municipio="${escapeHtml(found.slug)}">
+            <input type="text" name="contato" class="lead-capture-input" placeholder="Seu e-mail ou WhatsApp" required autocomplete="email">
+            <label class="lead-capture-consent">
+              <input type="checkbox" required>
+              <span>Aceito ser contatado pela equipe do Zonea sobre este interesse.</span>
+            </label>
+            <button type="submit" class="lead-capture-btn">Enviar</button>
+          </form>
+        </details>
+        ` : ''}
       </div>
     `;
   } else {
@@ -162,6 +177,39 @@ function renderMunicipioCard(found, container, opts = {}) {
   container.innerHTML = html;
   container.className = 'status-message visible';
 }
+
+// Captura de interesse (card bloqueado, "prefere ser avisado antes de assinar?").
+// Delegado no document em vez de anexado a cada card renderizado, porque
+// renderMunicipioCard substitui o innerHTML do container a cada chamada — um
+// listener direto no formulário seria descartado junto no próximo render, e o
+// mesmo card aparece tanto na busca da Home quanto no mapa (js/mapa.js).
+document.addEventListener('submit', async (e) => {
+  const form = e.target.closest('.lead-capture-form');
+  if (!form) return;
+  e.preventDefault();
+
+  const contato = form.querySelector('[name="contato"]').value.trim();
+  if (!contato) return;
+
+  const btn = form.querySelector('.lead-capture-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+  try {
+    const { error } = await supabaseClient.functions.invoke('submit-lead', {
+      body: { contato, municipioSlug: form.dataset.municipio || null, deviceId: getDeviceId() },
+    });
+    if (error) throw error;
+
+    localStorage.setItem('zonea_lead_enviado', '1');
+    const wrapper = form.closest('.lead-capture');
+    if (wrapper) {
+      wrapper.outerHTML = '<p class="lead-capture-sucesso">✓ Contato registrado! Vamos te avisar por lá.</p>';
+    }
+  } catch (err) {
+    console.error('Erro ao registrar interesse no Zonea:', err);
+    if (btn) { btn.disabled = false; btn.textContent = 'Enviar'; }
+  }
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON — campos públicos)
