@@ -703,6 +703,14 @@ input[type="password"]:focus {
   color: var(--cor-cinza-escuro);
 }
 
+/* O atributo [hidden] do HTML não é confiável em <svg> em todos os
+   navegadores (o display:none do UA stylesheet nem sempre vence a regra
+   própria de display do SVG) — força explicitamente aqui, senão os dois
+   ícones (olho aberto/fechado) aparecem sobrepostos ao mesmo tempo. */
+.password-toggle-btn svg[hidden] {
+  display: none;
+}
+
 .input-icon {
   position: absolute;
   left: 14px;

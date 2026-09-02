@@ -27,8 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       input.type = visivel ? 'password' : 'text';
       btn.setAttribute('aria-pressed', String(!visivel));
       btn.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Ocultar senha');
-      if (iconEye) iconEye.hidden = !visivel;
-      if (iconEyeOff) iconEyeOff.hidden = visivel;
+      // toggleAttribute em vez de .hidden = ...: em elementos <svg>, a
+      // propriedade .hidden não reflete no atributo real (diferente de
+      // HTMLElement), então o clique nunca mudava nada na tela.
+      if (iconEye) iconEye.toggleAttribute('hidden', !visivel);
+      if (iconEyeOff) iconEyeOff.toggleAttribute('hidden', visivel);
     });
   });
 
