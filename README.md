@@ -80,20 +80,28 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── migrations/
 │   │   ├── 0001_init.sql                     # Schema inicial (tabelas + Row Level Security)
 │   │   ├── 0002_preview_gratis.sql           # Tabela de controle da consulta gratuita
-│   │   └── 0003_leads_interesse.sql          # Tabela de captura de contato (card bloqueado)
+│   │   ├── 0003_leads_interesse.sql          # Tabela de captura de contato (card bloqueado)
+│   │   └── 0004_mapa_demo_bh.sql             # Flag is_demo + policy pública (Belo Horizonte grátis)
 │   └── functions/
 │       ├── create-mp-preference/index.ts     # Gera o link de pagamento (Mercado Pago Checkout Pro)
 │       ├── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
 │       ├── get-preview-municipio/index.ts    # Libera a consulta gratuita (1 por visitante anônimo)
 │       └── submit-lead/index.ts              # Registra o contato de quem pediu pra ser avisado
 ├── scripts/
-│   └── migrate-municipios.mjs    # Script único de importação de municipios.json para o Supabase
+│   └── migrate-municipios.mjs    # Script histórico da migração inicial (Fase 2) — hoje desatualizado: lê
+│                                    # link/sistema/detalhes_tecnicos de data/municipios.json, campos que
+│                                    # já não existem mais lá (viraram exclusivos do Supabase). Mantido só
+│                                    # como referência de como o schema foi populado a primeira vez.
 ├── .github/workflows/
 │   └── mirror-hostinger.yml      # Espelha automaticamente todo push em main pro repositório de deploy
 ├── robots.txt          # Diretivas de indexação para buscadores
 ├── sitemap.xml          # Mapa do site para SEO
 ├── img/                # Logo, ícones e imagens
-├── marketing/          # Material de divulgação (stories exportados, prints) — não faz parte do site em si
+├── marketing/          # Material de divulgação — não faz parte do site em si
+│   ├── prints/          # Capturas de tela para redes sociais
+│   ├── story-export/    # Stories exportados (Instagram)
+│   ├── ads/              # Conceitos de anúncio (Design Canvas — .dc.html editáveis + PNGs finais)
+│   └── ad-assets/        # Material de apoio dos anúncios (recortes de tela, variações de logo)
 └── README.md           # Este arquivo
 ```
 
