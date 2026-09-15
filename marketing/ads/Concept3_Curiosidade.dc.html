@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .zn-root { font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; }
+    a { color: #6FA3E6; } a:hover { color: #9CC1F2; }
+  </style>
+</helmet>
+
+<div class="zn-root" style="width:1080px;height:1350px;position:relative;overflow:hidden;background:#0B1526;">
+
+  <svg width="1080" height="1350" style="position:absolute;inset:0;opacity:0.45;" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#1E3358" stroke-width="1.4">
+      <path d="M-40,110 C 180,50 340,170 560,100 S 940,30 1140,120"/>
+      <path d="M-40,170 C 180,110 340,230 560,160 S 940,90 1140,180"/>
+      <path d="M-60,1160 C 200,1080 420,1220 620,1140 S 1000,1060 1160,1150"/>
+      <path d="M-60,1220 C 200,1140 420,1280 620,1200 S 1000,1120 1160,1210"/>
+    </g>
+  </svg>
+
+  <div style="position:relative;height:100%;display:flex;flex-direction:column;padding:60px 84px 52px;">
+
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="logo_final_120.png" alt="Zonea" style="width:34px;height:auto;display:block;">
+      <span style="color:#FFFFFF;font-size:19px;font-weight:800;letter-spacing:1.5px;">ZONEA</span>
+    </div>
+
+    <div style="margin-top:34px;font-size:52px;font-weight:800;line-height:1.2;letter-spacing:-1.3px;color:#FFFFFF;max-width:880px;">
+      Existe um mapa que sabe onde está o <span style="color:#6FA3E6;">zoneamento oficial</span> de cada cidade da RMBH.
+    </div>
+
+    <div style="margin-top:22px;max-width:740px;font-size:23px;font-weight:500;line-height:1.45;color:#AFC1DE;">
+      Clique no seu município e vá direto à fonte oficial &mdash; sem perder tempo procurando.
+    </div>
+
+    <!-- illustrated map card -->
+    <div style="margin-top:38px;display:flex;justify-content:center;">
+      <div style="width:900px;border-radius:22px;overflow:hidden;background:#EEF2F7;box-shadow:0 40px 80px -22px rgba(0,0,0,0.6);">
+
+        <!-- legend bar -->
+        <div style="display:flex;align-items:center;gap:22px;padding:16px 24px;background:#FFFFFF;border-bottom:1px solid #E2E8F0;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;color:#475569;letter-spacing:0.2px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#2E8B57;display:inline-block;"></span>CONFIRMADO E ACESSÍVEL</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#1E5AA8;display:inline-block;"></span>CONFIRMADO (EXIGE ASSINATURA)</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#94A3B8;display:inline-block;"></span>AINDA NÃO CONFIRMADO</span>
+        </div>
+
+        <!-- map area -->
+        <svg width="900" height="560" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="900" height="560" fill="#EEF2F7"/>
+          <g stroke="#DCE3EC" stroke-width="1">
+            <path d="M0,80 H900 M0,160 H900 M0,240 H900 M0,320 H900 M0,400 H900 M0,480 H900" />
+            <path d="M100,0 V560 M240,0 V560 M380,0 V560 M520,0 V560 M660,0 V560 M800,0 V560" />
+          </g>
+          <path d="M180,120 C 140,220 160,340 230,410 C 300,480 430,470 500,430 C 600,470 700,430 730,340 C 760,240 700,150 610,120 C 520,80 420,70 360,90 C 290,60 220,70 180,120 Z"
+                fill="#E4ECF5" stroke="#8FADD6" stroke-width="2" stroke-dasharray="7 6"/>
+
+          <!-- secondary markers -->
+          <g>
+            <circle cx="260" cy="180" r="8" fill="#2E8B57"/>
+            <circle cx="330" cy="140" r="8" fill="#94A3B8"/>
+            <circle cx="400" cy="200" r="8" fill="#1E5AA8"/>
+            <circle cx="230" cy="260" r="8" fill="#1E5AA8"/>
+            <circle cx="300" cy="330" r="8" fill="#94A3B8"/>
+            <circle cx="380" cy="370" r="8" fill="#2E8B57"/>
+            <circle cx="470" cy="330" r="8" fill="#94A3B8"/>
+            <circle cx="540" cy="260" r="8" fill="#1E5AA8"/>
+            <circle cx="600" cy="200" r="8" fill="#94A3B8"/>
+            <circle cx="560" cy="150" r="8" fill="#1E5AA8"/>
+            <circle cx="650" cy="290" r="8" fill="#2E8B57"/>
+            <circle cx="480" cy="410" r="8" fill="#1E5AA8"/>
+          </g>
+
+          <!-- Belo Horizonte marker -->
+          <circle cx="430" cy="280" r="34" fill="#2E8B57" opacity="0.14"/>
+          <circle cx="430" cy="280" r="20" fill="#2E8B57" opacity="0.22"/>
+          <circle cx="430" cy="280" r="10" fill="#2E8B57" stroke="#FFFFFF" stroke-width="3"/>
+          <g transform="translate(430,280)">
+            <rect x="-34" y="-56" width="68" height="30" rx="8" fill="#2E8B57"/>
+            <polygon points="-6,-26 6,-26 0,-16" fill="#2E8B57"/>
+            <text x="0" y="-36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFFFFF">GRÁTIS</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:30px;">
+      <div style="background:#2A66C4;color:#FFFFFF;font-size:28px;font-weight:800;letter-spacing:0.4px;padding:22px 52px;border-radius:14px;box-shadow:0 20px 45px -12px rgba(42,102,196,0.65);">
+        DESCUBRA O ZONEA &rarr;
+      </div>
+      <div style="font-size:34px;font-weight:800;color:#FFFFFF;letter-spacing:0.4px;">
+        zonea.com.br
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

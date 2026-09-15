@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .zn-root { font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; }
+  </style>
+</helmet>
+
+<div class="zn-root" style="width:1080px;height:1080px;position:relative;overflow:hidden;background:#0B1526;">
+
+  <svg width="1080" height="1080" style="position:absolute;inset:0;opacity:0.45;" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#1E3358" stroke-width="1.4">
+      <path d="M-40,80 C 180,20 340,140 560,70 S 940,0 1140,90"/>
+      <path d="M-40,140 C 180,80 340,200 560,130 S 940,60 1140,150"/>
+      <path d="M-60,950 C 200,870 420,1010 620,930 S 1000,850 1160,940"/>
+    </g>
+  </svg>
+
+  <div style="position:relative;height:100%;display:flex;flex-direction:column;padding:50px 72px 44px;">
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="logo_final_120.png" alt="Zonea" style="width:28px;height:auto;display:block;">
+      <span style="color:#FFFFFF;font-size:16px;font-weight:800;letter-spacing:1.3px;">ZONEA</span>
+    </div>
+
+    <div style="margin-top:20px;font-size:34px;font-weight:800;line-height:1.2;letter-spacing:-0.8px;color:#FFFFFF;max-width:640px;">
+      Existe um mapa que sabe onde está o <span style="color:#6FA3E6;">zoneamento oficial</span> de cada cidade da RMBH.
+    </div>
+
+    <div style="margin-top:14px;max-width:580px;font-size:17px;font-weight:500;line-height:1.42;color:#AFC1DE;">
+      Clique no seu município e vá direto à fonte oficial &mdash; sem perder tempo procurando.
+    </div>
+
+    <div style="margin-top:22px;display:flex;justify-content:center;">
+      <div style="width:760px;border-radius:18px;overflow:hidden;background:#EEF2F7;box-shadow:0 30px 60px -18px rgba(0,0,0,0.6);">
+
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 18px;background:#FFFFFF;border-bottom:1px solid #E2E8F0;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:#475569;letter-spacing:0.2px;">
+          <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;background:#2E8B57;display:inline-block;"></span>CONFIRMADO E ACESSÍVEL</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;background:#1E5AA8;display:inline-block;"></span>CONFIRMADO (EXIGE ASSINATURA)</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;background:#94A3B8;display:inline-block;"></span>AINDA NÃO CONFIRMADO</span>
+        </div>
+
+        <svg width="760" height="473" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="900" height="560" fill="#EEF2F7"/>
+          <g stroke="#DCE3EC" stroke-width="1">
+            <path d="M0,80 H900 M0,160 H900 M0,240 H900 M0,320 H900 M0,400 H900 M0,480 H900" />
+            <path d="M100,0 V560 M240,0 V560 M380,0 V560 M520,0 V560 M660,0 V560 M800,0 V560" />
+          </g>
+          <path d="M180,120 C 140,220 160,340 230,410 C 300,480 430,470 500,430 C 600,470 700,430 730,340 C 760,240 700,150 610,120 C 520,80 420,70 360,90 C 290,60 220,70 180,120 Z"
+                fill="#E4ECF5" stroke="#8FADD6" stroke-width="2" stroke-dasharray="7 6"/>
+          <g>
+            <circle cx="260" cy="180" r="8" fill="#2E8B57"/>
+            <circle cx="330" cy="140" r="8" fill="#94A3B8"/>
+            <circle cx="400" cy="200" r="8" fill="#1E5AA8"/>
+            <circle cx="230" cy="260" r="8" fill="#1E5AA8"/>
+            <circle cx="300" cy="330" r="8" fill="#94A3B8"/>
+            <circle cx="380" cy="370" r="8" fill="#2E8B57"/>
+            <circle cx="470" cy="330" r="8" fill="#94A3B8"/>
+            <circle cx="540" cy="260" r="8" fill="#1E5AA8"/>
+            <circle cx="600" cy="200" r="8" fill="#94A3B8"/>
+            <circle cx="560" cy="150" r="8" fill="#1E5AA8"/>
+            <circle cx="650" cy="290" r="8" fill="#2E8B57"/>
+            <circle cx="480" cy="410" r="8" fill="#1E5AA8"/>
+          </g>
+          <circle cx="430" cy="280" r="34" fill="#2E8B57" opacity="0.14"/>
+          <circle cx="430" cy="280" r="20" fill="#2E8B57" opacity="0.22"/>
+          <circle cx="430" cy="280" r="10" fill="#2E8B57" stroke="#FFFFFF" stroke-width="3"/>
+          <g transform="translate(430,280)">
+            <rect x="-34" y="-56" width="68" height="30" rx="8" fill="#2E8B57"/>
+            <polygon points="-6,-26 6,-26 0,-16" fill="#2E8B57"/>
+            <text x="0" y="-36" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFFFFF">GRÁTIS</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:20px;">
+      <div style="background:#2A66C4;color:#FFFFFF;font-size:19px;font-weight:800;letter-spacing:0.3px;padding:15px 36px;border-radius:11px;box-shadow:0 16px 34px -10px rgba(42,102,196,0.65);">
+        DESCUBRA O ZONEA &rarr;
+      </div>
+      <div style="font-size:24px;font-weight:800;color:#FFFFFF;letter-spacing:0.3px;">
+        zonea.com.br
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

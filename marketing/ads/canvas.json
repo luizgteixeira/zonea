@@ -1,0 +1,16 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Concept2_Autoridade.dc.html", "x": 1160, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Concept3_Curiosidade.dc.html", "x": 2320, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Main_Square.dc.html", "x": 0, "y": 1470, "w": 1080, "h": 1080 },
+    { "file": "Main_Story.dc.html", "x": 1160, "y": 1470, "w": 1080, "h": 1920 }
+  ],
+  "annotations": [
+    { "id": "note-main", "x": 0, "y": -90, "w": 1000, "text": "CONCEITO 1 — IMPACTO (recomendado para campanha paga). Gancho numérico 34 → 1 pra travar o scroll; card real do resultado auditado entrega prova em 2-3s." },
+    { "id": "note-c2", "x": 1160, "y": -90, "w": 1000, "text": "CONCEITO 2 — AUTORIDADE. Tom institucional, prova técnica (EPSG/Datum) e o próprio FAQ 'não é imobiliário' — forte para remarketing e público técnico." },
+    { "id": "note-c3", "x": 2320, "y": -90, "w": 1000, "text": "CONCEITO 3 — CURIOSIDADE. Mapa como convite à exploração; headline em forma de pergunta pra gerar clique." },
+    { "id": "note-adapt", "x": 0, "y": 1380, "w": 1000, "text": "Adaptações do conceito vencedor (Impacto) para Feed quadrado e Stories/Reels." }
+  ],
+  "launch": { "view": "canvas" }
+}
