@@ -35,13 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // rows[0] = ponto inicial (initialEStr/initialNStr).
   // rows[i>=1] = segmento a partir do ponto anterior (azimuteStr/distanciaStr).
+  // Se a linha trouxer coordenadaEStr/coordenadaNStr (colagem do memorial completo), o vértice
+  // usa essas coordenadas em vez de ser calculado pela cadeia azimute/distância ("modo por
+  // coordenadas"): é assim que a área do memorial sai igual à declarada nele.
   let rows = [emptyRow()];
   let computed = [];   // computed[i] = { E, N, valid }
   let fieldFlags = []; // fieldFlags[i] = { azimuteInvalid, distanciaInvalid, initialEInvalid, initialNInvalid }
   let ultimoCalculo = null; // { pontos, area, perimetro, erroFechamento } do último "Fechar Poligonal e Calcular"
 
   function emptyRow() {
-    return { azimuteStr: '', distanciaStr: '', initialEStr: '', initialNStr: '' };
+    return { azimuteStr: '', distanciaStr: '', initialEStr: '', initialNStr: '', coordenadaEStr: '', coordenadaNStr: '' };
   }
 
   // ---------- PARSERS ----------
@@ -129,6 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
         fieldFlags.push({
           initialEInvalid: Estr !== '' && !Number.isFinite(E),
           initialNInvalid: Nstr !== '' && !Number.isFinite(N),
+        });
+      } else if (row.coordenadaEStr.trim() !== '' || row.coordenadaNStr.trim() !== '') {
+        const E = parseNumber(row.coordenadaEStr);
+        const N = parseNumber(row.coordenadaNStr);
+        const valid = Number.isFinite(E) && Number.isFinite(N);
+        computed.push({ E: valid ? E : null, N: valid ? N : null, valid, porCoordenada: true });
+        fieldFlags.push({
+          azimuteInvalid: false,
+          distanciaInvalid: false,
+          coordenadaInvalid: !valid,
         });
       } else {
         const prev = computed[i - 1];
@@ -242,11 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return td;
   }
 
-  function makeComputedCell(text) {
+  function makeComputedCell(text, porCoordenada) {
     const td = document.createElement('td');
     const input = document.createElement('input');
     input.type = 'text';
-    input.className = 'cell-input computed-cell';
+    input.className = 'cell-input computed-cell' + (porCoordenada ? ' coord-informada' : '');
+    if (porCoordenada) input.title = 'Coordenada informada no memorial (não calculada). Edite o azimute ou a distância desta linha para voltar ao cálculo.';
     input.value = text;
     input.readOnly = true;
     input.tabIndex = -1;
@@ -294,8 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
           invalid: flags.initialNInvalid,
         }));
       } else {
-        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.E, 3) : '—'));
-        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.N, 3) : '—'));
+        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.E, 3) : '—', c.porCoordenada));
+        tr.appendChild(makeComputedCell(c.valid ? formatNumber(c.N, 3) : '—', c.porCoordenada));
       }
 
       const tdAction = document.createElement('td');
@@ -337,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const computedInputs = tr.querySelectorAll('.computed-cell');
         if (computedInputs[0]) computedInputs[0].value = c.valid ? formatNumber(c.E, 3) : '—';
         if (computedInputs[1]) computedInputs[1].value = c.valid ? formatNumber(c.N, 3) : '—';
+        computedInputs.forEach((ci) => ci.classList.toggle('coord-informada', !!c.porCoordenada));
       }
     });
   }
@@ -521,6 +536,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function setFieldValue(rowIndex, field, value) {
     const row = rows[rowIndex];
     if (!row) return;
+    if (field === 'azimute' || field === 'distancia') {
+      row.coordenadaEStr = '';
+      row.coordenadaNStr = '';
+    }
     if (field === 'azimute') row.azimuteStr = value;
     else if (field === 'distancia') row.distanciaStr = value;
     else if (field === 'initialE') row.initialEStr = value;
@@ -566,6 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // rótulo de vértice sendo interpretado como azimute) sem avisar
     // ninguém, então preferimos avisar e pular a linha.
     let linhasIgnoradas = 0;
+    let usouCoordenadas = false;
 
     grid.forEach((cols, j) => {
       const targetIndex = startRowIndex + j;
@@ -573,13 +593,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const isInitial = targetIndex === 0;
 
       if (cols.length === 6) {
+        // Formato do memorial: cada linha é um segmento (Vértice Inicial → Final) e E/N são
+        // as coordenadas do vértice inicial. Então E/N vão pra linha do vértice inicial e
+        // azimute/distância pra linha seguinte (onde o segmento termina).
         if (isInitial) {
           rows[targetIndex].initialEStr = cols[4] || '';
           rows[targetIndex].initialNStr = cols[5] || '';
         } else {
-          rows[targetIndex].azimuteStr = cols[2] || '';
-          rows[targetIndex].distanciaStr = cols[3] || '';
+          rows[targetIndex].coordenadaEStr = cols[4] || '';
+          rows[targetIndex].coordenadaNStr = cols[5] || '';
         }
+        if (rows.length <= targetIndex + 1) rows.push(emptyRow());
+        rows[targetIndex + 1].azimuteStr = cols[2] || '';
+        rows[targetIndex + 1].distanciaStr = cols[3] || '';
+        usouCoordenadas = true;
       } else if (cols.length === 4) {
         if (isInitial) {
           rows[targetIndex].initialEStr = cols[2] || '';
@@ -608,6 +635,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (linhasIgnoradas > 0) {
       const linhasOk = grid.length - linhasIgnoradas;
       showStatus('warn', `⚠️ ${linhasOk} linha(s) importada(s), mas ${linhasIgnoradas} linha(s) tinham um número de colunas não reconhecido (use 1, 2, 4 ou 6 colunas) e foram ignoradas.`);
+    } else if (usouCoordenadas) {
+      showStatus('ok', `✓ ${grid.length} linha(s) importada(s). <strong>Modo por coordenadas:</strong> os vértices usam as coordenadas E/N do memorial (não só azimute e distância), como no documento original.`);
     } else {
       showStatus('ok', `✓ ${grid.length} linha(s) importada(s) da área de transferência.`);
     }
@@ -671,13 +700,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const pts = computed.map(c => ({ E: c.E, N: c.N }));
-    const area = shoelaceArea(pts);
-    const perimetro = rows.slice(1).reduce((sum, row) => {
+    // Perímetro: soma das distâncias informadas; na linha sem distância (ex.: vértice dado só
+    // por coordenada) vale a distância entre os dois pontos.
+    const perimetro = rows.slice(1).reduce((sum, row, k) => {
       const d = parseNumber(row.distanciaStr);
-      return sum + (Number.isFinite(d) ? d : 0);
+      return sum + (Number.isFinite(d) && d > 0 ? d : distanceBetween(pts[k], pts[k + 1]));
     }, 0);
     const erroFechamento = distanceBetween(pts[pts.length - 1], pts[0]);
     const fechou = erroFechamento <= CLOSURE_TOLERANCE_M;
+
+    // Se fechou, o último ponto calculado é o P0 de novo (com o erro de fechamento de
+    // diferença), não um vértice a mais — a área é da poligonal fechada, sem ele. É a
+    // mesma regra de prepararVertices() em js/exportar-poligonal.js, pro número na tela
+    // e o do arquivo DXF/KML serem do mesmo polígono. Se NÃO fechou, entram todos os pontos.
+    const verticesDaArea = (fechou && pts.length > 3) ? pts.slice(0, -1) : pts;
+    const area = shoelaceArea(verticesDaArea);
 
     ultimoCalculo = { pontos: pts, area, perimetro, erroFechamento };
     clearResultsStale();

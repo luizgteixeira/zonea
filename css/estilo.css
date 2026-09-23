@@ -479,6 +479,11 @@ main {
   font-weight: 600;
 }
 
+.poligonal-edit-table .cell-input.computed-cell.coord-informada {
+  background: var(--cor-verde-suave);
+  color: var(--cor-verde-hover);
+}
+
 .poligonal-edit-table .cell-input.input-invalid {
   border-color: #E66550;
   background: #FCE8E6;
