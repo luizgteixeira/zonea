@@ -1244,7 +1244,10 @@ input[type="password"]:focus {
 /* 9. SERVIÇOS & MÓDULOS DE INTELIGÊNCIA */
 .servicos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  /* min(320px, 100%) em vez de 320px puro: numa viewport mais estreita que
+     320px + o padding do container, o "minmax(320px, ...)" forçava a coluna
+     a ficar mais larga que a tela inteira, criando scroll horizontal. */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: 24px;
   margin-top: 32px;
 }
@@ -1458,7 +1461,10 @@ footer,
   padding: 4px 12px;
   border-radius: var(--raio-borda-pill);
   letter-spacing: 0.05em;
-  white-space: nowrap;
+  /* Sem nowrap: em telas bem estreitas (<400px), o texto do selo é mais
+     largo que a viewport inteira e forçava scroll horizontal na página. */
+  white-space: normal;
+  max-width: 100%;
 }
 
 /* Localização aproximada do visitante (por IP) — linha discreta abaixo dos

@@ -119,18 +119,20 @@
         <p>
           Um quadrado de 100 m de lado, rotacionado 45° (ou seja, "andando na diagonal" em relação aos eixos E/N), partindo do ponto inicial E=1000, N=1000:
         </p>
-        <table>
-          <thead>
-            <tr><th>Segmento</th><th>Azimute</th><th>Distância</th><th>Ponto resultante (E, N)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Inicial</td><td>—</td><td>—</td><td>1000,000 / 1000,000</td></tr>
-            <tr><td>1</td><td>45°</td><td>100 m</td><td>1070,711 / 1070,711</td></tr>
-            <tr><td>2</td><td>135°</td><td>100 m</td><td>1141,421 / 1000,000</td></tr>
-            <tr><td>3</td><td>225°</td><td>100 m</td><td>1070,711 / 929,289</td></tr>
-            <tr><td>4</td><td>315°</td><td>100 m</td><td>1000,000 / 1000,000</td></tr>
-          </tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr><th>Segmento</th><th>Azimute</th><th>Distância</th><th>Ponto resultante (E, N)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Inicial</td><td>—</td><td>—</td><td>1000,000 / 1000,000</td></tr>
+              <tr><td>1</td><td>45°</td><td>100 m</td><td>1070,711 / 1070,711</td></tr>
+              <tr><td>2</td><td>135°</td><td>100 m</td><td>1141,421 / 1000,000</td></tr>
+              <tr><td>3</td><td>225°</td><td>100 m</td><td>1070,711 / 929,289</td></tr>
+              <tr><td>4</td><td>315°</td><td>100 m</td><td>1000,000 / 1000,000</td></tr>
+            </tbody>
+          </table>
+        </div>
         <p>
           Aplicando Shoelace nesses quatro pontos: <strong>área = 10.000 m²</strong> — exatamente 100 × 100, como esperado de um quadrado. Somando os quatro segmentos: <strong>perímetro = 400 m</strong>. E o ponto final bate perfeitamente com o inicial, então o <strong>erro de fechamento é 0 m</strong> (na prática, com medições reais de campo, raramente é exatamente zero — veja o próximo artigo sobre isso).
         </p>

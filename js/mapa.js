@@ -41,9 +41,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       return { fillColor: '#EFF6FF', color: '#1E5AA8', weight: 2, fillOpacity: 0.55, dashArray: '4 3' };
     }
     // ainda não confirmado — dado público de qualquer forma, sem trava.
-    // Contorno mais escuro que o cinza-claro usado nas tags: sobre o tile
-    // do OpenStreetMap (já claro), um cinza pálido some visualmente.
-    return { fillColor: '#F8FAFC', color: '#94A3B8', weight: 1.5, fillOpacity: 0.35 };
+    // Contorno mais escuro e mais espesso que as tentativas anteriores: mesmo
+    // um cinza médio (#94A3B8) ainda sumia visualmente sobre o tile claro do
+    // OpenStreetMap — usuários relataram só conseguir ver Belo Horizonte.
+    return { fillColor: '#E2E8F0', color: '#475569', weight: 2, fillOpacity: 0.45 };
   }
 
   const map = L.map(mapaContainer, { scrollWheelZoom: false }).setView([-19.92, -44.05], 9);
