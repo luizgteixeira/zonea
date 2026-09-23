@@ -29,7 +29,7 @@ Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu própr
 * **Desenhar uma poligonal automaticamente** — em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo.
 * **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-A busca de município, o mapa e os artigos são **100% gratuitos**, sem precisar de conta — os dados dos municípios são públicos e vêm das próprias prefeituras. O que é pago é a **Ferramenta de Poligonal**: pra usá-la é preciso criar conta em `conta.html` e assinar (Pix, boleto ou cartão, via Mercado Pago).
+A busca de município, o mapa e os artigos são **100% gratuitos**, sem precisar de conta — os dados dos municípios são públicos e vêm das próprias prefeituras. O que é pago é a **Ferramenta de Poligonal**: as **2 primeiras poligonais são grátis** (basta criar uma conta gratuita em `conta.html`) e, depois disso, é preciso assinar (Pix, boleto ou cartão, via Mercado Pago).
 
 ---
 
@@ -43,7 +43,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`. Só a Poligonal depende disso: busca, mapa e artigos funcionam mesmo com o Supabase fora do ar.
 * **Dados dos municípios** (link do portal, sistema, detalhes técnicos, sistema de referência, status de disponibilidade) ficam todos em `data/municipios.json`, um arquivo estático e público — não há mais nenhuma consulta a banco pra buscar ou mostrar um município.
 * As tabelas e Edge Functions da antiga trava por município (`municipios_protegido`, `anon_preview_usado`, `leads_interesse`, `get-preview-municipio`, `submit-lead`) **não são mais usadas pelo site** e ficam no repositório só como histórico, até serem desativadas no Supabase.
-* A **Poligonal** (`poligonal.html`) exige sessão **e** assinatura ativa (não só login) — é a ferramenta paga.
+* A **Poligonal** (`poligonal.html`) exige **conta logada**; quem decide se a pessoa ainda pode calcular é a Edge Function `usar-poligonal`. As 2 primeiras poligonais de cada conta são grátis; depois, só assinante ativo. O crédito é gasto no primeiro "Fechar Poligonal e Calcular" de cada poligonal (recalcular a mesma poligonal, com o mesmo ponto inicial, não gasta outro; "Limpar Tudo" começa uma nova). O contador vive em `profiles.poligonais_gratis_usadas` e é incrementado de forma atômica pela função SQL `consumir_poligonal_gratis` (só a `service_role` consegue chamá-la) — o limite fica numa constante só, `LIMITE_POLIGONAIS_GRATIS`, na Edge Function. O desenho ao vivo enquanto a pessoa digita é livre; o crédito controla o resultado (área, perímetro e erro de fechamento).
 * **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
 * **Mapa** (`mapa.html` + `js/mapa.js`): usa [Leaflet](https://leafletjs.com) sobre tiles do OpenStreetMap e uma malha de limites municipais derivada de dados abertos do IBGE (`data/rmbh-municipios.geojson`). Reaproveita a mesma função de renderização de card da busca (`renderMunicipioCard`, em `js/script.js`), então o comportamento de acesso é idêntico nos dois lugares.
 
@@ -61,7 +61,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── calcular-area-perimetro-poligonal.html   # Guia: azimute/distância → coordenadas, área e perímetro
 │   ├── erro-fechamento-poligonal.html           # Guia: o que é erro de fechamento e como corrigir
 │   └── memorial-descritivo.html                 # Guia: o que é um memorial descritivo e quando é exigido
-├── poligonal.html     # Ferramenta que desenha a poligonal automaticamente (exige assinatura ativa)
+├── poligonal.html     # Ferramenta que desenha a poligonal automaticamente (2 grátis por conta, depois assinatura)
 ├── faq.html           # Perguntas frequentes
 ├── conta.html          # Cadastro, login e status da assinatura
 ├── css/
@@ -81,9 +81,11 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   │   ├── 0001_init.sql                     # Schema inicial (tabelas + Row Level Security)
 │   │   ├── 0002_preview_gratis.sql           # (em desuso) Tabela da antiga consulta gratuita por dispositivo
 │   │   ├── 0003_leads_interesse.sql          # (em desuso) Tabela da antiga captura de contato
-│   │   └── 0004_mapa_demo_bh.sql             # (em desuso) Flag is_demo da antiga regra "Belo Horizonte grátis"
+│   │   ├── 0004_mapa_demo_bh.sql             # (em desuso) Flag is_demo da antiga regra "Belo Horizonte grátis"
+│   │   └── 0005_poligonais_gratis.sql        # Contador de poligonais grátis por conta + função atômica de consumo
 │   └── functions/
 │       ├── create-mp-preference/index.ts     # Gera o link de pagamento (Mercado Pago Checkout Pro)
+│       ├── usar-poligonal/index.ts           # Controla o uso da Poligonal: 2 grátis por conta, depois assinatura
 │       ├── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
 │       ├── get-preview-municipio/index.ts    # (em desuso) Antiga consulta gratuita por visitante
 │       └── submit-lead/index.ts              # (em desuso) Antigo registro de contato

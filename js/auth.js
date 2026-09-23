@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!loginForm) return; // página sem os elementos de conta — não faz nada
 
+  // Quem chega aqui vindo da Poligonal (guard de js/script.js) volta pra ela depois de entrar.
+  const urlParams = new URLSearchParams(window.location.search);
+  const veioDaPoligonal = urlParams.has('access_required');
+
   // Botão de mostrar/ocultar senha (login e cadastro)
   document.querySelectorAll('.password-toggle-btn').forEach((btn) => {
     const input = document.getElementById(btn.getAttribute('data-target'));
@@ -73,6 +77,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     clearAuthStatus();
+    if (veioDaPoligonal) {
+      window.location.href = '/poligonal.html';
+      return;
+    }
     await renderAccountState();
   });
 
@@ -81,13 +89,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
     showAuthStatus('ok', 'Criando sua conta...');
-    const { error } = await supabaseClient.auth.signUp({ email, password });
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
     if (error) {
       showAuthStatus('error', `Não foi possível criar a conta: ${error.message}`);
       return;
     }
-    showAuthStatus('ok', '✓ Conta criada! Se a confirmação de e-mail estiver ativa, verifique sua caixa de entrada.');
+    // Sem confirmação de e-mail obrigatória, o cadastro já devolve a sessão: segue direto.
+    if (data.session && veioDaPoligonal) {
+      window.location.href = '/poligonal.html';
+      return;
+    }
     await renderAccountState();
+    // Depois do renderAccountState: ele chama showForm(), que limpa qualquer aviso — e sem
+    // sessão (confirmação de e-mail pendente) a pessoa ficaria sem saber o que fazer.
+    if (!data.session) {
+      showAuthStatus('ok', '✓ Conta criada! Enviamos um link de confirmação para o seu e-mail — confirme e depois entre para usar a Ferramenta de Poligonal.');
+    }
   });
 
   resetForm.addEventListener('submit', async (e) => {
@@ -125,9 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnAssinar.disabled = true;
       label.textContent = 'Gerando link de pagamento...';
       try {
-        const { data, error } = await supabaseClient.functions.invoke('create-mp-preference');
-        if (error || !data?.init_point) throw error || new Error('Resposta sem init_point');
-        window.location.href = data.init_point;
+        await iniciarPagamento();
       } catch (err) {
         console.error('Erro ao iniciar pagamento:', err);
         showAccountActionStatus('error', 'Não foi possível iniciar o pagamento agora. Tente novamente em um instante ou fale com a equipe pelo WhatsApp.');
@@ -173,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       badge.textContent = 'SEM ASSINATURA ATIVA';
       badge.className = 'tag busca-direta';
-      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. Assine para liberar a Ferramenta de Poligonal.';
+      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. As 2 primeiras poligonais são grátis; depois, assine para continuar usando a Ferramenta de Poligonal.';
       btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de saber sobre outras formas de pagamento.`);
       btnWhatsapp.style.display = '';
       if (btnAssinarEl) btnAssinarEl.style.display = '';
@@ -183,8 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const noSession = await renderAccountState();
-  const urlParams = new URLSearchParams(window.location.search);
-  if (noSession && urlParams.has('access_required')) {
-    showAuthStatus('warn', 'A Ferramenta de Poligonal exige assinatura ativa. Entre ou crie sua conta abaixo para assinar.');
+  if (noSession && veioDaPoligonal) {
+    showAuthStatus('warn', 'Crie sua conta gratuita (ou entre) para usar a Ferramenta de Poligonal — as 2 primeiras poligonais são grátis.');
   }
 });

@@ -27,3 +27,12 @@ async function getAssinaturaAtiva() {
 
   return { session, ativa, profile };
 }
+
+// Gera o link de pagamento (Edge Function create-mp-preference) e leva o usuário
+// ao checkout do Mercado Pago. Lança erro se não conseguir — quem chama trata.
+// Usado por conta.html (btnAssinar) e pela Poligonal (quando os créditos acabam).
+async function iniciarPagamento() {
+  const { data, error } = await supabaseClient.functions.invoke('create-mp-preference');
+  if (error || !data?.init_point) throw error || new Error('Resposta sem init_point');
+  window.location.href = data.init_point;
+}

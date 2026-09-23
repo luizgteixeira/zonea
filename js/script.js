@@ -3,14 +3,16 @@
    Script Principal Institucional, Gated Content & Decoupled Data
    ============================================================ */
 
-// 1. GUARD DE ACESSO (GATED CONTENT) — sessão real via Supabase Auth
+// 1. GUARD DE ACESSO — sessão real via Supabase Auth
 // Busca, mapa e artigos são 100% livres (os dados dos municípios são públicos e
-// vêm de data/municipios.json). Só a Poligonal (ferramenta paga) exige login
-// com assinatura ativa.
+// vêm de data/municipios.json). A Poligonal (ferramenta paga) exige conta logada:
+// as 2 primeiras poligonais são grátis e, depois, só assinante ativo. Quem decide
+// isso é a Edge Function usar-poligonal (js/poligonal.js), não este redirecionamento
+// — aqui só garantimos que existe uma conta pra contar os créditos.
 const isGatedPage = window.location.pathname.endsWith('poligonal.html');
 if (isGatedPage) {
-  getAssinaturaAtiva().then(({ ativa }) => {
-    if (!ativa) {
+  getAssinaturaAtiva().then(({ session }) => {
+    if (!session) {
       window.location.href = '/conta.html?access_required=1';
     }
   });

@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultFechamento = document.getElementById('resultFechamento');
   const resultsStaleNotice = document.getElementById('resultsStaleNotice');
 
+  const creditosEl = document.getElementById('poligonalCreditos');
+  const paywallEl = document.getElementById('poligonalPaywall');
+  const paywallStatusEl = document.getElementById('poligonalPaywallStatus');
+  const btnAssinarPoligonal = document.getElementById('btnAssinarPoligonal');
+
   if (!tbody) return; // página sem a ferramenta — não faz nada
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -395,6 +400,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ---------- CRÉDITOS (poligonais grátis / assinatura) ----------
+  // Quem decide é sempre o servidor (Edge Function usar-poligonal): aqui só pedimos
+  // e mostramos a resposta. Um crédito é gasto no primeiro "Fechar Poligonal e
+  // Calcular" de cada poligonal — recalcular a mesma (mesmo ponto inicial) depois
+  // de corrigir um valor não gasta outro. "Limpar Tudo" começa uma poligonal nova.
+  let creditos = null;          // última resposta do servidor: { permitido, assinante, limite, restantes }
+  let chaveCreditada = null;    // ponto inicial da poligonal que já teve o crédito gasto
+  let verificandoCredito = false; // evita dois cliques seguidos gastarem dois créditos
+
+  function chaveDaPoligonal() {
+    return `${parseNumber(rows[0].initialEStr)}|${parseNumber(rows[0].initialNStr)}`;
+  }
+
+  async function chamarUsarPoligonal(acao) {
+    const { data, error } = await supabaseClient.functions.invoke('usar-poligonal', { body: { acao } });
+    if (error || !data) throw error || new Error('Resposta vazia da função usar-poligonal');
+    return data;
+  }
+
+  function renderCreditos() {
+    if (!creditosEl || !creditos) return;
+    if (creditos.assinante) {
+      creditosEl.className = 'status-message ok visible';
+      creditosEl.innerHTML = '✓ <strong>Assinatura ativa</strong> — poligonais ilimitadas.';
+    } else if (creditos.restantes > 0) {
+      creditosEl.className = 'status-message ok visible';
+      creditosEl.innerHTML = `🎁 <strong>Você tem ${creditos.restantes} de ${creditos.limite} poligonais grátis.</strong> Um crédito é usado na primeira vez que você clica em “Fechar Poligonal e Calcular” em cada poligonal.`;
+    } else {
+      creditosEl.className = 'status-message warn visible';
+      creditosEl.innerHTML = `⚠️ <strong>Suas ${creditos.limite} poligonais grátis acabaram.</strong> Assine para continuar calculando.`;
+    }
+    if (paywallEl) paywallEl.hidden = !!creditos.assinante || creditos.restantes > 0;
+  }
+
+  async function carregarCreditos() {
+    if (!creditosEl) return;
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return; // sem conta: o guard de js/script.js já está redirecionando pro cadastro
+    try {
+      creditos = await chamarUsarPoligonal('status');
+      renderCreditos();
+    } catch (err) {
+      console.error('Erro ao consultar créditos da Poligonal:', err);
+      creditosEl.className = 'status-message warn visible';
+      creditosEl.innerHTML = '⚠️ Não foi possível verificar seus créditos agora. Recarregue a página em instantes.';
+    }
+  }
+
+  if (btnAssinarPoligonal) {
+    btnAssinarPoligonal.addEventListener('click', async () => {
+      const label = btnAssinarPoligonal.querySelector('span');
+      const textoOriginal = label.textContent;
+      btnAssinarPoligonal.disabled = true;
+      label.textContent = 'Gerando link de pagamento...';
+      try {
+        await iniciarPagamento();
+      } catch (err) {
+        console.error('Erro ao iniciar pagamento:', err);
+        paywallStatusEl.className = 'status-message error visible';
+        paywallStatusEl.textContent = 'Não foi possível iniciar o pagamento agora. Tente novamente em um instante ou fale com a equipe pelo WhatsApp.';
+        btnAssinarPoligonal.disabled = false;
+        label.textContent = textoOriginal;
+      }
+    });
+  }
+
   // ---------- ESTADO DOS BOTÕES ----------
   function updateButtons() {
     const last = computed[computed.length - 1];
@@ -520,12 +591,45 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFull();
   });
 
-  btnClosePolygon.addEventListener('click', () => {
+  btnClosePolygon.addEventListener('click', async () => {
+    if (verificandoCredito) return;
     recompute();
     const last = computed[computed.length - 1];
     if (!(rows.length >= 3 && last && last.valid)) {
       showStatus('error', '❌ Revise as linhas destacadas em vermelho, ou adicione mais pontos (mínimo de 3) antes de fechar a poligonal.');
       return;
+    }
+
+    // Poligonal ainda não paga (nem com crédito grátis): pede permissão ao servidor.
+    // Só chega aqui com a poligonal válida, então erro de digitação não gasta crédito.
+    const chave = chaveDaPoligonal();
+    if (chave !== chaveCreditada) {
+      verificandoCredito = true;
+      btnClosePolygon.disabled = true;
+      showStatus('ok', 'Verificando seus créditos...');
+      try {
+        const resposta = await chamarUsarPoligonal('consumir');
+        creditos = resposta;
+        renderCreditos();
+        if (!resposta.permitido) {
+          clearStatus();
+          if (paywallEl) paywallEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        chaveCreditada = chave;
+      } catch (err) {
+        console.error('Erro ao verificar créditos da Poligonal:', err);
+        showStatus('error', '❌ Não foi possível verificar seus créditos agora. Tente novamente em instantes.');
+        return;
+      } finally {
+        verificandoCredito = false;
+        updateButtons();
+      }
+      if (chaveDaPoligonal() !== chave) {
+        showStatus('warn', '⚠️ A poligonal mudou durante a verificação. Clique em “Fechar Poligonal e Calcular” novamente.');
+        return;
+      }
+      recompute();
     }
 
     const pts = computed.map(c => ({ E: c.E, N: c.N }));
@@ -558,6 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Deseja limpar todos os pontos inseridos e recomeçar?')) return;
 
     rows = [emptyRow()];
+    chaveCreditada = null;
     resultArea.textContent = '—';
     resultPerimetro.textContent = '—';
     resultFechamento.textContent = '—';
@@ -570,4 +675,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Estado inicial
   renderFull();
+  carregarCreditos();
 });

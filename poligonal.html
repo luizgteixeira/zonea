@@ -83,6 +83,11 @@
       </div>
     </section>
 
+    <!-- CRÉDITOS: poligonais grátis / assinatura (preenchido por js/poligonal.js) -->
+    <section style="max-width: 1000px; margin: 0 auto 32px;">
+      <div id="poligonalCreditos" class="status-message" aria-live="polite"></div>
+    </section>
+
     <!-- ORIENTAÇÕES: VERIFICAÇÃO DO SISTEMA DE REFERÊNCIA -->
     <section style="max-width: 1000px; margin: 0 auto 32px;">
       <div style="border-bottom: 2px solid var(--cor-azul-suave); padding-bottom: 12px; margin-bottom: 24px;">
@@ -164,6 +169,19 @@
       </div>
 
       <div id="poligonalStatus" class="status-message"></div>
+
+      <div id="poligonalPaywall" class="card" hidden style="margin-top: 20px; padding: 28px; text-align: center; border: 2px solid var(--cor-azul-borda);">
+        <h3 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro); margin-bottom: 8px;">
+          Suas poligonais grátis acabaram
+        </h3>
+        <p style="font-size: 14px; color: var(--cor-cinza); max-width: 520px; margin: 0 auto 20px;">
+          Assine para continuar calculando e desenhando poligonais — pagamento por Pix, boleto ou cartão, sem renovação automática.
+        </p>
+        <button type="button" id="btnAssinarPoligonal" class="btn-submit" style="width: auto; display: inline-flex; padding: 14px 28px;">
+          <span>Assinar e continuar →</span>
+        </button>
+        <div id="poligonalPaywallStatus" class="status-message" style="margin-top: 16px;"></div>
+      </div>
 
       <p style="font-size: 12.5px; color: var(--cor-cinza); margin-top: 16px;">
         Formatos de azimute aceitos: <code>189°1'24.32"</code> ou decimal <code>189.5</code>. Ao colar do Excel, a ferramenta reconhece 2, 4 ou 6 colunas (incluindo o formato completo do memorial: Vértice Inicial, Vértice Final, Azimute, Distância, E, N).
