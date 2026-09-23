@@ -429,6 +429,65 @@ main {
   border-color: var(--cor-cinza);
 }
 
+/* Aviso de confirmação (substitui o confirm() do navegador) */
+.zonea-dialog {
+  margin: auto; /* o reset global de margens tiraria o centralizamento nativo do <dialog> */
+  border: none;
+  border-radius: var(--raio-borda-lg);
+  padding: 0;
+  width: min(420px, calc(100vw - 32px));
+  box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.35);
+  font-family: var(--fonte-principal);
+  color: var(--cor-cinza-escuro);
+}
+
+.zonea-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.zonea-dialog-corpo {
+  padding: 24px;
+}
+
+.zonea-dialog-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.zonea-dialog-msg {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0 0 20px;
+}
+
+.zonea-dialog-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.zonea-dialog-ok {
+  background: var(--cor-azul);
+  color: var(--cor-branco);
+  border: 1px solid transparent;
+  padding: 12px 20px;
+  font-family: var(--fonte-principal);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--raio-borda-md);
+  cursor: pointer;
+}
+
+.zonea-dialog-ok.perigo {
+  background: #B42318;
+}
+
+.zonea-dialog-ok:hover {
+  filter: brightness(0.92);
+}
+
 /* Tabela editável (Reconstituir a Poligonal) */
 .poligonal-edit-table th:first-child,
 .poligonal-edit-table td:first-child {

@@ -732,10 +732,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSvg({ ok: fechou });
   });
 
-  btnResetPoligonal.addEventListener('click', () => {
+  btnResetPoligonal.addEventListener('click', async () => {
     const hasData = rows.length > 1 || rows[0].initialEStr || rows[0].initialNStr;
     if (!hasData) return;
-    if (!confirm('Deseja limpar todos os pontos inseridos e recomeçar?')) return;
+    const limpar = await confirmarZonea({
+      titulo: 'Limpar tudo?',
+      mensagem: 'Todos os pontos e resultados desta poligonal serão apagados e você recomeça do zero. Essa ação não pode ser desfeita.',
+      confirmar: 'Limpar tudo',
+      perigo: true,
+    });
+    if (!limpar) return;
 
     rows = [emptyRow()];
     chaveCreditada = null;

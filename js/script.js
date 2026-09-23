@@ -30,6 +30,41 @@ let dadosCarregadosComSucesso = true; // vira false se o fetch de municipios.jso
 let resolverZoneaDadosProntos;
 window.zoneaDadosProntos = new Promise((resolve) => { resolverZoneaDadosProntos = resolve; });
 
+// Substitui o confirm() do navegador por um aviso no estilo do site. Devolve uma Promise:
+// true se a pessoa confirmou, false se cancelou (botão, Esc ou clique fora).
+function confirmarZonea({ titulo, mensagem, confirmar = 'Confirmar', cancelar = 'Cancelar', perigo = false }) {
+  return new Promise((resolve) => {
+    const dlg = document.createElement('dialog');
+    dlg.className = 'zonea-dialog';
+    dlg.setAttribute('aria-labelledby', 'zoneaDialogTitulo');
+    dlg.innerHTML = `
+      <form method="dialog" class="zonea-dialog-corpo">
+        <h2 id="zoneaDialogTitulo" class="zonea-dialog-titulo"></h2>
+        <p class="zonea-dialog-msg"></p>
+        <div class="zonea-dialog-acoes">
+          <button type="submit" value="cancelar" class="btn-secondary" autofocus></button>
+          <button type="submit" value="ok" class="zonea-dialog-ok"></button>
+        </div>
+      </form>`;
+    dlg.querySelector('.zonea-dialog-titulo').textContent = titulo;
+    dlg.querySelector('.zonea-dialog-msg').textContent = mensagem;
+    const [btnCancelar, btnOk] = dlg.querySelectorAll('button');
+    btnCancelar.textContent = cancelar;
+    btnOk.textContent = confirmar;
+    if (perigo) btnOk.classList.add('perigo');
+
+    dlg.addEventListener('close', () => {
+      resolve(dlg.returnValue === 'ok');
+      dlg.remove();
+    });
+    // clique no fundo escuro (fora da caixa) cancela
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close('cancelar'); });
+
+    document.body.appendChild(dlg);
+    dlg.showModal();
+  });
+}
+
 function normalize(str) {
   // remove marcas diacríticas (acentos) resultantes da decomposição NFD:
   // ocupam a faixa Unicode 0x0300–0x036F (Combining Diacritical Marks)
@@ -249,7 +284,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnLockToggle.addEventListener('click', async () => {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
-        if (confirm('Deseja encerrar sua sessão no Zonea?')) {
+        const sair = await confirmarZonea({
+          titulo: 'Encerrar sessão?',
+          mensagem: 'Você sai da sua conta neste navegador. Dá pra entrar de novo quando quiser.',
+          confirmar: 'Sair',
+        });
+        if (sair) {
           await supabaseClient.auth.signOut();
           window.location.href = '/servicos.html';
         }
