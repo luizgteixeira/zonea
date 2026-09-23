@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       badge.textContent = 'SEM ASSINATURA ATIVA';
       badge.className = 'tag busca-direta';
-      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. Assine para liberar a consulta e a Ferramenta de Poligonal.';
+      details.textContent = 'Sua conta ainda não tem uma assinatura ativa. Assine para liberar a Ferramenta de Poligonal.';
       btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de saber sobre outras formas de pagamento.`);
       btnWhatsapp.style.display = '';
       if (btnAssinarEl) btnAssinarEl.style.display = '';

@@ -23,13 +23,13 @@ Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu própr
 ## O que dá pra fazer no site hoje
 
 * **Buscar um município e ir direto à fonte oficial** — digite o nome (o campo até corrige acentos e maiúsculas/minúsculas) e o Zonea mostra o link confirmado do geoportal daquela cidade, junto com um resumo do que tem disponível lá.
-* **Explorar o mapa da RMBH** — um mapa interativo (Leaflet + malha oficial do IBGE) com o contorno dos 34 municípios. Clique em qualquer um pra ver o mesmo card de dados da busca. Belo Horizonte é liberado gratuitamente pra qualquer visitante, sem conta, como amostra do produto.
+* **Explorar o mapa da RMBH** — um mapa interativo (Leaflet + malha oficial do IBGE) com o contorno dos 34 municípios. Clique em qualquer um pra ver o mesmo card de dados da busca e ir direto ao portal da prefeitura.
 * **Saber se o dado é confiável** — cada resultado mostra se o portal já foi auditado por nós ("Fonte Auditada") ou se ainda está em fase de checagem ("Busca Direta"). E se um portal cair fora do ar, o Zonea avisa isso na tela, em vez de simplesmente te mandar para um link quebrado.
 * **Aprender os termos técnicos e a prática** — a Central de Conhecimento reúne um glossário (WMS, WFS, Datum, SIRGAS 2000 e outros termos que aparecem nos portais de geoprocessamento) e artigos práticos, como calcular área/perímetro de uma poligonal a partir de azimute e distância, o que é erro de fechamento e como corrigi-lo, e o que é um memorial descritivo.
 * **Desenhar uma poligonal automaticamente** — em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo.
 * **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-A busca de município e o mapa são livres pra qualquer visitante, sem precisar de conta — inclusive dá pra ver o link real de **um município confirmado gratuitamente**, como prévia (além de Belo Horizonte, sempre grátis no mapa). Pra continuar acessando outros municípios confirmados e usar a Ferramenta de Poligonal, é preciso criar conta em `conta.html` e assinar (Pix, boleto ou cartão, via Mercado Pago).
+A busca de município, o mapa e os artigos são **100% gratuitos**, sem precisar de conta — os dados dos municípios são públicos e vêm das próprias prefeituras. O que é pago é a **Ferramenta de Poligonal**: pra usá-la é preciso criar conta em `conta.html` e assinar (Pix, boleto ou cartão, via Mercado Pago).
 
 ---
 
@@ -40,9 +40,9 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * As informações públicas dos municípios ficam num arquivo separado (`data/municipios.json`), fora do código da página — assim dá pra atualizar os dados sem mexer no visual do site.
 * O visual (cores, fontes, espaçamentos) é centralizado num único arquivo de estilo (`css/estilo.css`), então mudar a identidade visual do site inteiro é uma questão de editar um lugar só.
 * Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo). Todos os links internos gerados por JavaScript usam caminho absoluto a partir da raiz (ex. `/conta.html`), pra funcionar tanto nas páginas do primeiro nível quanto nas de dentro de `conhecimento/`.
-* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`.
-* **Dados sensíveis por município** (link do portal, detalhes técnicos, sistema de referência) não estão em `data/municipios.json` — moram na tabela `municipios_protegido` no Supabase, protegida por Row Level Security: só é lida por quem está logado **e** com assinatura ativa, com uma exceção: a linha de Belo Horizonte tem a flag `is_demo`, liberada por uma policy pública — é assim que o mapa e a busca mostram o card completo de BH pra qualquer visitante, sem exigir login.
-* **Consulta gratuita** (município confirmado, fora Belo Horizonte): a Home não exige login. Quando um visitante sem assinatura busca um município confirmado, `js/script.js` chama a Edge Function `get-preview-municipio`, que libera os dados reais **uma única vez por visitante** — controlado no servidor pela tabela `anon_preview_usado`, usando um ID anônimo gerado no navegador (`getDeviceId()`, só um UUID em `localStorage`, não é autenticação). Depois da primeira vez, volta a pedir assinatura — e o card bloqueado oferece um formulário opcional pra deixar contato e ser avisado antes de assinar (Edge Function `submit-lead`, tabela `leads_interesse`).
+* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`. Só a Poligonal depende disso: busca, mapa e artigos funcionam mesmo com o Supabase fora do ar.
+* **Dados dos municípios** (link do portal, sistema, detalhes técnicos, sistema de referência, status de disponibilidade) ficam todos em `data/municipios.json`, um arquivo estático e público — não há mais nenhuma consulta a banco pra buscar ou mostrar um município.
+* As tabelas e Edge Functions da antiga trava por município (`municipios_protegido`, `anon_preview_usado`, `leads_interesse`, `get-preview-municipio`, `submit-lead`) **não são mais usadas pelo site** e ficam no repositório só como histórico, até serem desativadas no Supabase.
 * A **Poligonal** (`poligonal.html`) exige sessão **e** assinatura ativa (não só login) — é a ferramenta paga.
 * **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
 * **Mapa** (`mapa.html` + `js/mapa.js`): usa [Leaflet](https://leafletjs.com) sobre tiles do OpenStreetMap e uma malha de limites municipais derivada de dados abertos do IBGE (`data/rmbh-municipios.geojson`). Reaproveita a mesma função de renderização de card da busca (`renderMunicipioCard`, em `js/script.js`), então o comportamento de acesso é idêntico nos dois lugares.
@@ -53,8 +53,8 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 
 ```text
 /
-├── index.html         # Página principal — busca de municípios (livre, com 1 consulta grátis por visitante)
-├── mapa.html           # Mapa interativo dos 34 municípios da RMBH (Belo Horizonte sempre grátis)
+├── index.html         # Página principal — busca de municípios (livre)
+├── mapa.html           # Mapa interativo dos 34 municípios da RMBH (livre)
 ├── servicos.html      # Sobre o Zonea, casos de uso e chamada para criar conta
 ├── conhecimento.html  # Glossário técnico + índice dos artigos práticos
 ├── conhecimento/
@@ -73,20 +73,20 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── supabase-client.js   # Inicialização do client Supabase (usado em toda página)
 │   └── auth.js               # Cadastro/login/logout, usado só em conta.html
 ├── data/
-│   ├── municipios.json         # Lista pública dos 34 municípios (campos sensíveis vivem no Supabase)
+│   ├── municipios.json         # Os 34 municípios: dados públicos + portal oficial auditado de cada um
 │   ├── config.json             # Configurações gerais (ex: número do WhatsApp)
 │   └── rmbh-municipios.geojson # Malha dos limites dos 34 municípios (derivada de dados abertos do IBGE)
 ├── supabase/
 │   ├── migrations/
 │   │   ├── 0001_init.sql                     # Schema inicial (tabelas + Row Level Security)
-│   │   ├── 0002_preview_gratis.sql           # Tabela de controle da consulta gratuita
-│   │   ├── 0003_leads_interesse.sql          # Tabela de captura de contato (card bloqueado)
-│   │   └── 0004_mapa_demo_bh.sql             # Flag is_demo + policy pública (Belo Horizonte grátis)
+│   │   ├── 0002_preview_gratis.sql           # (em desuso) Tabela da antiga consulta gratuita por dispositivo
+│   │   ├── 0003_leads_interesse.sql          # (em desuso) Tabela da antiga captura de contato
+│   │   └── 0004_mapa_demo_bh.sql             # (em desuso) Flag is_demo da antiga regra "Belo Horizonte grátis"
 │   └── functions/
 │       ├── create-mp-preference/index.ts     # Gera o link de pagamento (Mercado Pago Checkout Pro)
 │       ├── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
-│       ├── get-preview-municipio/index.ts    # Libera a consulta gratuita (1 por visitante anônimo)
-│       └── submit-lead/index.ts              # Registra o contato de quem pediu pra ser avisado
+│       ├── get-preview-municipio/index.ts    # (em desuso) Antiga consulta gratuita por visitante
+│       └── submit-lead/index.ts              # (em desuso) Antigo registro de contato
 ├── scripts/
 │   └── migrate-municipios.mjs    # Script histórico da migração inicial (Fase 2) — hoje desatualizado: lê
 │                                    # link/sistema/detalhes_tecnicos de data/municipios.json, campos que
@@ -119,7 +119,7 @@ python -m http.server 8000
 npx serve .
 ```
 
-Depois, acesse `http://localhost:8000/servicos.html` no navegador (a busca de município e o mapa são livres; a ferramenta de poligonal exige assinatura ativa — crie uma conta em `conta.html`).
+Depois, acesse `http://localhost:8000/servicos.html` no navegador (busca, mapa e artigos são livres; a ferramenta de poligonal exige assinatura ativa — crie uma conta em `conta.html`).
 
 ---
 

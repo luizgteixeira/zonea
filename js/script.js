@@ -4,11 +4,9 @@
    ============================================================ */
 
 // 1. GUARD DE ACESSO (GATED CONTENT) — sessão real via Supabase Auth
-// A Home (index.html) é livre pra qualquer visitante: a busca funciona sem
-// conta, com uma consulta grátis a um município confirmado por visitante
-// (ver getDeviceId()/get-preview-municipio mais abaixo) — os dados sensíveis
-// continuam protegidos por RLS no Supabase, não por esse redirecionamento.
-// Só a Poligonal (ferramenta paga) continua exigindo login.
+// Busca, mapa e artigos são 100% livres (os dados dos municípios são públicos e
+// vêm de data/municipios.json). Só a Poligonal (ferramenta paga) exige login
+// com assinatura ativa.
 const isGatedPage = window.location.pathname.endsWith('poligonal.html');
 if (isGatedPage) {
   getAssinaturaAtiva().then(({ ativa }) => {
@@ -18,26 +16,12 @@ if (isGatedPage) {
   });
 }
 
-// Identificador anônimo por visitante (só um UUID aleatório guardado no
-// navegador) — usado exclusivamente pra controlar a consulta gratuita de
-// município confirmado (1 por visitante). Não é autenticação nem substitui
-// login: é só a chave que a Edge Function get-preview-municipio usa pra
-// saber se esse navegador já usou a cortesia.
-function getDeviceId() {
-  let id = localStorage.getItem('zonea_device_id');
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem('zonea_device_id', id);
-  }
-  return id;
-}
-
 let MUNICIPIOS = [];
 let CONFIG = { whatsapp: '5531992609970' }; // fallback caso data/config.json não carregue
 let dadosCarregadosComSucesso = true; // vira false se o fetch de municipios.json falhar
 
-// Promise que resolve quando MUNICIPIOS já está carregado e mesclado com os dados
-// protegidos (ver DOMContentLoaded abaixo). script.js e mapa.js escutam
+// Promise que resolve quando MUNICIPIOS já está carregado (ver DOMContentLoaded
+// abaixo). script.js e mapa.js escutam
 // DOMContentLoaded separadamente — sem isso, mapa.js poderia ler MUNICIPIOS antes
 // dele estar pronto. Páginas que precisam de MUNICIPIOS fora da busca (ex. o mapa)
 // devem fazer `await window.zoneaDadosProntos;` antes de usá-lo.
@@ -63,13 +47,11 @@ function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, (ch) => ENTITIES[ch]);
 }
 
-// Renderiza o card de resultado de um município (confirmado com dados / confirmado
-// bloqueado / ainda não confirmado) dentro de `container`. Usado pela busca da Home
-// e pelo mapa (js/mapa.js) — é a mesma decisão de estado nos dois lugares, baseada
-// só em `found.confirmado`/`found.link` (que já vêm com o merge de municipios_protegido
-// aplicado, quando houver). `opts.previaGratisConcedidaAgora` só é usado pela busca.
-function renderMunicipioCard(found, container, opts = {}) {
-  const { previaGratisConcedidaAgora = false } = opts;
+// Renderiza o card de resultado de um município (confirmado com portal auditado /
+// ainda não confirmado) dentro de `container`. Usado pela busca da Home e pelo
+// mapa (js/mapa.js) — é a mesma decisão de estado nos dois lugares, baseada só em
+// `found.confirmado`/`found.link`, ambos vindos de data/municipios.json.
+function renderMunicipioCard(found, container) {
   let html;
 
   if (found.confirmado && found.link) {
@@ -83,12 +65,6 @@ function renderMunicipioCard(found, container, opts = {}) {
           <span class="tag confirmado">FONTE AUDITADA</span>
           ${indisponivel ? '<span class="tag indisponivel">FORA DO AR</span>' : ''}
         </div>
-
-        ${previaGratisConcedidaAgora ? `
-        <div class="status-message ok visible" style="margin-top: 0; margin-bottom: 16px;">
-          🎁 <strong>Essa foi sua consulta gratuita.</strong> Para acessar outros municípios confirmados, <a href="/conta.html">crie sua conta e assine</a>.
-        </div>
-        ` : ''}
 
         <p class="result-card-desc">Resumo dos dados e camadas urbanísticas mapeadas para este município:</p>
 
@@ -113,40 +89,6 @@ function renderMunicipioCard(found, container, opts = {}) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/></svg>
           <span>Avise-me quando o portal voltar</span>
         </a>
-        ` : ''}
-      </div>
-    `;
-  } else if (found.confirmado) {
-    // Município já auditado pelo Zonea, mas os campos protegidos (link,
-    // detalhes técnicos) não vieram — ou a assinatura não está ativa, ou
-    // houve erro ao buscá-los no Supabase (ver console).
-    const jaEnviouLead = !!localStorage.getItem('zonea_lead_enviado');
-    html = `
-      <div class="result-card confirmed">
-        <div class="result-card-head">
-          <span class="result-card-title">🔒 Portal Auditado — ${escapeHtml(found.nome)}</span>
-          <span class="tag confirmado">FONTE AUDITADA</span>
-        </div>
-
-        <p class="result-card-desc">O Zonea já auditou o portal oficial de ${escapeHtml(found.nome)}, mas os detalhes completos (link direto e dados técnicos) exigem uma assinatura ativa.</p>
-
-        <a href="/conta.html" class="result-cta primary">
-          <span>Ativar Assinatura →</span>
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </a>
-
-        ${!jaEnviouLead ? `
-        <details class="lead-capture">
-          <summary>Prefere ser avisado antes de assinar?</summary>
-          <form class="lead-capture-form" data-municipio="${escapeHtml(found.slug)}">
-            <input type="text" name="contato" class="lead-capture-input" placeholder="Seu e-mail ou WhatsApp" required autocomplete="email">
-            <label class="lead-capture-consent">
-              <input type="checkbox" required>
-              <span>Aceito ser contatado pela equipe do Zonea sobre este interesse.</span>
-            </label>
-            <button type="submit" class="lead-capture-btn">Enviar</button>
-          </form>
-        </details>
         ` : ''}
       </div>
     `;
@@ -178,39 +120,6 @@ function renderMunicipioCard(found, container, opts = {}) {
   container.className = 'status-message visible';
 }
 
-// Captura de interesse (card bloqueado, "prefere ser avisado antes de assinar?").
-// Delegado no document em vez de anexado a cada card renderizado, porque
-// renderMunicipioCard substitui o innerHTML do container a cada chamada — um
-// listener direto no formulário seria descartado junto no próximo render, e o
-// mesmo card aparece tanto na busca da Home quanto no mapa (js/mapa.js).
-document.addEventListener('submit', async (e) => {
-  const form = e.target.closest('.lead-capture-form');
-  if (!form) return;
-  e.preventDefault();
-
-  const contato = form.querySelector('[name="contato"]').value.trim();
-  if (!contato) return;
-
-  const btn = form.querySelector('.lead-capture-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
-
-  try {
-    const { error } = await supabaseClient.functions.invoke('submit-lead', {
-      body: { contato, municipioSlug: form.dataset.municipio || null, deviceId: getDeviceId() },
-    });
-    if (error) throw error;
-
-    localStorage.setItem('zonea_lead_enviado', '1');
-    const wrapper = form.closest('.lead-capture');
-    if (wrapper) {
-      wrapper.outerHTML = '<p class="lead-capture-sucesso">✓ Contato registrado! Vamos te avisar por lá.</p>';
-    }
-  } catch (err) {
-    console.error('Erro ao registrar interesse no Zonea:', err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Enviar'; }
-  }
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
   // 2. CARREGAMENTO ASSÍNCRONO DOS DADOS (DECOUPLED JSON — campos públicos)
   try {
@@ -229,28 +138,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     dadosCarregadosComSucesso = false;
   }
 
-  // Sessão/assinatura do usuário — calculada uma única vez e reaproveitada
-  // tanto para os dados protegidos (abaixo) quanto para o header (item 4).
-  const assinatura = await getAssinaturaAtiva();
-
-  // 2b. DADOS PROTEGIDOS (link, sistema, detalhes técnicos) — vindos do Supabase
-  // (tabela municipios_protegido, atrás de RLS) em vez do arquivo estático, que
-  // só tem os campos públicos. A consulta roda pra QUALQUER visitante — quem não
-  // tem assinatura ativa só recebe, pela própria RLS, a linha marcada como
-  // demonstração pública (Belo Horizonte); assinante ativo recebe todas. O
-  // JavaScript não precisa saber qual é a regra, só faz merge do que voltar.
-  try {
-    const { data: protegidos, error } = await supabaseClient
-      .from('municipios_protegido')
-      .select('slug, link, sistema, detalhes_tecnicos, sistema_referencia, indisponivel, indisponivel_desde');
-    if (error) throw error;
-    const porSlug = new Map(protegidos.map(p => [p.slug, p]));
-    MUNICIPIOS = MUNICIPIOS.map(m => ({ ...m, ...(porSlug.get(m.slug) || {}) }));
-  } catch (err) {
-    console.error('Erro ao carregar dados protegidos do Zonea:', err);
-  }
-
+  // Busca, mapa e artigos dependem só dos dados estáticos acima — liberam já,
+  // sem esperar (nem depender de) o Supabase. Sessão/assinatura só importa pro
+  // botão do header (item 4) e pro guard da Poligonal, e carrega em paralelo.
   resolverZoneaDadosProntos();
+  const assinaturaPromise = getAssinaturaAtiva();
 
   // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página,
   // já com uma mensagem padrão pra equipe saber do que se trata.
@@ -365,7 +257,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  renderHeaderLockUI(assinatura.session, assinatura.ativa);
+  assinaturaPromise
+    .then(({ session, ativa }) => renderHeaderLockUI(session, ativa))
+    .catch((err) => console.error('Erro ao carregar a sessão do Zonea:', err));
 
   // 6. AUTOCOMPLETE E FORMULÁRIO DE CONSULTA (HOME)
   const input = document.getElementById('municipio');
@@ -484,7 +378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 7. SUBMISSÃO DO FORMULÁRIO & REFINAMENTO DE RESULTADOS
   if (form && input && statusEl) {
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
       const val = input.value.trim();
       if (!val) {
@@ -499,35 +393,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      let found = MUNICIPIOS.find(m => normalize(m.nome) === normalize(val));
+      const found = MUNICIPIOS.find(m => normalize(m.nome) === normalize(val));
       if (!found) {
         statusEl.innerHTML = `<div class="status-message error visible">"${escapeHtml(val)}" não faz parte dos 34 municípios cadastrados da RMBH.</div>`;
         statusEl.className = 'status-message visible';
         return;
       }
 
-      let previaGratisConcedidaAgora = false;
-
-      // Município já confirmado, mas ainda não temos os dados protegidos em memória
-      // (visitante sem assinatura ativa) — tenta a consulta gratuita (1 por visitante,
-      // controlada no servidor via Edge Function, não pelo navegador).
-      if (found.confirmado && !found.link) {
-        statusEl.innerHTML = '<div class="status-message ok visible">Consultando fonte oficial...</div>';
-        statusEl.className = 'status-message visible';
-        try {
-          const { data, error } = await supabaseClient.functions.invoke('get-preview-municipio', {
-            body: { deviceId: getDeviceId(), slug: found.slug },
-          });
-          if (!error && data?.allowed && data.municipio) {
-            found = { ...found, ...data.municipio };
-            previaGratisConcedidaAgora = true;
-          }
-        } catch (err) {
-          console.error('Erro ao consultar prévia gratuita do Zonea:', err);
-        }
-      }
-
-      renderMunicipioCard(found, statusEl, { previaGratisConcedidaAgora });
+      renderMunicipioCard(found, statusEl);
     });
   }
 

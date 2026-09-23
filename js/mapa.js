@@ -33,17 +33,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function estiloDoMunicipio(m) {
     if (m && m.confirmado && m.link) {
-      // confirmado e com dados liberados pra esse visitante (BH sempre, ou assinante ativo)
+      // portal oficial auditado pelo Zonea
       return { fillColor: '#ECFDF5', color: '#2E8B57', weight: 2, fillOpacity: 0.55 };
     }
-    if (m && m.confirmado) {
-      // confirmado, mas exige assinatura ativa pra ver os dados
-      return { fillColor: '#EFF6FF', color: '#1E5AA8', weight: 2, fillOpacity: 0.55, dashArray: '4 3' };
-    }
-    // ainda não confirmado — dado público de qualquer forma, sem trava.
-    // Contorno mais escuro e mais espesso que as tentativas anteriores: mesmo
-    // um cinza médio (#94A3B8) ainda sumia visualmente sobre o tile claro do
-    // OpenStreetMap — usuários relataram só conseguir ver Belo Horizonte.
+    // ainda não confirmado. Contorno escuro e espesso de propósito: um cinza mais
+    // claro sumia sobre o tile claro do OpenStreetMap e parecia que só os
+    // municípios confirmados existiam no mapa.
     return { fillColor: '#E2E8F0', color: '#475569', weight: 2, fillOpacity: 0.45 };
   }
 
@@ -53,8 +48,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
     maxZoom: 17,
   }).addTo(map);
-
-  let layerBelohorizonte = null;
 
   const geoLayer = L.geoJSON(geojson, {
     style: (feature) => estiloDoMunicipio(encontrarMunicipio(feature.properties.name)),
@@ -68,10 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       layer.on('click', () => {
         if (m) renderMunicipioCard(m, painelEl);
       });
-
-      if (m && m.slug === 'belo-horizonte') {
-        layerBelohorizonte = layer;
-      }
     },
   }).addTo(map);
 
@@ -81,12 +70,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Não foi possível ajustar os limites do mapa:', err);
   }
 
-  // Belo Horizonte ganha um selo fixo "GRÁTIS" — e o painel já abre com os
-  // dados dele, sem precisar de nenhum clique, pra mostrar o produto na hora.
-  if (layerBelohorizonte) {
-    layerBelohorizonte.bindTooltip('GRÁTIS', { permanent: true, direction: 'center', className: 'mapa-badge-demo' });
-    const bh = encontrarMunicipio('Belo Horizonte');
-    if (bh) renderMunicipioCard(bh, painelEl);
+  // O painel já abre com Belo Horizonte (o maior polo da região), sem precisar
+  // de nenhum clique — evita um painel vazio e mostra o card na hora.
+  const bh = encontrarMunicipio('Belo Horizonte');
+  if (bh) {
+    renderMunicipioCard(bh, painelEl);
   } else {
     painelEl.innerHTML = '<div class="status-message ok visible">Clique em um município no mapa pra ver os dados disponíveis.</div>';
     painelEl.className = 'status-message visible';
