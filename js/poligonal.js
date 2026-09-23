@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const paywallStatusEl = document.getElementById('poligonalPaywallStatus');
   const btnAssinarPoligonal = document.getElementById('btnAssinarPoligonal');
 
+  const btnExportarDxf = document.getElementById('btnExportarDxf');
+  const btnExportarKml = document.getElementById('btnExportarKml');
+  const btnExportarKmz = document.getElementById('btnExportarKmz');
+
   if (!tbody) return; // página sem a ferramenta — não faz nada
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -34,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let rows = [emptyRow()];
   let computed = [];   // computed[i] = { E, N, valid }
   let fieldFlags = []; // fieldFlags[i] = { azimuteInvalid, distanciaInvalid, initialEInvalid, initialNInvalid }
+  let ultimoCalculo = null; // { pontos, area, perimetro, erroFechamento } do último "Fechar Poligonal e Calcular"
 
   function emptyRow() {
     return { azimuteStr: '', distanciaStr: '', initialEStr: '', initialNStr: '' };
@@ -164,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultPerimetro.classList.add('stale');
     resultFechamento.classList.add('stale');
     if (resultsStaleNotice) resultsStaleNotice.hidden = false;
+    atualizarBotoesExportar();
   }
 
   function clearResultsStale() {
@@ -171,7 +177,39 @@ document.addEventListener('DOMContentLoaded', () => {
     resultPerimetro.classList.remove('stale');
     resultFechamento.classList.remove('stale');
     if (resultsStaleNotice) resultsStaleNotice.hidden = true;
+    atualizarBotoesExportar();
   }
+
+  // ---------- EXPORTAÇÃO (DXF / KML / KMZ) ----------
+  // Sempre exporta o snapshot do último cálculo — por isso os botões só ficam ativos
+  // quando os resultados na tela estão atualizados (tabela não mudou desde então).
+  function atualizarBotoesExportar() {
+    const pode = !!ultimoCalculo && !!resultsStaleNotice && resultsStaleNotice.hidden;
+    [btnExportarDxf, btnExportarKml, btnExportarKmz].forEach((b) => { if (b) b.disabled = !pode; });
+  }
+
+  function nomeBaseDoArquivo() {
+    const d = new Date();
+    const dois = (n) => String(n).padStart(2, '0');
+    return `poligonal-zonea-${d.getFullYear()}${dois(d.getMonth() + 1)}${dois(d.getDate())}-${dois(d.getHours())}${dois(d.getMinutes())}`;
+  }
+
+  function exportar(botao, extensao, tipoMime, gerar) {
+    if (!botao) return;
+    botao.addEventListener('click', () => {
+      if (!ultimoCalculo) return;
+      try {
+        ZoneaExport.baixarArquivo(`${nomeBaseDoArquivo()}.${extensao}`, gerar(ultimoCalculo), tipoMime);
+      } catch (err) {
+        console.error(`Erro ao gerar o arquivo ${extensao.toUpperCase()}:`, err);
+        showStatus('error', `❌ Não foi possível gerar o arquivo ${extensao.toUpperCase()}. Tente novamente.`);
+      }
+    });
+  }
+
+  exportar(btnExportarDxf, 'dxf', 'application/dxf', (d) => ZoneaExport.gerarDXF(d));
+  exportar(btnExportarKml, 'kml', 'application/vnd.google-earth.kml+xml', (d) => ZoneaExport.gerarKML(d));
+  exportar(btnExportarKmz, 'kmz', 'application/vnd.google-earth.kmz', (d) => ZoneaExport.gerarKMZ(d));
 
   // ---------- STATUS ----------
   function showStatus(state, html) {
@@ -641,6 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const erroFechamento = distanceBetween(pts[pts.length - 1], pts[0]);
     const fechou = erroFechamento <= CLOSURE_TOLERANCE_M;
 
+    ultimoCalculo = { pontos: pts, area, perimetro, erroFechamento };
     clearResultsStale();
     resultArea.textContent = formatNumber(area, 2);
     resultPerimetro.textContent = formatNumber(perimetro, 2);
@@ -663,6 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     rows = [emptyRow()];
     chaveCreditada = null;
+    ultimoCalculo = null;
     resultArea.textContent = '—';
     resultPerimetro.textContent = '—';
     resultFechamento.textContent = '—';

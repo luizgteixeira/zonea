@@ -1547,6 +1547,38 @@ footer,
   }
 }
 
+/* Exportação da poligonal (DXF / KML / KMZ) — card de Resultados */
+.poligonal-export {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cor-cinza-borda);
+}
+
+.poligonal-export-titulo {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 12px;
+}
+
+.poligonal-export-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.poligonal-export-botoes .btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.poligonal-export-nota {
+  margin-top: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--cor-cinza);
+}
+
 /* 16. PÁGINAS DE ARTIGO (conhecimento/*.html) */
 .article-container {
   max-width: 760px;

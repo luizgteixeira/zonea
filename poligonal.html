@@ -213,6 +213,17 @@
             <span class="metric-label">Erro de Fechamento (m)</span>
           </div>
         </div>
+        <div class="poligonal-export">
+          <h3 class="poligonal-export-titulo">Baixar o desenho</h3>
+          <div class="poligonal-export-botoes">
+            <button type="button" id="btnExportarDxf" class="btn-secondary" disabled>DXF (AutoCAD)</button>
+            <button type="button" id="btnExportarKml" class="btn-secondary" disabled>KML (Google Earth)</button>
+            <button type="button" id="btnExportarKmz" class="btn-secondary" disabled>KMZ (Google Earth)</button>
+          </div>
+          <p class="poligonal-export-nota">
+            Disponível depois de "Fechar Poligonal e Calcular". O <strong>DXF</strong> abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM (SIRGAS 2000, zona 23S). O <strong>KML/KMZ</strong> abre no Google Earth, em latitude/longitude.
+          </p>
+        </div>
         <p id="resultsStaleNotice" class="results-stale-notice" hidden>
           ⚠️ Resultados desatualizados — a tabela mudou desde o último cálculo. Clique em "Fechar Poligonal e Calcular" para atualizar.
         </p>
@@ -250,6 +261,7 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/script.js"></script>
+  <script src="js/exportar-poligonal.js"></script>
   <script src="js/poligonal.js"></script>
 </body>
 </html>
