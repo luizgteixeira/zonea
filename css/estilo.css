@@ -2140,3 +2140,63 @@ footer,
   border: 1px solid var(--cor-cinza-borda);
   border-radius: var(--raio-borda-md);
 }
+
+/* Busca por endereço ou CEP (mapa.html) */
+.busca-endereco {
+  max-width: 1000px;
+  margin: 0 auto 24px;
+  padding: 22px 24px;
+}
+
+.busca-endereco-titulo {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 12px;
+}
+
+.busca-endereco-form {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.busca-endereco-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+  font-family: var(--fonte-principal);
+  font-size: 15px;
+  color: var(--cor-cinza-escuro);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+}
+
+.busca-endereco-btn {
+  flex: none;
+  width: auto;
+  padding: 14px 24px;
+}
+
+#buscaEnderecoResultado.visible {
+  margin-top: 14px;
+  line-height: 1.5;
+}
+
+#buscaEnderecoResultado.visible div + div {
+  margin-top: 4px;
+}
+
+.busca-endereco-nota {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--cor-cinza);
+}
+
+@media (max-width: 560px) {
+  .busca-endereco { padding: 18px 16px; }
+  .busca-endereco-form { flex-direction: column; }
+  .busca-endereco-btn { width: 100%; }
+}

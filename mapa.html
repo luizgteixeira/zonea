@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="css/estilo.css?v=20260924g">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925a">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -69,8 +69,26 @@
       </h1>
 
       <p class="hero-subtitle">
-        Clique em um município pra ver os dados oficiais disponíveis e ir direto ao portal da prefeitura.
+        Clique em um município — ou busque um endereço ou CEP — pra ver os dados oficiais disponíveis e ir direto ao portal da prefeitura.
         <strong>Gratuito, sem precisar de conta.</strong>
+      </p>
+    </section>
+
+    <!-- BUSCA POR ENDEREÇO OU CEP -->
+    <section class="busca-endereco card" aria-labelledby="buscaEnderecoTitulo">
+      <h2 id="buscaEnderecoTitulo" class="busca-endereco-titulo">Buscar por endereço ou CEP</h2>
+      <form id="formBuscaEndereco" class="busca-endereco-form" novalidate>
+        <label for="inputEndereco" class="visually-hidden">Endereço ou CEP</label>
+        <input type="text" id="inputEndereco" class="busca-endereco-input" maxlength="160" autocomplete="off"
+               placeholder="Ex.: 30130-010  ou  Av. Afonso Pena, 1500, Belo Horizonte">
+        <button type="submit" id="btnBuscaEndereco" class="btn-submit busca-endereco-btn">
+          <span>Buscar no mapa</span>
+        </button>
+      </form>
+      <div id="buscaEnderecoResultado" class="status-message" aria-live="polite"></div>
+      <p class="busca-endereco-nota">
+        Descobre em qual município da RMBH fica o endereço e leva você ao portal certo. O CEP localiza a rua ou o bairro, não o terreno.
+        O que você digita é enviado à BrasilAPI e ao OpenStreetMap só para achar o ponto — o Zonea não guarda essa informação.
       </p>
     </section>
 
@@ -123,10 +141,11 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260924g"></script>
-  <script src="js/script.js?v=20260924g"></script>
+  <script src="js/supabase-client.js?v=20260925a"></script>
+  <script src="js/script.js?v=20260925a"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/mapa.js?v=20260924g"></script>
+  <script src="js/busca-endereco.js?v=20260925a"></script>
+  <script src="js/mapa.js?v=20260925a"></script>
 </body>
 </html>

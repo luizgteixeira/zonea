@@ -70,6 +70,121 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Não foi possível ajustar os limites do mapa:', err);
   }
 
+  // ---------- BUSCA POR ENDEREÇO / CEP ----------
+  // Localiza o ponto (BrasilAPI / OpenStreetMap), marca no mapa e mostra o card do município
+  // em que ele cai — o mesmo card do clique. Ver js/busca-endereco.js.
+  const formBusca = document.getElementById('formBuscaEndereco');
+  const inputBusca = document.getElementById('inputEndereco');
+  const btnBusca = document.getElementById('btnBuscaEndereco');
+  const resultadoBusca = document.getElementById('buscaEnderecoResultado');
+  const caixaRmbh = ZoneaEndereco.caixaDaMalha(geojson);
+  let marcadorBusca = null;
+
+  function mostrarResultadoBusca(estado, blocos) {
+    resultadoBusca.className = `status-message ${estado} visible`;
+    resultadoBusca.replaceChildren(...blocos);
+  }
+
+  // textContent (e não innerHTML): o texto vem de serviços externos e do que a pessoa digitou.
+  function linha(texto, forte) {
+    const p = document.createElement('div');
+    if (forte) {
+      const s = document.createElement('strong');
+      s.textContent = texto;
+      p.appendChild(s);
+    } else {
+      p.textContent = texto;
+    }
+    return p;
+  }
+
+  function limparMarcador() {
+    if (marcadorBusca) {
+      map.removeLayer(marcadorBusca);
+      marcadorBusca = null;
+    }
+  }
+
+  async function executarBusca(evento) {
+    evento.preventDefault();
+    const entrada = ZoneaEndereco.interpretarEntrada(inputBusca.value);
+
+    if (entrada.tipo === 'vazio') {
+      mostrarResultadoBusca('warn', [linha('Digite um endereço ou um CEP para buscar.')]);
+      return;
+    }
+    if (entrada.tipo === 'cep_invalido') {
+      mostrarResultadoBusca('warn', [linha('Esse CEP parece incompleto: são 8 números (ex.: 30130-010).')]);
+      return;
+    }
+    if (entrada.tipo === 'curto') {
+      mostrarResultadoBusca('warn', [linha('Digite um pouco mais: rua, número e município (ex.: Av. Afonso Pena, 1500, Belo Horizonte).')]);
+      return;
+    }
+
+    btnBusca.disabled = true;
+    mostrarResultadoBusca('ok', [linha('Buscando...')]);
+    limparMarcador();
+
+    let achado;
+    try {
+      achado = entrada.tipo === 'cep'
+        ? await ZoneaEndereco.buscarCep(entrada.cep, caixaRmbh)
+        : await ZoneaEndereco.buscarEndereco(entrada.texto, caixaRmbh);
+    } catch (err) {
+      console.error('Erro na busca por endereço/CEP:', err);
+      mostrarResultadoBusca('error', [linha('Não foi possível buscar agora. Confira a conexão e tente de novo em instantes.')]);
+      btnBusca.disabled = false;
+      return;
+    }
+    btnBusca.disabled = false;
+
+    if (achado.erro === 'cep_nao_encontrado') {
+      mostrarResultadoBusca('warn', [linha('Não encontramos esse CEP. Confira os números ou busque pelo endereço.')]);
+      return;
+    }
+    if (achado.erro) {
+      mostrarResultadoBusca('warn', [
+        linha('Não encontramos esse endereço na RMBH.', true),
+        linha('Inclua o bairro e o município (ex.: Rua das Flores, 100, Betim) ou tente pelo CEP.'),
+      ]);
+      return;
+    }
+
+    const feature = ZoneaEndereco.acharFeature(achado.lon, achado.lat, geojson);
+    if (!feature) {
+      mostrarResultadoBusca('warn', [
+        linha('Esse endereço fica fora da Região Metropolitana de Belo Horizonte.', true),
+        linha(achado.rotulo),
+      ]);
+      return;
+    }
+
+    marcadorBusca = L.circleMarker([achado.lat, achado.lon], {
+      radius: 9, color: '#FFFFFF', weight: 3, fillColor: '#1E5AA8', fillOpacity: 1,
+    }).addTo(map);
+    marcadorBusca.bindTooltip('Endereço buscado', { direction: 'top' });
+    map.setView([achado.lat, achado.lon], achado.precisao === 'cep' ? 14 : 16);
+
+    const nomeMunicipio = feature.properties.name;
+    const precisao = achado.precisao === 'cep'
+      ? 'Posição aproximada: o CEP localiza a rua ou o bairro, não o terreno.'
+      : 'Posição aproximada: confira o local exato no portal da prefeitura.';
+    mostrarResultadoBusca('ok', [
+      linha(`📍 Fica em ${nomeMunicipio}`, true),
+      linha(achado.rotulo),
+      linha(precisao),
+    ]);
+
+    const municipio = encontrarMunicipio(nomeMunicipio);
+    if (municipio) renderMunicipioCard(municipio, painelEl);
+
+    // O mapa fica abaixo da caixa de busca: leva a tela até o ponto marcado.
+    mapaContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  if (formBusca && inputBusca && resultadoBusca) formBusca.addEventListener('submit', executarBusca);
+
   // O painel já abre com Belo Horizonte (o maior polo da região), sem precisar
   // de nenhum clique — evita um painel vazio e mostra o card na hora.
   const bh = encontrarMunicipio('Belo Horizonte');
