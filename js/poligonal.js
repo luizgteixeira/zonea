@@ -445,7 +445,14 @@ document.addEventListener('DOMContentLoaded', () => {
       svg.appendChild(closeLine);
     }
 
+    // Quando a poligonal fecha, o último ponto calculado cai em cima do P0: desenhar os dois
+    // deixava "P0" e "P6" sobrepostos no mesmo lugar. O contorno continua fechado; só o ponto
+    // e o rótulo repetidos deixam de aparecer.
+    const ultimoRepeteInicial = points.length > 3 &&
+      distanceBetween(points[points.length - 1], points[0]) <= CLOSURE_TOLERANCE_M;
+
     points.forEach((p, i) => {
+      if (ultimoRepeteInicial && i === points.length - 1) return;
       const s = toSvg(p);
       const circle = document.createElementNS(SVG_NS, 'circle');
       circle.setAttribute('cx', s.x);
