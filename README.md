@@ -109,7 +109,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │       ├── avisar-avaliacao/index.ts         # Manda por e-mail (Resend) o aviso de avaliação nova ou editada
 │       └── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
 ├── .github/workflows/
-│   └── mirror-hostinger.yml      # Espelha automaticamente todo push em main pro repositório de deploy
+│   └── mirror-hostinger.yml      # Espelha automaticamente todo push em main pro repositório de deploy (só roda no zonea)
 ├── .htaccess           # Manda o navegador conferir o HTML antes de usar a cópia guardada (Cache-Control no-cache)
 ├── robots.txt          # Diretivas de indexação para buscadores
 ├── sitemap.xml          # Mapa do site para SEO
@@ -142,7 +142,7 @@ Depois, acesse `http://localhost:8000/servicos.html` no navegador (busca, mapa e
 
 ## Deploy
 
-O site é hospedado na Hostinger. O fluxo é: você trabalha e dá push neste repositório (`zonea`) — o workflow `.github/workflows/mirror-hostinger.yml` espelha automaticamente todo push na branch `main` para um segundo repositório (`zonea-hostinger`), que é o que a Hostinger está de fato conectada para publicar. Não existe build nem deploy manual: um `git push` aqui já é suficiente pro site novo ir ao ar.
+O site é hospedado na Hostinger. O fluxo é: você trabalha e dá push neste repositório (`zonea`) — o workflow `.github/workflows/mirror-hostinger.yml` espelha automaticamente todo push na branch `main` para um segundo repositório (`zonea-hostinger`), que é o que a Hostinger está de fato conectada para publicar. Não existe build nem deploy manual: um `git push` aqui já é suficiente pro site novo ir ao ar. **Detalhe:** como o espelho copia o repositório inteiro, o arquivo do workflow também vai parar no `zonea-hostinger`; lá ele não tem o token (`HOSTINGER_MIRROR_TOKEN` só existe no `zonea`) e falhava em todo commit, deixando um "X" vermelho (sem afetar o deploy). Por isso o job tem `if: github.repository == 'luizgteixeira/zonea'`: no repositório da Hostinger ele é ignorado. Os commits antigos de lá continuam marcados em vermelho, e isso é normal.
 
 **Cache dos arquivos:** a Hostinger entrega `.js` e `.css` com validade de 7 dias, então quem já visitou o site continuaria com a cópia velha. Por isso todo `<script>` e `<link>` de arquivo do site leva uma versão no endereço (`js/auth.js?v=20260924g`). **Ao mudar qualquer `.js` ou `.css`, troque essa versão em todas as páginas HTML** (uma busca e substituição resolve). O HTML em si não precisa disso: o `.htaccess` manda o navegador conferir sempre.
 
