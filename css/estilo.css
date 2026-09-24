@@ -2044,3 +2044,74 @@ footer,
   .creditos-titulo { font-size: 18px; }
   .creditos-detalhe { font-size: 14px; }
 }
+
+/* Checklist de requisitos da senha (cadastro) */
+.senha-checklist {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-cinza);
+}
+
+.senha-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease;
+}
+
+.senha-marca {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-cinza-borda);
+  font-size: 11px;
+  line-height: 1;
+  color: transparent;
+  transition: all 0.15s ease;
+}
+
+.senha-checklist li.ok {
+  color: var(--cor-verde-hover);
+}
+
+.senha-checklist li.ok .senha-marca {
+  background: var(--cor-verde);
+  border-color: var(--cor-verde);
+  color: var(--cor-branco);
+}
+
+.senha-checklist li.ok .senha-marca::before {
+  content: "✓";
+}
+
+.senha-checklist li.erro {
+  color: #B42318;
+}
+
+.senha-checklist li.erro .senha-marca {
+  border-color: #B42318;
+}
+
+.senha-checklist li.erro .senha-marca::before {
+  content: "✕";
+  color: #B42318;
+}
+
+.btn-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.auth-tabs[hidden] {
+  display: none;
+}

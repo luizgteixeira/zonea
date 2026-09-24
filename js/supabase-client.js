@@ -7,6 +7,15 @@
 const SUPABASE_URL = 'https://fkjmojbbxpilajehvpjy.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_UrTtjSJQDDBym-Y9VlkL0Q_2eVtMvT-';
 
+// O link do e-mail "Esqueci minha senha" volta ao site com #...&type=recovery e já deixa a pessoa
+// logada. Guardamos isso ANTES do SDK limpar o endereço, pra conta.html pedir a nova senha
+// (sem isso ela só entrava no site, sem definir senha nenhuma). Se o link cair em outra
+// página, manda pra conta.html mantendo o que veio no endereço.
+const ZONEA_RECUPERANDO_SENHA = /type=recovery/.test(window.location.hash);
+if (ZONEA_RECUPERANDO_SENHA && !window.location.pathname.endsWith('/conta.html')) {
+  window.location.replace('/conta.html' + window.location.hash);
+}
+
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Checa sessão + status de assinatura do usuário logado.

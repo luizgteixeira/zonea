@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
   const resetForm = document.getElementById('resetForm');
+  const newPasswordForm = document.getElementById('newPasswordForm');
+  const authTabs = document.getElementById('authTabs');
   const authStatus = document.getElementById('authStatus');
   const authCard = document.getElementById('authCard');
   const accountStatusCard = document.getElementById('accountStatusCard');
@@ -39,6 +41,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // Regras da senha (cadastro e "nova senha"): o checklist marca cada regra na hora que é cumprida
+  // e o botão só libera com tudo certo e as duas senhas iguais. (O Supabase também precisa exigir
+  // essas regras no painel — a checagem daqui é só a experiência do usuário.)
+  const REGRAS_SENHA = {
+    tamanho: (s) => s.length >= 6,
+    maiuscula: (s) => /\p{Lu}/u.test(s),
+    minuscula: (s) => /\p{Ll}/u.test(s),
+    numero: (s) => /\p{N}/u.test(s),
+    especial: (s) => /[^\p{L}\p{N}\s]/u.test(s),
+  };
+
+  function senhaAtendeRegras(senha) {
+    return Object.values(REGRAS_SENHA).every((regra) => regra(senha));
+  }
+
+  function configurarChecklistSenha({ senhaId, confirmaId, listaId, igualId, botaoId }) {
+    const senhaEl = document.getElementById(senhaId);
+    const confirmaEl = document.getElementById(confirmaId);
+    const igualLi = document.getElementById(igualId);
+    const botao = document.getElementById(botaoId);
+    if (!senhaEl || !confirmaEl) return;
+
+    function atualizar() {
+      const senha = senhaEl.value;
+      const confirmacao = confirmaEl.value;
+      document.querySelectorAll(`#${listaId} li`).forEach((li) => {
+        li.classList.toggle('ok', REGRAS_SENHA[li.dataset.regra](senha));
+      });
+      const igual = senha !== '' && confirmacao !== '' && senha === confirmacao;
+      if (igualLi) {
+        igualLi.classList.toggle('ok', igual);
+        igualLi.classList.toggle('erro', confirmacao !== '' && !igual);
+        igualLi.querySelector('.senha-igual-texto').textContent =
+          confirmacao !== '' && !igual ? 'As senhas ainda não são iguais' : 'As duas senhas são iguais';
+      }
+      if (botao) botao.disabled = !(senhaAtendeRegras(senha) && igual);
+    }
+
+    senhaEl.addEventListener('input', atualizar);
+    confirmaEl.addEventListener('input', atualizar);
+  }
+
+  configurarChecklistSenha({ senhaId: 'signupPassword', confirmaId: 'signupPasswordConfirm', listaId: 'signupChecklist', igualId: 'signupMatch', botaoId: 'btnCriarConta' });
+  configurarChecklistSenha({ senhaId: 'newPassword', confirmaId: 'newPasswordConfirm', listaId: 'newChecklist', igualId: 'newMatch', botaoId: 'btnSalvarNovaSenha' });
+
   function showAuthStatus(state, text) {
     authStatus.className = `status-message ${state} visible`;
     authStatus.textContent = text;
@@ -53,6 +100,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     loginForm.hidden = name !== 'login';
     signupForm.hidden = name !== 'signup';
     resetForm.hidden = name !== 'reset';
+    if (newPasswordForm) newPasswordForm.hidden = name !== 'novaSenha';
+    if (authTabs) authTabs.hidden = name === 'novaSenha';
     if (tabLogin) tabLogin.classList.toggle('active', name === 'login');
     if (tabSignup) tabSignup.classList.toggle('active', name === 'signup');
     clearAuthStatus();
@@ -88,6 +137,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
+    const confirmacao = document.getElementById('signupPasswordConfirm').value;
+    if (!senhaAtendeRegras(password)) {
+      showAuthStatus('error', 'A senha ainda não cumpre todos os requisitos da lista acima.');
+      return;
+    }
+    if (password !== confirmacao) {
+      showAuthStatus('error', 'As duas senhas não são iguais. Digite a mesma senha nos dois campos.');
+      return;
+    }
     showAuthStatus('ok', 'Criando sua conta...');
     const { data, error } = await supabaseClient.auth.signUp({ email, password });
     if (error) {
@@ -111,7 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
     const email = document.getElementById('resetEmail').value.trim();
     showAuthStatus('ok', 'Enviando...');
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/conta.html`,
+    });
     if (error) {
       showAuthStatus('error', 'Não foi possível enviar o link de redefinição.');
       return;
@@ -197,7 +257,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     return false;
   }
 
-  const noSession = await renderAccountState();
+  // Chegou pelo link do e-mail "Esqueci minha senha": pede a nova senha antes de qualquer outra coisa.
+  if (ZONEA_RECUPERANDO_SENHA && newPasswordForm) {
+    authCard.hidden = false;
+    accountStatusCard.hidden = true;
+    showForm('novaSenha');
+    showAuthStatus('ok', 'Link confirmado! Escolha uma nova senha para a sua conta.');
+  }
+
+  if (newPasswordForm) {
+    newPasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const senha = document.getElementById('newPassword').value;
+      const confirmacao = document.getElementById('newPasswordConfirm').value;
+      if (!senhaAtendeRegras(senha)) {
+        showAuthStatus('error', 'A senha ainda não cumpre todos os requisitos da lista acima.');
+        return;
+      }
+      if (senha !== confirmacao) {
+        showAuthStatus('error', 'As duas senhas não são iguais. Digite a mesma senha nos dois campos.');
+        return;
+      }
+      showAuthStatus('ok', 'Salvando a nova senha...');
+      const { error } = await supabaseClient.auth.updateUser({ password: senha });
+      if (error) {
+        console.error('Erro ao trocar a senha:', error);
+        showAuthStatus('error', `Não foi possível salvar a nova senha: ${error.message}`);
+        return;
+      }
+      // Tira o "#...type=recovery" do endereço pra um F5 não reabrir este formulário.
+      history.replaceState(null, '', window.location.pathname);
+      await renderAccountState();
+      showAccountActionStatus('ok', '✓ Senha alterada com sucesso! Você já está logado(a).');
+    });
+  }
+
+  const noSession = ZONEA_RECUPERANDO_SENHA ? false : await renderAccountState();
   if (noSession && veioDaPoligonal) {
     showAuthStatus('warn', 'Crie sua conta gratuita (ou entre) para usar a Ferramenta de Poligonal — as 2 primeiras poligonais são grátis.');
   }

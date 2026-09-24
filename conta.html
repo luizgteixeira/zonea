@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260924c">
+  <link rel="stylesheet" href="css/estilo.css?v=20260924e">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -78,7 +78,7 @@
         <span>Acesso à Conta</span>
       </div>
 
-      <div class="auth-tabs">
+      <div class="auth-tabs" id="authTabs">
         <button type="button" class="cat-btn active" id="tabLogin" data-tab="login">Entrar</button>
         <button type="button" class="cat-btn" id="tabSignup" data-tab="signup">Criar Conta</button>
       </div>
@@ -116,9 +116,9 @@
           <input type="email" id="signupEmail" required autocomplete="email">
         </div>
         <div class="form-group">
-          <label for="signupPassword" class="form-label">Senha (mínimo 6 caracteres)</label>
+          <label for="signupPassword" class="form-label">Senha</label>
           <div class="input-wrapper">
-            <input type="password" id="signupPassword" required minlength="6" autocomplete="new-password">
+            <input type="password" id="signupPassword" required minlength="6" autocomplete="new-password" aria-describedby="signupChecklist">
             <button type="button" class="password-toggle-btn" data-target="signupPassword" aria-label="Mostrar senha" aria-pressed="false">
               <svg class="icon-eye" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -130,8 +130,34 @@
               </svg>
             </button>
           </div>
+          <ul id="signupChecklist" class="senha-checklist" aria-label="Requisitos da senha">
+            <li data-regra="tamanho"><span class="senha-marca" aria-hidden="true"></span>Pelo menos 6 caracteres</li>
+            <li data-regra="maiuscula"><span class="senha-marca" aria-hidden="true"></span>Uma letra maiúscula (A-Z)</li>
+            <li data-regra="minuscula"><span class="senha-marca" aria-hidden="true"></span>Uma letra minúscula (a-z)</li>
+            <li data-regra="numero"><span class="senha-marca" aria-hidden="true"></span>Um número (0-9)</li>
+            <li data-regra="especial"><span class="senha-marca" aria-hidden="true"></span>Um caractere especial (! @ # $ % &amp; * ...)</li>
+          </ul>
         </div>
-        <button type="submit" class="btn-submit">
+        <div class="form-group">
+          <label for="signupPasswordConfirm" class="form-label">Repita a senha</label>
+          <div class="input-wrapper">
+            <input type="password" id="signupPasswordConfirm" required autocomplete="new-password" aria-describedby="signupMatch">
+            <button type="button" class="password-toggle-btn" data-target="signupPasswordConfirm" aria-label="Mostrar senha" aria-pressed="false">
+              <svg class="icon-eye" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg class="icon-eye-off" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" hidden>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <ul class="senha-checklist" style="margin-top: 10px;">
+            <li id="signupMatch" data-regra="igual"><span class="senha-marca" aria-hidden="true"></span><span class="senha-igual-texto">As duas senhas são iguais</span></li>
+          </ul>
+        </div>
+        <button type="submit" class="btn-submit" id="btnCriarConta" disabled>
           <span>Criar Conta</span>
         </button>
       </form>
@@ -145,6 +171,55 @@
           <span>Enviar link de redefinição</span>
         </button>
         <button type="button" id="btnBackToLogin" class="auth-link-btn">Voltar para o login</button>
+      </form>
+
+      <form id="newPasswordForm" autocomplete="off" hidden>
+        <p style="font-size: 14px; color: var(--cor-cinza); margin-bottom: 16px;">Escolha uma nova senha para a sua conta.</p>
+        <div class="form-group">
+          <label for="newPassword" class="form-label">Nova senha</label>
+          <div class="input-wrapper">
+            <input type="password" id="newPassword" required minlength="6" autocomplete="new-password" aria-describedby="newChecklist">
+            <button type="button" class="password-toggle-btn" data-target="newPassword" aria-label="Mostrar senha" aria-pressed="false">
+              <svg class="icon-eye" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg class="icon-eye-off" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" hidden>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <ul id="newChecklist" class="senha-checklist" aria-label="Requisitos da senha">
+            <li data-regra="tamanho"><span class="senha-marca" aria-hidden="true"></span>Pelo menos 6 caracteres</li>
+            <li data-regra="maiuscula"><span class="senha-marca" aria-hidden="true"></span>Uma letra maiúscula (A-Z)</li>
+            <li data-regra="minuscula"><span class="senha-marca" aria-hidden="true"></span>Uma letra minúscula (a-z)</li>
+            <li data-regra="numero"><span class="senha-marca" aria-hidden="true"></span>Um número (0-9)</li>
+            <li data-regra="especial"><span class="senha-marca" aria-hidden="true"></span>Um caractere especial (! @ # $ % &amp; * ...)</li>
+          </ul>
+        </div>
+        <div class="form-group">
+          <label for="newPasswordConfirm" class="form-label">Repita a nova senha</label>
+          <div class="input-wrapper">
+            <input type="password" id="newPasswordConfirm" required autocomplete="new-password" aria-describedby="newMatch">
+            <button type="button" class="password-toggle-btn" data-target="newPasswordConfirm" aria-label="Mostrar senha" aria-pressed="false">
+              <svg class="icon-eye" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg class="icon-eye-off" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" hidden>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <ul class="senha-checklist" style="margin-top: 10px;">
+            <li id="newMatch"><span class="senha-marca" aria-hidden="true"></span><span class="senha-igual-texto">As duas senhas são iguais</span></li>
+          </ul>
+        </div>
+        <button type="submit" class="btn-submit" id="btnSalvarNovaSenha" disabled>
+          <span>Salvar nova senha</span>
+        </button>
       </form>
 
       <div id="authStatus" class="status-message"></div>
@@ -206,8 +281,8 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260924c"></script>
-  <script src="js/script.js?v=20260924c"></script>
-  <script src="js/auth.js?v=20260924c"></script>
+  <script src="js/supabase-client.js?v=20260924e"></script>
+  <script src="js/script.js?v=20260924e"></script>
+  <script src="js/auth.js?v=20260924e"></script>
 </body>
 </html>
