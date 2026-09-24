@@ -1,7 +1,7 @@
 /* ============================================================
    ZONEA — Exportação da poligonal (DXF, KML e KMZ)
    Funções puras: recebem os vértices já calculados pela Ferramenta de
-   Poligonal (E/N em SIRGAS 2000 / UTM zona 23S) e devolvem o conteúdo
+   Poligonal (E/N em UTM zona 23S, SIRGAS 2000 ou SAD-69) e devolvem o conteúdo
    dos arquivos. Nada aqui mexe na página — quem baixa é baixarArquivo().
 
    - DXF (AutoCAD R12): desenho em metros, nas mesmas coordenadas UTM da
@@ -9,6 +9,9 @@
      formato proprietário da Autodesk e não dá pra gerar direto no navegador.
    - KML / KMZ (Google Earth): latitude/longitude. O KMZ é o KML compactado
      (aqui, ZIP sem compressão, escrito à mão — sem dependência externa).
+     Se o memorial estiver em SAD-69, as coordenadas são convertidas para SIRGAS 2000
+     antes (o Google Earth trabalha em WGS84, que é praticamente igual ao SIRGAS 2000);
+     sem essa conversão o desenho cairia uns 60 m fora do lugar na RMBH.
    ============================================================ */
 
 (function (global) {
@@ -18,20 +21,37 @@
   // A RMBH inteira cabe na zona 23 (meridiano central 45° W). Se a ferramenta um dia
   // aceitar outra zona, é aqui (e no aviso de datum da página) que isso muda.
   const ZONA_UTM = 23;
-  const SEMIEIXO_A = 6378137.0;            // elipsoide GRS80 (o de SIRGAS 2000)
-  const ACHATAMENTO = 1 / 298.257222101;
   const K0 = 0.9996;
   const FALSO_LESTE = 500000;
   const FALSO_NORTE = 10000000;            // hemisfério sul
+
+  // Datums aceitos pra ler as coordenadas do memorial. O DXF nunca converte nada (sai nas
+  // mesmas coordenadas UTM informadas); só o KML/KMZ precisa de lat/lon em SIRGAS 2000/WGS84.
+  //   - SIRGAS 2000: elipsoide GRS80, sem conversão.
+  //   - SAD-69: elipsoide GRS67 modificado + translação geocêntrica de 3 parâmetros do IBGE
+  //     (Resolução PR 1/2005, SAD-69 → SIRGAS 2000): ΔX = -67,35 m, ΔY = +3,88 m, ΔZ = -38,22 m.
+  //     É aproximada (erro típico de poucos metros), e não substitui a transformação oficial.
+  const ELIPSOIDES = {
+    grs80: { a: 6378137.0, f: 1 / 298.257222101 },
+    grs67: { a: 6378160.0, f: 1 / 298.25 },
+  };
+  const DATUNS = {
+    sirgas2000: { rotulo: 'SIRGAS 2000', elipsoide: 'grs80', translacao: null },
+    sad69: { rotulo: 'SAD-69', elipsoide: 'grs67', translacao: { dx: -67.35, dy: 3.88, dz: -38.22 } },
+  };
+
+  function datumValido(chave) {
+    return Object.prototype.hasOwnProperty.call(DATUNS, chave) ? chave : 'sirgas2000';
+  }
 
   // Distância abaixo da qual o último vértice é considerado o mesmo que o primeiro
   // (mesma tolerância de fechamento da ferramenta: 5 cm).
   const TOLERANCIA_FECHAMENTO_M = 0.05;
 
   // ---------- UTM → latitude/longitude (série de Krüger, 4ª ordem) ----------
-  // Precisão de sub-milímetro dentro da zona. SIRGAS 2000 e WGS84 diferem em
-  // centímetros, então o resultado serve pro Google Earth sem conversão de datum.
-  function utmParaLatLon(E, N) {
+  // Devolve a lat/lon NO PRÓPRIO datum do memorial (mesmo elipsoide das coordenadas).
+  function utmParaLatLonNoElipsoide(E, N, elipsoide) {
+    const { a: SEMIEIXO_A, f: ACHATAMENTO } = elipsoide;
     const n = ACHATAMENTO / (2 - ACHATAMENTO);
     const n2 = n * n, n3 = n2 * n, n4 = n3 * n;
     const A = SEMIEIXO_A / (1 + n) * (1 + n2 / 4 + n4 / 64);
@@ -61,7 +81,46 @@
     for (let j = 1; j <= 4; j++) lat += delta[j - 1] * Math.sin(2 * j * chi);
     const lon0 = (6 * ZONA_UTM - 183) * Math.PI / 180;
     const lon = lon0 + Math.atan2(Math.sinh(etaL), Math.cos(xiL));
-    return { lat: lat * 180 / Math.PI, lon: lon * 180 / Math.PI };
+    return { lat, lon }; // radianos
+  }
+
+  // lat/lon/altura → X/Y/Z geocêntricos, e a volta (iterativa; converge em poucas voltas)
+  function geodesicasParaXyz(lat, lon, h, { a, f }) {
+    const e2 = f * (2 - f);
+    const N = a / Math.sqrt(1 - e2 * Math.sin(lat) ** 2);
+    return {
+      x: (N + h) * Math.cos(lat) * Math.cos(lon),
+      y: (N + h) * Math.cos(lat) * Math.sin(lon),
+      z: (N * (1 - e2) + h) * Math.sin(lat),
+    };
+  }
+
+  function xyzParaGeodesicas({ x, y, z }, { a, f }) {
+    const e2 = f * (2 - f);
+    const p = Math.hypot(x, y);
+    let lat = Math.atan2(z, p * (1 - e2));
+    for (let i = 0; i < 10; i++) {
+      const N = a / Math.sqrt(1 - e2 * Math.sin(lat) ** 2);
+      const h = p / Math.cos(lat) - N;
+      lat = Math.atan2(z, p * (1 - e2 * N / (N + h)));
+    }
+    return { lat, lon: Math.atan2(y, x) };
+  }
+
+  // UTM (no datum informado) → latitude/longitude em graus, em SIRGAS 2000 (≈ WGS84).
+  function utmParaLatLon(E, N, datum) {
+    const d = DATUNS[datumValido(datum)];
+    const origem = ELIPSOIDES[d.elipsoide];
+    const { lat, lon } = utmParaLatLonNoElipsoide(E, N, origem);
+    if (!d.translacao) return { lat: lat * 180 / Math.PI, lon: lon * 180 / Math.PI };
+
+    const xyz = geodesicasParaXyz(lat, lon, 0, origem);
+    const destino = xyzParaGeodesicas({
+      x: xyz.x + d.translacao.dx,
+      y: xyz.y + d.translacao.dy,
+      z: xyz.z + d.translacao.dz,
+    }, ELIPSOIDES.grs80);
+    return { lat: destino.lat * 180 / Math.PI, lon: destino.lon * 180 / Math.PI };
   }
 
   // ---------- PREPARO DOS VÉRTICES ----------
@@ -106,7 +165,7 @@
   // ---------- DXF (AutoCAD R12, ASCII) ----------
   // Só ASCII de propósito: DXF R12 não tem codificação declarada, e acento vira
   // lixo em vários programas. Por isso os textos do desenho saem sem acento.
-  function gerarDXF({ pontos, area, perimetro, erroFechamento }) {
+  function gerarDXF({ pontos, area, perimetro, erroFechamento, datum }) {
     const v = prepararVertices(pontos);
     const linhas = [];
     const g = (codigo, valor) => { linhas.push(String(codigo), String(valor)); };
@@ -163,7 +222,7 @@
     });
 
     const resumo1 = `AREA: ${fmt(area, 2)} m2  |  PERIMETRO: ${fmt(perimetro, 2)} m  |  ERRO DE FECHAMENTO: ${fmt(erroFechamento, 3)} m`;
-    const resumo2 = 'SIRGAS 2000 / UTM 23S - gerado pelo Zonea (ferramenta de apoio, nao substitui ART/RRT)';
+    const resumo2 = `${DATUNS[datumValido(datum)].rotulo} / UTM 23S (coordenadas como informadas) - gerado pelo Zonea (ferramenta de apoio, nao substitui ART/RRT)`;
     [resumo1, resumo2].forEach((texto, i) => {
       g(0, 'TEXT'); g(8, 'ZONEA_TEXTO');
       g(10, fmt(minE, 3)); g(20, fmt(minN - alturaTexto * (3 + i * 2), 3)); g(30, '0.0');
@@ -180,9 +239,17 @@
     return String(texto).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  function gerarKML({ pontos, area, perimetro, erroFechamento }) {
+  function textoSistemaDeOrigem(datum) {
+    if (datumValido(datum) === 'sad69') {
+      return `<b>Sistema de origem:</b> SAD-69 / UTM zona 23S, convertido para SIRGAS 2000 (translação de 3 parâmetros do IBGE, ` +
+        `precisão de poucos metros) e depois para latitude/longitude. Confira a posição antes de usar.<br>`;
+    }
+    return `<b>Sistema de origem:</b> SIRGAS 2000 / UTM zona 23S (EPSG:31983), convertido para latitude/longitude.<br>`;
+  }
+
+  function gerarKML({ pontos, area, perimetro, erroFechamento, datum }) {
     let v = prepararVertices(pontos);
-    const coordenadas = v.map(p => ({ ...p, ...utmParaLatLon(p.E, p.N) }));
+    const coordenadas = v.map(p => ({ ...p, ...utmParaLatLon(p.E, p.N, datum) }));
 
     // O anel externo do KML deve ser anti-horário e fechado (primeiro ponto repetido no fim).
     let anel = coordenadas.slice();
@@ -194,7 +261,7 @@
       `<b>Área:</b> ${formatoBR(area, 2)} m²<br>` +
       `<b>Perímetro:</b> ${formatoBR(perimetro, 2)} m<br>` +
       `<b>Erro de fechamento:</b> ${formatoBR(erroFechamento, 3)} m<br>` +
-      `<b>Sistema de origem:</b> SIRGAS 2000 / UTM zona 23S (EPSG:31983), convertido para latitude/longitude.<br>` +
+      textoSistemaDeOrigem(datum) +
       `<i>Gerado pelo Zonea — ferramenta de apoio, não substitui ART/RRT.</i>`;
 
     const marcadores = coordenadas.map(p =>
@@ -338,5 +405,5 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  global.ZoneaExport = { utmParaLatLon, prepararVertices, gerarDXF, gerarKML, gerarKMZ, baixarArquivo };
+  global.ZoneaExport = { DATUNS, utmParaLatLon, prepararVertices, gerarDXF, gerarKML, gerarKMZ, baixarArquivo };
 })(typeof window !== 'undefined' ? window : globalThis);

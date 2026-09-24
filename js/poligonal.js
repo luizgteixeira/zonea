@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAddRow = document.getElementById('btnAddRow');
   const btnClosePolygon = document.getElementById('btnClosePolygon');
   const btnResetPoligonal = document.getElementById('btnResetPoligonal');
+  const selectDatumExport = document.getElementById('selectDatumExport');
   const poligonalStatus = document.getElementById('poligonalStatus');
 
   const svg = document.getElementById('poligonalSvg');
@@ -212,7 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     botao.addEventListener('click', () => {
       if (!ultimoCalculo) return;
       try {
-        ZoneaExport.baixarArquivo(`${nomeBaseDoArquivo()}.${extensao}`, gerar(ultimoCalculo), tipoMime);
+        // O datum escolhido só vale na hora de baixar (não altera o cálculo nem deixa o resultado desatualizado).
+        const datum = selectDatumExport ? selectDatumExport.value : 'sirgas2000';
+        ZoneaExport.baixarArquivo(`${nomeBaseDoArquivo()}.${extensao}`, gerar({ ...ultimoCalculo, datum }), tipoMime);
       } catch (err) {
         console.error(`Erro ao gerar o arquivo ${extensao.toUpperCase()}:`, err);
         showStatus('error', `❌ Não foi possível gerar o arquivo ${extensao.toUpperCase()}. Tente novamente.`);

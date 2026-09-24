@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260924f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260924g">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -122,7 +122,7 @@
             </tr>
             <tr>
               <td>4</td>
-              <td>Se o Datum for antigo (ex.: Córrego Alegre, SAD69) ou WGS84, procure o setor de geoprocessamento/cartografia da prefeitura do município correspondente para realizar a conversão para SIRGAS 2000.</td>
+              <td>Se o Datum for SAD-69, você pode preencher a tabela normalmente e escolher "SAD-69" ao baixar o KML/KMZ (o Google Earth precisa da conversão). Se for antigo demais (ex.: Córrego Alegre) ou WGS84, procure o setor de geoprocessamento/cartografia da prefeitura do município correspondente para realizar a conversão para SIRGAS 2000.</td>
             </tr>
           </tbody>
         </table>
@@ -215,13 +215,21 @@
         </div>
         <div class="poligonal-export">
           <h3 class="poligonal-export-titulo">Baixar o desenho</h3>
+          <div class="poligonal-export-datum">
+            <label for="selectDatumExport" class="poligonal-export-datum-rotulo">Datum das coordenadas do memorial</label>
+            <select id="selectDatumExport" class="poligonal-export-datum-select">
+              <option value="sirgas2000" selected>SIRGAS 2000 (padrão)</option>
+              <option value="sad69">SAD-69 (converter para SIRGAS 2000 no KML/KMZ)</option>
+            </select>
+          </div>
           <div class="poligonal-export-botoes">
             <button type="button" id="btnExportarDxf" class="btn-secondary" disabled>DXF (AutoCAD)</button>
             <button type="button" id="btnExportarKml" class="btn-secondary" disabled>KML (Google Earth)</button>
             <button type="button" id="btnExportarKmz" class="btn-secondary" disabled>KMZ (Google Earth)</button>
           </div>
           <p class="poligonal-export-nota">
-            Disponível depois de "Fechar Poligonal e Calcular". O <strong>DXF</strong> abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM (SIRGAS 2000, zona 23S). O <strong>KML/KMZ</strong> abre no Google Earth, em latitude/longitude.
+            Disponível depois de "Fechar Poligonal e Calcular". O <strong>DXF</strong> abre no AutoCAD, BricsCAD, LibreCAD e QGIS, sempre nas mesmas coordenadas UTM que você informou (zona 23S). O <strong>KML/KMZ</strong> abre no Google Earth, em latitude/longitude.
+            <strong>Se o seu memorial estiver em SAD-69, escolha essa opção acima antes de baixar o KML/KMZ</strong>: sem a conversão o desenho cai cerca de 60 m fora do lugar em Belo Horizonte. A conversão usa os parâmetros oficiais do IBGE, mas é aproximada (erro de poucos metros) e não substitui a transformação oficial.
           </p>
         </div>
         <p id="resultsStaleNotice" class="results-stale-notice" hidden>
@@ -259,9 +267,9 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260924f"></script>
-  <script src="js/script.js?v=20260924f"></script>
-  <script src="js/exportar-poligonal.js?v=20260924f"></script>
-  <script src="js/poligonal.js?v=20260924f"></script>
+  <script src="js/supabase-client.js?v=20260924g"></script>
+  <script src="js/script.js?v=20260924g"></script>
+  <script src="js/exportar-poligonal.js?v=20260924g"></script>
+  <script src="js/poligonal.js?v=20260924g"></script>
 </body>
 </html>

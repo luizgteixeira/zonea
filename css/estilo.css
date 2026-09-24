@@ -2115,3 +2115,28 @@ footer,
 .auth-tabs[hidden] {
   display: none;
 }
+
+/* Seletor de datum (exportação KML/KMZ) */
+.poligonal-export-datum {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.poligonal-export-datum-rotulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-cinza-escuro);
+}
+
+.poligonal-export-datum-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--fonte-principal);
+  font-size: 14px;
+  color: var(--cor-cinza-escuro);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+}

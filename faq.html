@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260924f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260924g">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -66,7 +66,7 @@
       {
         "@type": "Question",
         "name": "Posso levar a poligonal para o AutoCAD ou para o Google Earth?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim. Depois de clicar em \"Fechar Poligonal e Calcular\", é possível baixar o desenho em DXF (abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM SIRGAS 2000 zona 23S) e em KML ou KMZ (abre no Google Earth, em latitude e longitude). O formato DWG é proprietário da Autodesk e não é gerado, mas o DXF abre normalmente no AutoCAD e pode ser salvo como DWG por lá." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. Depois de clicar em \"Fechar Poligonal e Calcular\", é possível baixar o desenho em DXF (abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM que você informou, zona 23S) e em KML ou KMZ (abre no Google Earth, em latitude e longitude). O formato DWG é proprietário da Autodesk e não é gerado, mas o DXF abre normalmente no AutoCAD e pode ser salvo como DWG por lá. Se o seu memorial estiver em SAD-69, escolha esse datum na página antes de baixar o KML ou KMZ: o Zonea converte as coordenadas para SIRGAS 2000 (com os parâmetros do IBGE, de forma aproximada) e o Google Earth posiciona o desenho no lugar certo." }
       },
       {
         "@type": "Question",
@@ -334,7 +334,7 @@
           </button>
           </h3>
           <div class="faq-answer" id="faq-a-21">
-            Sim. Depois de clicar em <strong>"Fechar Poligonal e Calcular"</strong>, é possível baixar o desenho em <strong>DXF</strong> (abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM SIRGAS 2000 zona 23S) e em <strong>KML</strong> ou <strong>KMZ</strong> (abre no Google Earth, em latitude e longitude). O formato DWG é proprietário da Autodesk e não é gerado, mas o DXF abre normalmente no AutoCAD e pode ser salvo como DWG por lá.
+            Sim. Depois de clicar em <strong>"Fechar Poligonal e Calcular"</strong>, é possível baixar o desenho em <strong>DXF</strong> (abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM que você informou, zona 23S) e em <strong>KML</strong> ou <strong>KMZ</strong> (abre no Google Earth, em latitude e longitude). O formato DWG é proprietário da Autodesk e não é gerado, mas o DXF abre normalmente no AutoCAD e pode ser salvo como DWG por lá. Se o seu memorial estiver em SAD-69, escolha esse datum na página antes de baixar o KML ou KMZ: o Zonea converte as coordenadas para SIRGAS 2000 (com os parâmetros do IBGE, de forma aproximada) e o Google Earth posiciona o desenho no lugar certo.
           </div>
         </div>
       </div>
@@ -583,7 +583,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260924f"></script>
-  <script src="js/script.js?v=20260924f"></script>
+  <script src="js/supabase-client.js?v=20260924g"></script>
+  <script src="js/script.js?v=20260924g"></script>
 </body>
 </html>

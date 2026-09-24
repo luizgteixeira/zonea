@@ -42,9 +42,9 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo). Todos os links internos gerados por JavaScript usam caminho absoluto a partir da raiz (ex. `/conta.html`), pra funcionar tanto nas páginas do primeiro nível quanto nas de dentro de `conhecimento/`.
 * **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`. Só a Poligonal depende disso: busca, mapa e artigos funcionam mesmo com o Supabase fora do ar.
 * **Dados dos municípios** (link do portal, sistema, detalhes técnicos, sistema de referência, status de disponibilidade) ficam todos em `data/municipios.json`, um arquivo estático e público — não há mais nenhuma consulta a banco pra buscar ou mostrar um município.
-* As tabelas e Edge Functions da antiga trava por município (`municipios_protegido`, `anon_preview_usado`, `leads_interesse`, `get-preview-municipio`, `submit-lead`) **não são mais usadas pelo site** e ficam no repositório só como histórico, até serem desativadas no Supabase.
+* A antiga trava por município (tabelas `municipios_protegido`, `anon_preview_usado` e `leads_interesse`, e as Edge Functions `get-preview-municipio` e `submit-lead`) **foi removida**: o código saiu do repositório e a migração `0006_remove_trava_por_municipio.sql` apaga as tabelas do Supabase (as duas funções publicadas precisam ser apagadas à mão no painel).
 * A **Poligonal** (`poligonal.html`) exige **conta logada**; quem decide se a pessoa ainda pode calcular é a Edge Function `usar-poligonal`. As 2 primeiras poligonais de cada conta são grátis; depois, só assinante ativo. O crédito é gasto no primeiro "Fechar Poligonal e Calcular" de cada poligonal (recalcular a mesma poligonal, com o mesmo ponto inicial, não gasta outro; "Limpar Tudo" começa uma nova). O contador vive em `profiles.poligonais_gratis_usadas` e é incrementado de forma atômica pela função SQL `consumir_poligonal_gratis` (só a `service_role` consegue chamá-la) — o limite fica numa constante só, `LIMITE_POLIGONAIS_GRATIS`, na Edge Function. O desenho ao vivo enquanto a pessoa digita é livre; o crédito controla o resultado (área, perímetro e erro de fechamento).
-* **Exportação da poligonal** (`js/exportar-poligonal.js`): tudo é gerado no próprio navegador, sem dependências. O **DXF** (AutoCAD R12, só ASCII) sai nas mesmas coordenadas UTM SIRGAS 2000 zona 23S da ferramenta, com camadas `ZONEA_POLIGONAL`, `ZONEA_VERTICES` e `ZONEA_TEXTO`. O **KML/KMZ** converte UTM → latitude/longitude por série de Krüger (diferença de sub-milímetro contra o `pyproj`; SIRGAS 2000 e WGS84 diferem em centímetros, então serve pro Google Earth). O KMZ é um ZIP sem compressão escrito à mão. O **DWG** não é gerado: é um formato proprietário da Autodesk. Os botões só ficam ativos quando os resultados na tela estão atualizados, e o último vértice repetido do fechamento é descartado no arquivo.
+* **Exportação da poligonal** (`js/exportar-poligonal.js`): tudo é gerado no próprio navegador, sem dependências. O **DXF** (AutoCAD R12, só ASCII) sai nas mesmas coordenadas UTM zona 23S que a pessoa informou (não converte datum), com camadas `ZONEA_POLIGONAL`, `ZONEA_VERTICES` e `ZONEA_TEXTO`. O **KML/KMZ** converte UTM → latitude/longitude por série de Krüger (diferença de sub-milímetro contra o `pyproj`; SIRGAS 2000 e WGS84 diferem em centímetros, então serve pro Google Earth). A pessoa escolhe o **datum do memorial** (SIRGAS 2000 ou SAD-69) antes de baixar: com SAD-69, as coordenadas passam por uma translação geocêntrica de 3 parâmetros do IBGE (Resolução PR 1/2005: ΔX −67,35 m, ΔY +3,88 m, ΔZ −38,22 m, elipsoide GRS67) até o SIRGAS 2000 — sem isso o desenho cairia ~64 m fora do lugar na RMBH. É aproximada (erro de poucos metros), conferida contra o `pyproj` em sub-milímetro pro mesmo modelo, e só afeta o KML/KMZ. O KMZ é um ZIP sem compressão escrito à mão. O **DWG** não é gerado: é um formato proprietário da Autodesk. Os botões só ficam ativos quando os resultados na tela estão atualizados, e o último vértice repetido do fechamento é descartado no arquivo.
 * **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
 * **Mapa** (`mapa.html` + `js/mapa.js`): usa [Leaflet](https://leafletjs.com) sobre tiles do OpenStreetMap e uma malha de limites municipais derivada de dados abertos do IBGE (`data/rmbh-municipios.geojson`). Reaproveita a mesma função de renderização de card da busca (`renderMunicipioCard`, em `js/script.js`), então o comportamento de acesso é idêntico nos dois lugares.
 
@@ -81,21 +81,18 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 ├── supabase/
 │   ├── migrations/
 │   │   ├── 0001_init.sql                     # Schema inicial (tabelas + Row Level Security)
-│   │   ├── 0002_preview_gratis.sql           # (em desuso) Tabela da antiga consulta gratuita por dispositivo
-│   │   ├── 0003_leads_interesse.sql          # (em desuso) Tabela da antiga captura de contato
-│   │   ├── 0004_mapa_demo_bh.sql             # (em desuso) Flag is_demo da antiga regra "Belo Horizonte grátis"
-│   │   └── 0005_poligonais_gratis.sql        # Contador de poligonais grátis por conta + função atômica de consumo
+│   │   ├── 0002_preview_gratis.sql           # (histórico) Tabela da antiga consulta gratuita por dispositivo — removida na 0006
+│   │   ├── 0003_leads_interesse.sql          # (histórico) Tabela da antiga captura de contato — removida na 0006
+│   │   ├── 0004_mapa_demo_bh.sql             # (histórico) Flag is_demo da antiga regra "Belo Horizonte grátis" — removida na 0006
+│   │   ├── 0005_poligonais_gratis.sql        # Contador de poligonais grátis por conta + função atômica de consumo
+│   │   └── 0006_remove_trava_por_municipio.sql # Apaga as tabelas da antiga trava por município
+│   ├── email-templates/
+│   │   ├── confirmar-cadastro.html           # E-mail de confirmação de cadastro em português (colar no Supabase > Authentication > Emails)
+│   │   └── redefinir-senha.html              # E-mail "Esqueci minha senha" em português
 │   └── functions/
 │       ├── create-mp-preference/index.ts     # Gera o link de pagamento (Mercado Pago Checkout Pro)
 │       ├── usar-poligonal/index.ts           # Controla o uso da Poligonal: 2 grátis por conta, depois assinatura
-│       ├── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
-│       ├── get-preview-municipio/index.ts    # (em desuso) Antiga consulta gratuita por visitante
-│       └── submit-lead/index.ts              # (em desuso) Antigo registro de contato
-├── scripts/
-│   └── migrate-municipios.mjs    # Script histórico da migração inicial (Fase 2) — hoje desatualizado: lê
-│                                    # link/sistema/detalhes_tecnicos de data/municipios.json, campos que
-│                                    # já não existem mais lá (viraram exclusivos do Supabase). Mantido só
-│                                    # como referência de como o schema foi populado a primeira vez.
+│       └── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
 ├── .github/workflows/
 │   └── mirror-hostinger.yml      # Espelha automaticamente todo push em main pro repositório de deploy
 ├── robots.txt          # Diretivas de indexação para buscadores
