@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="css/estilo.css?v=20260925b">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925c">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -79,8 +79,15 @@
       <h2 id="buscaEnderecoTitulo" class="busca-endereco-titulo">Buscar por endereço ou CEP</h2>
       <form id="formBuscaEndereco" class="busca-endereco-form" novalidate>
         <label for="inputEndereco" class="visually-hidden">Endereço ou CEP</label>
-        <input type="text" id="inputEndereco" class="busca-endereco-input" maxlength="160" autocomplete="off"
-               placeholder="Ex.: 30130-010  ou  Av. Afonso Pena, 1500, Belo Horizonte">
+        <div class="busca-endereco-campo">
+          <input type="text" id="inputEndereco" class="busca-endereco-input" maxlength="160" autocomplete="off"
+                 placeholder="Ex.: 30130-010  ou  Av. Afonso Pena, 1500, Belo Horizonte">
+          <button type="button" id="btnLimparBusca" class="busca-endereco-limpar" aria-label="Limpar a busca" title="Limpar a busca" hidden>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line>
+            </svg>
+          </button>
+        </div>
         <button type="submit" id="btnBuscaEndereco" class="btn-submit busca-endereco-btn">
           <span>Buscar no mapa</span>
         </button>
@@ -141,11 +148,11 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925b"></script>
-  <script src="js/script.js?v=20260925b"></script>
+  <script src="js/supabase-client.js?v=20260925c"></script>
+  <script src="js/script.js?v=20260925c"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/busca-endereco.js?v=20260925b"></script>
-  <script src="js/mapa.js?v=20260925b"></script>
+  <script src="js/busca-endereco.js?v=20260925c"></script>
+  <script src="js/mapa.js?v=20260925c"></script>
 </body>
 </html>

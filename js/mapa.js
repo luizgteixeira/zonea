@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputBusca = document.getElementById('inputEndereco');
   const btnBusca = document.getElementById('btnBuscaEndereco');
   const resultadoBusca = document.getElementById('buscaEnderecoResultado');
+  const btnLimparBusca = document.getElementById('btnLimparBusca');
+  let numeroDaBusca = 0; // cada busca (ou limpeza) muda o número: resposta atrasada de busca antiga é descartada
   const caixaRmbh = ZoneaEndereco.caixaDaMalha(geojson);
   let marcadorBusca = null;
 
@@ -105,6 +107,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  function atualizarBotaoLimpar() {
+    if (btnLimparBusca) btnLimparBusca.hidden = inputBusca.value === '' && !marcadorBusca && !resultadoBusca.classList.contains('visible');
+  }
+
+  // Apaga tudo o que a busca deixou: texto, resultado, ponto no mapa — e volta a mostrar a RMBH inteira.
+  function limparBusca() {
+    numeroDaBusca++;
+    inputBusca.value = '';
+    resultadoBusca.className = 'status-message';
+    resultadoBusca.replaceChildren();
+    limparMarcador();
+    btnBusca.disabled = false;
+    try {
+      map.fitBounds(geoLayer.getBounds(), { padding: [16, 16] });
+    } catch (err) {
+      console.error('Não foi possível voltar ao mapa inteiro:', err);
+    }
+    atualizarBotaoLimpar();
+    inputBusca.focus();
+  }
+
   async function executarBusca(evento) {
     evento.preventDefault();
     const entrada = ZoneaEndereco.interpretarEntrada(inputBusca.value);
@@ -122,9 +145,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
+    const meuNumero = ++numeroDaBusca;
     btnBusca.disabled = true;
     mostrarResultadoBusca('ok', [linha('Buscando...')]);
     limparMarcador();
+    atualizarBotaoLimpar();
 
     let achado;
     try {
@@ -132,11 +157,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? await ZoneaEndereco.buscarCep(entrada.cep, caixaRmbh)
         : await ZoneaEndereco.buscarEndereco(entrada.texto, caixaRmbh);
     } catch (err) {
+      if (meuNumero !== numeroDaBusca) return; // a pessoa limpou a busca enquanto esperava
       console.error('Erro na busca por endereço/CEP:', err);
       mostrarResultadoBusca('error', [linha('Não foi possível buscar agora. Confira a conexão e tente de novo em instantes.')]);
       btnBusca.disabled = false;
       return;
     }
+    if (meuNumero !== numeroDaBusca) return; // a pessoa limpou a busca enquanto esperava
     btnBusca.disabled = false;
 
     if (achado.erro === 'cep_nao_encontrado') {
@@ -186,7 +213,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     mapaContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  if (formBusca && inputBusca && resultadoBusca) formBusca.addEventListener('submit', executarBusca);
+  if (formBusca && inputBusca && resultadoBusca) {
+    formBusca.addEventListener('submit', async (evento) => {
+      await executarBusca(evento);
+      atualizarBotaoLimpar();
+    });
+    inputBusca.addEventListener('input', atualizarBotaoLimpar);
+    inputBusca.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && (inputBusca.value !== '' || marcadorBusca)) limparBusca();
+    });
+    if (btnLimparBusca) btnLimparBusca.addEventListener('click', limparBusca);
+  }
 
   // O painel já abre com Belo Horizonte (o maior polo da região), sem precisar
   // de nenhum clique — evita um painel vazio e mostra o card na hora.

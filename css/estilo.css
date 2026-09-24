@@ -2200,3 +2200,45 @@ footer,
   .busca-endereco-form { flex-direction: column; }
   .busca-endereco-btn { width: 100%; }
 }
+
+/* Botão "X" dentro do campo de busca por endereço/CEP */
+.busca-endereco-campo {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.busca-endereco-campo .busca-endereco-input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+.busca-endereco-limpar {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cor-cinza);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.busca-endereco-limpar:hover,
+.busca-endereco-limpar:focus-visible {
+  background: var(--cor-cinza-claro);
+  color: var(--cor-cinza-escuro);
+}
+
+.busca-endereco-limpar[hidden] {
+  display: none;
+}
