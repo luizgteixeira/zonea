@@ -77,6 +77,8 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── exportar-poligonal.js # Gera os arquivos DXF, KML e KMZ da poligonal (funções puras, sem dependências)
 │   ├── supabase-client.js   # Inicialização do client Supabase (usado em toda página)
 │   └── auth.js               # Cadastro (senha dupla + checklist), login, recuperação de senha e pagamento, só em conta.html
+├── docs/
+│   └── pesquisa-lotes-belo-horizonte.md  # O que BH publica sobre lotes (dados abertos x GeoServer) e o que dá pra fazer
 ├── data/
 │   ├── municipios.json         # Os 34 municípios: dados públicos + portal oficial auditado de cada um
 │   ├── config.json             # Configurações gerais (ex: número do WhatsApp)
@@ -148,7 +150,7 @@ O site é hospedado na Hostinger. O fluxo é: você trabalha e dá push neste re
 1. **Fase 1 — Base:** estrutura do site e catálogo dos municípios da RMBH. ✅
 2. **Fase 2 — Dados confiáveis:** conferir e validar os portais de cada município. *(em andamento — 6 de 34 confirmados)*
 3. **Fase 3 — Mapas:** visor interativo com os limites dos 34 municípios. ✅ *(camadas de zoneamento/WMS sobrepostas ainda não — ver Fase 5)*
-4. **Fase 4 — Busca avançada:** encontrar o município e o portal certo por endereço ou CEP ✅ *(feito no mapa)*. A busca por **número de lote** ficou pendente: não existe cadastro nacional, cada prefeitura tem o seu (índice cadastral, inscrição imobiliária…), então depende de a prefeitura publicar os dados, município a município — a começar por Belo Horizonte, ainda a pesquisar.
+4. **Fase 4 — Busca avançada:** encontrar o município e o portal certo por endereço ou CEP ✅ *(feito no mapa)*. A busca por **número de lote** ficou pendente: não existe cadastro nacional, cada prefeitura tem o seu (índice cadastral, inscrição imobiliária…), então depende de a prefeitura publicar os dados, município a município — a começar por Belo Horizonte, já pesquisada em `docs/pesquisa-lotes-belo-horizonte.md` (o portal de dados abertos publica o desenho dos lotes em CSV com licença CC-BY, mas o serviço com índice cadastral e endereço só aceita chamadas do site da PBH).
 5. **Fase 5 — Inteligência territorial:** camadas geográficas (WMS/WFS) sobre o mapa, cruzamento de dados de diferentes fontes e relatórios automáticos.
 6. **Fase 6 — Expansão:** levar o Zonea para outras regiões do Brasil, além da RMBH.
 
