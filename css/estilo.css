@@ -2644,3 +2644,273 @@ footer,
   .aval-resumo-nota { font-size: 44px; }
 }
 
+/* ===== Página "Desenhar poligonal" (desenhar-poligonal.html) ===== */
+.lp-secao {
+  max-width: 1000px;
+  margin: 0 auto 48px;
+  padding: 0 4px;
+}
+
+.lp-titulo {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 18px;
+}
+
+.lp-texto {
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--cor-cinza);
+  margin: 0 0 16px;
+}
+
+.lp-texto-pequeno {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.lp-cta-linha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.lp-cta,
+.lp-cta-sec,
+.lp-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  padding: 14px 28px;
+  text-decoration: none;
+}
+
+.lp-nota-cta {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--cor-cinza);
+}
+
+.lp-passos {
+  list-style: none;
+  counter-reset: passo;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 18px;
+  padding: 0;
+  margin: 0 0 28px;
+}
+
+.lp-passos li {
+  counter-increment: passo;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 20px 20px 64px;
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-lg);
+  box-shadow: var(--sombra-card);
+}
+
+.lp-passos li::before {
+  content: counter(passo);
+  position: absolute;
+  left: 18px;
+  top: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--cor-azul);
+  color: var(--cor-branco);
+  font-weight: 800;
+}
+
+.lp-passos li strong {
+  font-size: 16px;
+  color: var(--cor-cinza-escuro);
+}
+
+.lp-passos li span {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--cor-cinza);
+}
+
+.lp-imagens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 20px;
+}
+
+.lp-imagens figure {
+  margin: 0;
+}
+
+.lp-imagens img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--raio-borda-lg);
+  border: 1px solid var(--cor-cinza-borda);
+}
+
+.lp-imagens figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--cor-cinza);
+}
+
+.lp-lista {
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--cor-cinza);
+}
+
+.lp-lista strong {
+  color: var(--cor-cinza-escuro);
+}
+
+.lp-conversor {
+  padding: 24px;
+}
+
+.lp-conversor textarea,
+.lp-conversor select {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--fonte-mono, monospace);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--cor-cinza-escuro);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+  resize: vertical;
+}
+
+.lp-conversor select {
+  font-family: var(--fonte-principal);
+}
+
+.lp-rotulo {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 6px;
+}
+
+.lp-rotulo-topo {
+  margin-top: 18px;
+}
+
+.lp-conversor-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.lp-conversor-campo {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.lp-conversor-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.lp-conversor-linha .lp-conversor-botoes {
+  margin-top: 0;
+}
+
+.lp-btn {
+  width: auto;
+  padding: 12px 24px;
+}
+
+#convStatus.visible {
+  margin-top: 14px;
+  line-height: 1.55;
+}
+
+#convStatus.visible div + div {
+  margin-top: 4px;
+}
+
+.lp-tabela-conv td,
+.lp-tabela-conv th {
+  white-space: nowrap;
+}
+
+#convResultado {
+  margin-top: 18px;
+}
+
+.lp-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lp-faq-item {
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+  padding: 14px 18px;
+}
+
+.lp-faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--cor-cinza-escuro);
+}
+
+.lp-faq-item p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--cor-cinza);
+}
+
+.lp-final {
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .lp-conversor { padding: 18px 14px; }
+  .lp-titulo { font-size: 22px; }
+  .lp-passos li { padding-left: 58px; }
+}
+
+/* tabela "Quais coordenadas a ferramenta aceita?": primeira coluna legível (fonte normal e mais larga) */
+.lp-secao .data-table td:first-child {
+  font-family: var(--fonte-principal);
+  font-size: 14px;
+  width: 34%;
+  color: var(--cor-cinza-escuro);
+}
+

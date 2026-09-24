@@ -9,7 +9,9 @@
 // as 2 primeiras poligonais são grátis e, depois, só assinante ativo. Quem decide
 // isso é a Edge Function usar-poligonal (js/poligonal.js), não este redirecionamento
 // — aqui só garantimos que existe uma conta pra contar os créditos.
-const isGatedPage = window.location.pathname.endsWith('poligonal.html');
+// Só a página da ferramenta é fechada (exige conta). Comparar o nome inteiro: "desenhar-poligonal.html"
+// (a página pública) também TERMINA em "poligonal.html" e não pode cair na trava.
+const isGatedPage = /(^|\/)poligonal\.html$/.test(window.location.pathname);
 if (isGatedPage) {
   getAssinaturaAtiva().then(({ session }) => {
     if (!session) {

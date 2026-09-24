@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925h">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -72,6 +72,11 @@
         "@type": "Question",
         "name": "Como funcionam as avaliações do Zonea?",
         "acceptedAnswer": { "@type": "Answer", "text": "Qualquer pessoa pode ler as avaliações na página Avaliações. Para escrever uma, é preciso ter uma conta e ter usado a Ferramenta de Poligonal pelo menos uma vez: assim as opiniões são de quem realmente usou. Cada conta pode ter uma avaliação, que pode ser editada ou apagada quando quiser. Toda avaliação passa por uma revisão antes de aparecer (e volta para a revisão se for editada). O seu e-mail nunca é mostrado, só o nome que você escolher, a sua área (opcional) e o texto. O Zonea pode responder publicamente, mas não altera a nota nem o comentário de ninguém." }
+      },
+      {
+        "@type": "Question",
+        "name": "Dá para desenhar uma poligonal com latitude e longitude?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dá. A ferramenta trabalha em UTM, mas a página Desenhar poligonal tem um conversor de latitude e longitude para UTM, que aceita graus decimais e graus, minutos e segundos (uma coordenada por linha) e já monta o bloco pronto para colar na Ferramenta de Poligonal. Confira o datum das coordenadas (SIRGAS 2000 ou SAD-69) e o fuso: o Zonea usa UTM 23S, que cobre a Região Metropolitana de Belo Horizonte." }
       },
       {
         "@type": "Question",
@@ -362,6 +367,18 @@
 
         <div class="faq-item card">
           <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-25" aria-expanded="false" aria-controls="faq-a-25">
+            <span>Dá para desenhar uma poligonal com latitude e longitude?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          </h3>
+          <div class="faq-answer" id="faq-a-25">
+            Dá. A ferramenta trabalha em UTM, mas a página <a href="desenhar-poligonal.html#conversor">Desenhar poligonal</a> tem um <strong>conversor de latitude e longitude para UTM</strong>, que aceita graus decimais e graus, minutos e segundos (uma coordenada por linha) e já monta o bloco pronto para colar na Ferramenta de Poligonal. Confira o <strong>datum</strong> das coordenadas (SIRGAS 2000 ou SAD-69) e o <strong>fuso</strong>: o Zonea usa UTM 23S, que cobre a Região Metropolitana de Belo Horizonte. Veja também o guia <a href="conhecimento/coordenadas-geograficas-para-utm.html">Coordenadas geográficas e UTM: como converter</a>.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <h3 class="faq-question-heading">
           <button type="button" class="faq-question" id="faq-q-21" aria-expanded="false" aria-controls="faq-a-21">
             <span>Posso levar a poligonal para o AutoCAD ou para o Google Earth?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -595,6 +612,7 @@
       <div class="footer-credits">
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
@@ -618,7 +636,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925f"></script>
-  <script src="js/script.js?v=20260925f"></script>
+  <script src="js/supabase-client.js?v=20260925h"></script>
+  <script src="js/script.js?v=20260925h"></script>
 </body>
 </html>

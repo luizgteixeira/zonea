@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925h">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -277,6 +277,12 @@
         <p class="servico-desc">Quando esse documento entra no processo, o que ele reúne e como a poligonal se encaixa nele.</p>
       </a>
 
+      <a href="conhecimento/coordenadas-geograficas-para-utm.html" class="servico-card card" style="text-decoration: none; display: block;">
+        <span class="tag confirmado" style="margin-bottom: 12px; display: inline-block;">GUIA PRÁTICO</span>
+        <h3 class="servico-title">Coordenadas geográficas e UTM: como converter</h3>
+        <p class="servico-desc">Latitude e longitude ou UTM? A diferença, como passar graus, minutos e segundos para UTM e o que conferir antes de desenhar.</p>
+      </a>
+
     </section>
 
     <!-- CHAMADA PARA A FERRAMENTA DE POLIGONAL -->
@@ -287,8 +293,8 @@
       <p style="font-size: 14px; color: var(--cor-cinza); max-width: 620px; margin: 0 auto 20px;">
         Em vez de desenhar manualmente num software de CAD, informe as coordenadas UTM (E/N) e os dados de distância/azimute de cada segmento — o Zonea calcula e desenha a poligonal, a área, o perímetro e verifica o fechamento automaticamente.
       </p>
-      <a href="poligonal.html" class="result-cta primary" style="display: inline-flex;">
-        <span>Abrir Ferramenta de Poligonal →</span>
+      <a href="desenhar-poligonal.html" class="result-cta primary" style="display: inline-flex;">
+        <span>Desenhar poligonal a partir de coordenadas →</span>
       </a>
     </section>
   </main>
@@ -299,6 +305,7 @@
       <div class="footer-credits">
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
@@ -322,7 +329,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925f"></script>
-  <script src="js/script.js?v=20260925f"></script>
+  <script src="js/supabase-client.js?v=20260925h"></script>
+  <script src="js/script.js?v=20260925h"></script>
 </body>
 </html>

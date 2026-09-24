@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="../css/estilo.css?v=20260925f">
+  <link rel="stylesheet" href="../css/estilo.css?v=20260925h">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -81,7 +81,7 @@
 
       <div class="article-body">
         <p>
-          Uma <strong>poligonal</strong> é o contorno de um imóvel ou área descrito como uma sequência fechada de segmentos: você parte de um ponto inicial (com coordenadas conhecidas) e, pra cada vértice seguinte, sabe apenas o <strong>azimute</strong> (a direção, em graus, medida a partir do Norte, no sentido horário) e a <strong>distância</strong> até o próximo ponto. É assim que um caderno de campo de levantamento topográfico costuma registrar os dados — e é exatamente o que a <a href="../poligonal.html">Ferramenta de Poligonal do Zonea</a> recebe como entrada.
+          Uma <strong>poligonal</strong> é o contorno de um imóvel ou área descrito como uma sequência fechada de segmentos: você parte de um ponto inicial (com coordenadas conhecidas) e, pra cada vértice seguinte, sabe apenas o <strong>azimute</strong> (a direção, em graus, medida a partir do Norte, no sentido horário) e a <strong>distância</strong> até o próximo ponto. É assim que um caderno de campo de levantamento topográfico costuma registrar os dados — e é exatamente o que a <a href="../desenhar-poligonal.html">Ferramenta de Poligonal do Zonea</a> recebe como entrada.
         </p>
 
         <h2>1. De azimute/distância para coordenadas (E, N)</h2>
@@ -138,13 +138,14 @@
         </p>
 
         <div class="article-callout">
-          💡 Fazer isso à mão pra um polígono de 4 lados é rápido. Pra 10, 15 vértices, o risco de erro de digitação ou de sinal cresce rápido — foi exatamente pra isso que criamos a <a href="../poligonal.html">Ferramenta de Poligonal</a>: você digita (ou cola do Excel) os mesmos dados de azimute/distância e ela calcula área, perímetro e erro de fechamento automaticamente, além de desenhar o polígono.
+          💡 Fazer isso à mão pra um polígono de 4 lados é rápido. Pra 10, 15 vértices, o risco de erro de digitação ou de sinal cresce rápido — foi exatamente pra isso que criamos a <a href="../desenhar-poligonal.html">Ferramenta de Poligonal</a>: você digita (ou cola do Excel) os mesmos dados de azimute/distância e ela calcula área, perímetro e erro de fechamento automaticamente, além de desenhar o polígono.
         </div>
       </div>
 
       <div class="article-relacionados">
         <h2>Continue lendo</h2>
         <ul>
+          <li><a href="coordenadas-geograficas-para-utm.html">Coordenadas geográficas e UTM: qual a diferença e como converter</a></li>
           <li><a href="erro-fechamento-poligonal.html">Erro de fechamento em poligonal topográfica: o que é e como corrigir</a></li>
           <li><a href="memorial-descritivo.html">Memorial descritivo: o que é, quando é exigido e como montar um</a></li>
         </ul>
@@ -157,7 +158,7 @@
         <p style="font-size: 14px; color: var(--cor-cinza); max-width: 560px; margin: 0 auto 20px;">
           Informe as coordenadas do ponto inicial e o azimute/distância de cada segmento — o Zonea calcula área, perímetro e erro de fechamento, e desenha o polígono.
         </p>
-        <a href="../poligonal.html" class="result-cta primary" style="display: inline-flex;">
+        <a href="../desenhar-poligonal.html" class="result-cta primary" style="display: inline-flex;">
           <span>Abrir Ferramenta de Poligonal →</span>
         </a>
       </section>
@@ -170,6 +171,7 @@
       <div class="footer-credits">
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="/desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="/avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
@@ -193,7 +195,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="../js/supabase-client.js?v=20260925f"></script>
-  <script src="../js/script.js?v=20260925f"></script>
+  <script src="../js/supabase-client.js?v=20260925h"></script>
+  <script src="../js/script.js?v=20260925h"></script>
 </body>
 </html>

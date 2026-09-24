@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="light">
   <title>Zonea — Módulos de Inteligência Territorial & Serviços</title>
   <meta name="description"
-    content="Conheça as ferramentas disponíveis e o roadmap de evolução para consulta de dados territoriais e urbanísticos oficiais na RMBH.">
+    content="Ferramentas do Zonea: consulta aos portais oficiais da RMBH, mapa dos 34 municípios e a Ferramenta de Poligonal para desenhar o terreno a partir de coordenadas.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Zonea — Módulos de Inteligência Territorial & Serviços">
   <meta property="og:description"
@@ -19,7 +19,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925h">
 </head>
 
 <body>
@@ -190,6 +190,7 @@
             <li>Reconhece o formato completo do memorial descritivo ao colar do Excel</li>
             <li>Exporta o desenho em DXF (AutoCAD) e KML/KMZ (Google Earth)</li>
             <li>Gera um relatório em PDF com resultados, desenho e tabela de vértices</li>
+            <li>Aceita UTM, azimute e distância — e latitude e longitude, pelo <a href="desenhar-poligonal.html#conversor">conversor</a></li>
             <li data-creditos="linha"><strong>As 2 primeiras poligonais são grátis</strong> — depois, assinatura</li>
           </ul>
           <a href="poligonal.html" class="result-cta primary" style="margin-top: 16px; display: inline-flex;">
@@ -245,6 +246,7 @@
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a
             href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
@@ -267,8 +269,8 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925f"></script>
-  <script src="js/script.js?v=20260925f"></script>
+  <script src="js/supabase-client.js?v=20260925h"></script>
+  <script src="js/script.js?v=20260925h"></script>
 </body>
 
 </html>

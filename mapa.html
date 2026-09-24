@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
-  <title>Zonea — Mapa da RMBH</title>
-  <meta name="description" content="Mapa interativo dos 34 municípios da Região Metropolitana de Belo Horizonte (RMBH). Clique em um município pra ver os dados oficiais e ir direto ao portal de geoprocessamento da prefeitura — gratuito, sem cadastro.">
+  <title>Mapa da RMBH com busca por endereço e CEP — Zonea</title>
+  <meta name="description" content="Mapa dos 34 municípios da RMBH: clique em um município ou busque um endereço ou CEP e vá direto ao portal de geoprocessamento da prefeitura. Grátis, sem cadastro.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Zonea — Mapa da RMBH">
   <meta property="og:description" content="Visor territorial clicável dos 34 municípios da RMBH, direto da fonte oficial.">
@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925h">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -126,6 +126,7 @@
       <div class="footer-credits">
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
@@ -149,11 +150,11 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925f"></script>
-  <script src="js/script.js?v=20260925f"></script>
+  <script src="js/supabase-client.js?v=20260925h"></script>
+  <script src="js/script.js?v=20260925h"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/busca-endereco.js?v=20260925f"></script>
-  <script src="js/mapa.js?v=20260925f"></script>
+  <script src="js/busca-endereco.js?v=20260925h"></script>
+  <script src="js/mapa.js?v=20260925h"></script>
 </body>
 </html>

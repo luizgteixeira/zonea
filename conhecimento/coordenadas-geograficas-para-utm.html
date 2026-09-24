@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Converter coordenadas geográficas (lat/long) para UTM — Zonea</title>
+  <meta name="description" content="Latitude e longitude ou UTM? Entenda a diferença, como converter graus, minutos e segundos para UTM e o que conferir (datum, fuso, sinal) antes de desenhar uma poligonal.">
+  <link rel="canonical" href="https://zonea.com.br/conhecimento/coordenadas-geograficas-para-utm.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Coordenadas geográficas e UTM: qual a diferença e como converter">
+  <meta property="og:description" content="Latitude e longitude ou UTM? Entenda a diferença, como converter graus, minutos e segundos para UTM e o que conferir (datum, fuso, sinal) antes de desenhar uma poligonal.">
+  <meta property="og:image" content="https://zonea.com.br/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/estilo.css?v=20260925h">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Coordenadas geográficas e UTM: qual a diferença e como converter",
+    "description": "Latitude e longitude ou UTM? Entenda a diferença, como converter graus, minutos e segundos para UTM e o que conferir (datum, fuso, sinal) antes de desenhar uma poligonal.",
+    "author": {
+      "@type": "Organization",
+      "name": "Zonea"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Zonea",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://zonea.com.br/img/logo.webp"
+      }
+    },
+    "datePublished": "2026-09-25",
+    "dateModified": "2026-09-25",
+    "mainEntityOfPage": "https://zonea.com.br/conhecimento/coordenadas-geograficas-para-utm.html",
+    "inLanguage": "pt-BR"
+  }
+  </script>
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <img src="../img/logo.webp" width="40" alt="">
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">Conectando você aos dados oficiais</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="../index.html" class="nav-link">Início</a>
+        <a href="../servicos.html" class="nav-link">Serviços</a>
+        <a href="../mapa.html" class="nav-link">Mapa</a>
+        <a href="../conhecimento.html" class="nav-link active">Conhecimento</a>
+        <a href="../poligonal.html" class="nav-link">Poligonal</a>
+        <a href="../faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Entrar</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="article-container">
+      <a href="../conhecimento.html" class="article-back">← Central de Conhecimento</a>
+
+      <span class="tag confirmado">GUIA PRÁTICO · COORDENADAS</span>
+      <h1 class="article-title">Coordenadas geográficas e UTM: qual a diferença e como converter</h1>
+      <p class="article-subtitle">
+        O memorial traz latitude e longitude, mas a ferramenta pede UTM? Entenda a diferença entre os dois jeitos de escrever uma coordenada, como converter um no outro e o que conferir antes de desenhar a poligonal.
+      </p>
+      <div class="article-meta">Zonea · Atualizado em 25 de setembro de 2026 · leitura de ~6 min</div>
+
+      <div class="article-body">
+        <p>
+          Uma mesma posição no terreno pode ser escrita de duas formas: como <strong>coordenadas geográficas</strong> (latitude e longitude, em graus) ou como <strong>coordenadas UTM</strong> (em metros). Plantas, matrículas e memoriais descritivos usam uma ou outra — às vezes as duas. Para <strong>desenhar uma poligonal</strong>, calcular a área ou medir distâncias, o UTM é o mais prático, porque já está em metros.
+        </p>
+
+        <h2>Coordenadas geográficas: latitude e longitude</h2>
+        <p>
+          Indicam a posição na esfera terrestre, em graus. A <strong>latitude</strong> mede o quanto se está ao norte ou ao sul da linha do Equador; a <strong>longitude</strong>, o quanto se está a leste ou a oeste do meridiano de Greenwich. Elas aparecem em dois formatos:
+        </p>
+        <ul>
+          <li><strong>Graus decimais:</strong> <code>-19,92083</code> e <code>-43,93778</code>. É o formato do Google Earth e do GPS do celular.</li>
+          <li><strong>Graus, minutos e segundos:</strong> <code>19°55'15,2"S</code> e <code>43°56'16,1"W</code>. É comum em memoriais e plantas.</li>
+        </ul>
+        <p>
+          Em Minas Gerais, e na maior parte do Brasil, a latitude e a longitude são <strong>negativas</strong> (estamos ao sul do Equador e a oeste de Greenwich). Nos formatos com letra, isso vira <code>S</code> (sul) e <code>W</code> ou <code>O</code> (oeste). A regra de ouro: <strong>a latitude vem primeiro</strong>.
+        </p>
+
+        <h2>Coordenadas UTM: metros dentro de um fuso</h2>
+        <p>
+          O sistema UTM divide o mundo em fusos de 6° de largura e mede a posição em <strong>metros</strong>, dentro de cada fuso: o <strong>E</strong> (leste, ou <em>easting</em>) e o <strong>N</strong> (norte, ou <em>northing</em>). A Região Metropolitana de Belo Horizonte fica no <strong>fuso 23 Sul</strong>, com meridiano central em 45° W. Por isso os valores por aqui têm a forma de um E de seis dígitos (por volta de 600.000 m) e um N de sete dígitos (por volta de 7.800.000 m).
+        </p>
+        <p>
+          Como o UTM é plano e em metros, a distância entre dois pontos é uma conta simples, e a área de um polígono também — é exatamente o que a <a href="calcular-area-perimetro-poligonal.html">ferramenta usa para calcular área e perímetro</a>.
+        </p>
+
+        <h2>Como converter latitude e longitude para UTM</h2>
+        <ol>
+          <li>
+            <strong>Confira o datum.</strong> O datum é o sistema de referência das coordenadas. Hoje o padrão brasileiro é o <strong>SIRGAS 2000</strong> (praticamente igual ao WGS 84 usado pelo GPS). Memoriais mais antigos podem estar em <strong>SAD-69</strong>: coordenadas iguais em datums diferentes apontam lugares diferentes, com diferença de dezenas de metros.
+          </li>
+          <li>
+            <strong>Passe para graus decimais</strong> (se estiver em graus, minutos e segundos): some os graus, os minutos divididos por 60 e os segundos divididos por 3600, e dê o sinal negativo se for sul ou oeste. Exemplo: <code>19°55'15,2"S</code> = −(19 + 55/60 + 15,2/3600) = <strong>−19,920889</strong>; e <code>43°56'16,1"W</code> = <strong>−43,937806</strong>.
+          </li>
+          <li>
+            <strong>Converta para UTM.</strong> A conta usa as fórmulas da projeção Transversa de Mercator, trabalhosas para fazer à mão. Use o <a href="../desenhar-poligonal.html#conversor">conversor do Zonea</a>, que aceita os dois formatos e uma coordenada por linha. No exemplo acima, o resultado no fuso 23S, em SIRGAS 2000, é <strong>E = 611.171,418 m</strong> e <strong>N = 7.796.921,950 m</strong>.
+          </li>
+          <li>
+            <strong>Desenhe a poligonal.</strong> Com os vértices em UTM, cole na <a href="../desenhar-poligonal.html">Ferramenta de Poligonal</a>: o conversor já monta o bloco no formato do memorial, com o azimute e a distância de cada lado.
+          </li>
+        </ol>
+
+        <h2>Erros comuns (e como evitá-los)</h2>
+        <ul>
+          <li><strong>Latitude e longitude trocadas.</strong> Em Minas Gerais a latitude fica em torno de −14° a −23° e a longitude em torno de −39° a −51°. Se o primeiro número passar de 90 (sem contar o sinal), com certeza está trocado; se os dois forem parecidos, confira de que lado vem a latitude.</li>
+          <li><strong>Sinal esquecido.</strong> <code>19,92083</code> (positivo) está no Hemisfério Norte, ou seja, do outro lado do planeta. Para Minas Gerais, latitude e longitude precisam ser negativas (ou trazer S e W).</li>
+          <li><strong>Vírgula e ponto.</strong> No Brasil o decimal é a vírgula; muitos programas usam o ponto. Misturar os dois gera números errados sem aviso.</li>
+          <li><strong>Datum errado.</strong> Converter como SIRGAS 2000 coordenadas que estão em SAD-69 desloca o desenho; no Google Earth ele cai fora do lugar.</li>
+          <li><strong>Fuso errado.</strong> Fora do fuso 23 (longitudes a leste de 42° W ou a oeste de 48° W), o UTM muda de zona. O Zonea trabalha em 23S, por isso o conversor avisa quando alguma longitude estiver fora dele.</li>
+        </ul>
+
+        <div class="article-callout">
+          💡 O <a href="../desenhar-poligonal.html#conversor">conversor de latitude e longitude para UTM</a> do Zonea é gratuito e não pede cadastro. Depois de converter, as 2 primeiras poligonais de cada conta são grátis para desenhar, calcular a área e baixar em DXF, KML, KMZ ou PDF.
+        </div>
+
+        <p>
+          <em>Ferramenta de apoio:</em> a conversão é feita pelas fórmulas oficiais da projeção UTM e foi conferida contra uma biblioteca de referência, mas o resultado não substitui o levantamento topográfico nem a ART/RRT.
+        </p>
+      </div>
+
+      <div class="article-relacionados">
+        <h2>Continue lendo</h2>
+        <ul>
+          <li><a href="calcular-area-perimetro-poligonal.html">Como calcular área e perímetro de uma poligonal a partir de azimute e distância</a></li>
+          <li><a href="memorial-descritivo.html">Memorial descritivo: o que é, quando é exigido e como montar um</a></li>
+          <li><a href="erro-fechamento-poligonal.html">Erro de fechamento em poligonal topográfica: o que é e como corrigir</a></li>
+        </ul>
+      </div>
+
+      <section class="tool-callout card" style="margin-top: 32px; padding: 28px; text-align: center;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--cor-cinza-escuro); margin-bottom: 8px;">
+          Converta e desenhe a sua poligonal
+        </h2>
+        <p style="font-size: 14px; color: var(--cor-cinza); max-width: 560px; margin: 0 auto 20px;">
+          Cole as coordenadas de cada vértice, converta para UTM e veja a poligonal, a área e o erro de fechamento.
+        </p>
+        <a href="../desenhar-poligonal.html" class="result-cta primary" style="display: inline-flex;">
+          <span>Desenhar poligonal a partir de coordenadas →</span>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="/desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
+        <a href="/avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
+      </div>
+      <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
+        📍 VOCÊ: <strong id="visitorCoords">—</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Seu município ainda não está no mapa? Fale com a equipe</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js?v=20260925h"></script>
+  <script src="../js/script.js?v=20260925h"></script>
+</body>
+</html>

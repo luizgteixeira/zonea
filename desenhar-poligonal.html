@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Desenhar poligonal online a partir de coordenadas | Zonea</title>
+  <meta name="description" content="Desenhe a poligonal do terreno a partir de coordenadas UTM ou de latitude e longitude, calcule área e perímetro e exporte em DXF, KML e PDF. As 2 primeiras são grátis.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://zonea.com.br/desenhar-poligonal.html">
+  <meta property="og:title" content="Desenhar poligonal online a partir de coordenadas | Zonea">
+  <meta property="og:description" content="Desenhe a poligonal do terreno a partir de coordenadas UTM ou de latitude e longitude, calcule área e perímetro e exporte em DXF, KML e PDF. As 2 primeiras são grátis.">
+  <meta property="og:image" content="https://zonea.com.br/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/estilo.css?v=20260925h">
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Zonea — Ferramenta de Poligonal",
+  "url": "https://zonea.com.br/desenhar-poligonal.html",
+  "description": "Desenhe a poligonal do terreno a partir de coordenadas UTM ou de latitude e longitude, calcule área e perímetro e exporte em DXF, KML e PDF. As 2 primeiras são grátis.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "pt-BR",
+  "offers": [
+    {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL",
+      "description": "As 2 primeiras poligonais de cada conta são grátis"
+    },
+    {
+      "@type": "Offer",
+      "price": "9.90",
+      "priceCurrency": "BRL",
+      "description": "Assinatura de 30 dias, pagamento único"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zonea",
+    "url": "https://zonea.com.br/"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Como desenhar uma poligonal a partir de coordenadas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Informe as coordenadas UTM (E e N) do ponto inicial e o azimute e a distância de cada segmento — ou cole o memorial completo do Excel. O Zonea desenha o polígono, calcula a área, o perímetro e o erro de fechamento e deixa você baixar o resultado em DXF, KML, KMZ ou PDF."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Posso usar coordenadas geográficas (latitude e longitude)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. A ferramenta trabalha em UTM, mas esta página tem um conversor de latitude e longitude (em graus decimais ou em graus, minutos e segundos) para UTM que já monta o bloco pronto para colar na ferramenta."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Qual sistema de coordenadas o Zonea usa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "UTM zona 23S (meridiano central 45° W), no datum SIRGAS 2000, que cobre a Região Metropolitana de Belo Horizonte. Para memoriais em SAD-69, o KML e o KMZ podem ser convertidos para SIRGAS 2000 na hora de baixar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Dá para abrir o resultado no AutoCAD e no Google Earth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dá. O DXF abre no AutoCAD, BricsCAD, LibreCAD e QGIS. O KML e o KMZ abrem no Google Earth. Há ainda um relatório em PDF com os resultados, o desenho e a tabela de vértices."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "O Zonea substitui o levantamento topográfico ou a ART/RRT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. É uma ferramenta de apoio para conferir e visualizar poligonais. O levantamento, o memorial oficial e a responsabilidade técnica continuam com o profissional habilitado (CREA/CAU)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto custa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "As 2 primeiras poligonais de cada conta são grátis. Depois disso, a assinatura custa R$ 9,90 por 30 dias, em pagamento único (Pix, boleto ou cartão), sem renovação automática."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <div class="contours-watermark"></div>
+
+  <!-- HEADER INSTITUCIONAL -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Zonea Home">
+        <div class="logo-icon">
+          <img src="img/logo.webp" width="40" alt="">
+        </div>
+        <div>
+          <span class="logo-text">ZONEA</span>
+          <span class="logo-sub">Conectando você aos dados oficiais</span>
+        </div>
+      </a>
+
+      <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="servicos.html" class="nav-link">Serviços</a>
+        <a href="mapa.html" class="nav-link">Mapa</a>
+        <a href="conhecimento.html" class="nav-link">Conhecimento</a>
+        <a href="poligonal.html" class="nav-link">Poligonal</a>
+        <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
+        <button type="button" id="btnLockToggle" class="btn-lock">
+          <span>🔒 Entrar</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- APRESENTAÇÃO -->
+    <section class="hero-section" style="margin-bottom: 32px;">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Ferramenta de Poligonal
+      </div>
+
+      <h1 class="hero-title">
+        Desenhar poligonal <span class="logo-text">a partir de coordenadas</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Informe as coordenadas do terreno (UTM, azimute e distância, ou latitude e longitude) e o Zonea desenha a poligonal,
+        calcula a <strong>área</strong>, o <strong>perímetro</strong> e o <strong>erro de fechamento</strong>, e deixa você baixar
+        em <strong>DXF</strong>, <strong>KML/KMZ</strong> e <strong>PDF</strong>.
+      </p>
+
+      <div class="lp-cta-linha">
+        <a href="poligonal.html" class="btn-submit lp-cta">Desenhar minha poligonal — 2 grátis</a>
+        <a href="#conversor" class="btn-secondary lp-cta-sec">Tenho latitude e longitude</a>
+      </div>
+      <p class="lp-nota-cta">Sem instalar nada. Crie uma conta gratuita e use as 2 primeiras poligonais por nossa conta.</p>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section class="lp-secao" aria-labelledby="lpComoFunciona">
+      <h2 id="lpComoFunciona" class="lp-titulo">Como desenhar uma poligonal em 3 passos</h2>
+      <ol class="lp-passos">
+        <li>
+          <strong>Preencha ou cole os dados.</strong>
+          <span>Digite o ponto inicial (E e N) e o azimute e a distância de cada segmento, ou cole direto de uma planilha do Excel. Se você tem o memorial descritivo completo, com as coordenadas de cada vértice, cole também.</span>
+        </li>
+        <li>
+          <strong>Veja o desenho e os resultados.</strong>
+          <span>A poligonal aparece na hora, e o Zonea calcula a área do terreno, o perímetro e o erro de fechamento, avisando se algo não fechou.</span>
+        </li>
+        <li>
+          <strong>Baixe no formato que precisar.</strong>
+          <span>DXF para o AutoCAD, KML ou KMZ para o Google Earth, e um relatório em PDF com os resultados, o desenho e a tabela de vértices.</span>
+        </li>
+      </ol>
+
+      <div class="lp-imagens">
+        <figure>
+          <img src="img/poligonal-tabela-desenho.webp" width="760" height="950" loading="lazy"
+               alt="Tabela de vértices preenchida e a poligonal desenhada na Ferramenta de Poligonal do Zonea">
+          <figcaption>Os vértices entram na tabela e a poligonal é desenhada na hora.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/poligonal-resultados-exportacao.webp" width="760" height="950" loading="lazy"
+               alt="Área, perímetro e erro de fechamento calculados, com os botões para baixar DXF, KML, KMZ e relatório em PDF">
+          <figcaption>Área, perímetro, erro de fechamento e os botões de download.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- COORDENADAS ACEITAS -->
+    <section class="lp-secao" aria-labelledby="lpCoordenadas">
+      <h2 id="lpCoordenadas" class="lp-titulo">Quais coordenadas a ferramenta aceita?</h2>
+      <div class="data-table-wrapper card">
+        <table class="data-table">
+          <thead>
+            <tr><th scope="col">O que você tem</th><th scope="col">Como usar no Zonea</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Coordenadas UTM</strong> (E e N, em metros)</td>
+              <td>Digite ou cole direto na tabela. É o formato de trabalho da ferramenta (UTM zona 23S, SIRGAS 2000).</td>
+            </tr>
+            <tr>
+              <td><strong>Azimute e distância</strong> de cada segmento</td>
+              <td>Digite a partir do ponto inicial. Aceita graus, minutos e segundos (<code>189°1'24,32"</code>) ou graus decimais.</td>
+            </tr>
+            <tr>
+              <td><strong>Memorial descritivo</strong> com vértice, azimute, distância e coordenadas</td>
+              <td>Cole do Excel com 6 colunas. O Zonea usa as coordenadas de cada vértice e reproduz a área declarada no memorial.</td>
+            </tr>
+            <tr>
+              <td><strong>Coordenadas geográficas</strong> (latitude e longitude)</td>
+              <td>Use o <a href="#conversor">conversor abaixo</a>: ele transforma em UTM e gera o bloco pronto para colar na ferramenta.</td>
+            </tr>
+            <tr>
+              <td>Memorial em <strong>SAD-69</strong></td>
+              <td>Preencha normalmente e escolha SAD-69 ao baixar o KML/KMZ, para o desenho cair no lugar certo no Google Earth.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CONVERSOR -->
+    <section id="conversor" class="lp-secao" aria-labelledby="lpConversor">
+      <h2 id="lpConversor" class="lp-titulo">Converter latitude e longitude para UTM</h2>
+      <p class="lp-texto">
+        Cole uma coordenada por linha, <strong>latitude primeiro e longitude depois</strong>. Aceita graus decimais
+        (<code>-19.9208 -43.9378</code>) e graus, minutos e segundos (<code>19°55'15,2"S 43°56'16,1"W</code>), com ponto ou vírgula.
+        Cada linha vira um vértice, na ordem em que você colar.
+      </p>
+
+      <div class="card lp-conversor">
+        <label for="convEntrada" class="lp-rotulo">Coordenadas (uma por linha)</label>
+        <textarea id="convEntrada" rows="6" spellcheck="false" autocomplete="off"
+                  placeholder="-19.92083 -43.93778&#10;-19.92083 -43.93741&#10;-19.92119 -43.93741&#10;-19.92119 -43.93778"></textarea>
+
+        <div class="lp-conversor-linha">
+          <div class="lp-conversor-campo">
+            <label for="convDatum" class="lp-rotulo">Datum das coordenadas</label>
+            <select id="convDatum">
+              <option value="sirgas2000" selected>SIRGAS 2000 / WGS 84 (GPS, Google Earth)</option>
+              <option value="sad69">SAD-69</option>
+            </select>
+          </div>
+          <div class="lp-conversor-botoes">
+            <button type="button" id="convBotao" class="btn-submit lp-btn">Converter</button>
+            <button type="button" id="convExemplo" class="btn-secondary">Usar um exemplo</button>
+          </div>
+        </div>
+
+        <div id="convStatus" class="status-message" aria-live="polite"></div>
+
+        <div id="convResultado" hidden>
+          <div class="data-table-wrapper">
+            <table class="data-table lp-tabela-conv">
+              <thead>
+                <tr><th scope="col">Vértice</th><th scope="col">Latitude</th><th scope="col">Longitude</th><th scope="col">E (m)</th><th scope="col">N (m)</th></tr>
+              </thead>
+              <tbody id="convTabela"></tbody>
+            </table>
+          </div>
+
+          <label for="convBloco" class="lp-rotulo lp-rotulo-topo">Bloco para colar na Ferramenta de Poligonal</label>
+          <textarea id="convBloco" rows="5" readonly spellcheck="false"></textarea>
+          <div class="lp-conversor-botoes">
+            <button type="button" id="convCopiar" class="btn-submit lp-btn">Copiar bloco</button>
+            <a href="poligonal.html" class="btn-secondary lp-link-btn">Abrir a Ferramenta de Poligonal →</a>
+          </div>
+          <p class="lp-texto lp-texto-pequeno">
+            Na ferramenta, clique na <strong>primeira célula da coluna E</strong> (a linha do P0) e cole com Ctrl+V. Ela reconhece o bloco
+            pelo modo "por coordenadas". Se o memorial estiver em SAD-69, escolha SAD-69 aqui em cima e, na hora de baixar o KML/KMZ, escolha
+            SAD-69 também.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARA QUEM / QUANDO USAR -->
+    <section class="lp-secao" aria-labelledby="lpQuando">
+      <h2 id="lpQuando" class="lp-titulo">Quando isso ajuda</h2>
+      <ul class="lp-lista">
+        <li><strong>Conferir um memorial descritivo</strong> antes de protocolar: a área e o fechamento batem com o que está no documento?</li>
+        <li><strong>Visualizar o terreno</strong> a partir de uma planta ou matrícula que só traz coordenadas e medidas em texto.</li>
+        <li><strong>Levar a poligonal para o projeto:</strong> exportar em DXF e abrir direto no AutoCAD, sem redesenhar.</li>
+        <li><strong>Ver o lote no Google Earth</strong> em KML ou KMZ, para checar onde ele cai no mapa.</li>
+        <li><strong>Calcular a área do terreno</strong> pelas coordenadas ou por azimute e distância, sem planilha manual.</li>
+        <li><strong>Estudar</strong> como uma poligonal se fecha: veja também o guia de <a href="conhecimento/calcular-area-perimetro-poligonal.html">como calcular área e perímetro</a> e o de <a href="conhecimento/erro-fechamento-poligonal.html">erro de fechamento</a>.</li>
+      </ul>
+    </section>
+
+    <!-- PERGUNTAS -->
+    <section class="lp-secao" aria-labelledby="lpPerguntas">
+      <h2 id="lpPerguntas" class="lp-titulo">Perguntas frequentes</h2>
+      <div class="lp-faq">
+        <details class="lp-faq-item">
+          <summary>Como desenhar uma poligonal a partir de coordenadas?</summary>
+          <p>Informe as coordenadas UTM (E e N) do ponto inicial e o azimute e a distância de cada segmento — ou cole o memorial completo do Excel. O Zonea desenha o polígono, calcula a área, o perímetro e o erro de fechamento e deixa você baixar o resultado em DXF, KML, KMZ ou PDF.</p>
+        </details>
+        <details class="lp-faq-item">
+          <summary>Posso usar coordenadas geográficas (latitude e longitude)?</summary>
+          <p>Sim. A ferramenta trabalha em UTM, mas esta página tem um conversor de latitude e longitude (em graus decimais ou em graus, minutos e segundos) para UTM que já monta o bloco pronto para colar na ferramenta.</p>
+        </details>
+        <details class="lp-faq-item">
+          <summary>Qual sistema de coordenadas o Zonea usa?</summary>
+          <p>UTM zona 23S (meridiano central 45° W), no datum SIRGAS 2000, que cobre a Região Metropolitana de Belo Horizonte. Para memoriais em SAD-69, o KML e o KMZ podem ser convertidos para SIRGAS 2000 na hora de baixar.</p>
+        </details>
+        <details class="lp-faq-item">
+          <summary>Dá para abrir o resultado no AutoCAD e no Google Earth?</summary>
+          <p>Dá. O DXF abre no AutoCAD, BricsCAD, LibreCAD e QGIS. O KML e o KMZ abrem no Google Earth. Há ainda um relatório em PDF com os resultados, o desenho e a tabela de vértices.</p>
+        </details>
+        <details class="lp-faq-item">
+          <summary>O Zonea substitui o levantamento topográfico ou a ART/RRT?</summary>
+          <p>Não. É uma ferramenta de apoio para conferir e visualizar poligonais. O levantamento, o memorial oficial e a responsabilidade técnica continuam com o profissional habilitado (CREA/CAU).</p>
+        </details>
+        <details class="lp-faq-item">
+          <summary>Quanto custa?</summary>
+          <p>As 2 primeiras poligonais de cada conta são grátis. Depois disso, a assinatura custa R$ 9,90 por 30 dias, em pagamento único (Pix, boleto ou cartão), sem renovação automática.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- CHAMADA FINAL -->
+    <section class="lp-secao lp-final">
+      <h2 class="lp-titulo">Pronto para desenhar a sua?</h2>
+      <p class="lp-texto">As 2 primeiras poligonais são grátis. Depois, R$ 9,90 por 30 dias, sem renovação automática.</p>
+      <a href="poligonal.html" class="btn-submit lp-cta">Abrir a Ferramenta de Poligonal</a>
+      <p class="lp-texto lp-texto-pequeno">
+        Ferramenta de apoio: não substitui levantamento topográfico, ART/RRT nem a análise da prefeitura. Precisa de ajuda com um caso específico? Fale com a equipe pelo WhatsApp.
+      </p>
+    </section>
+  </main>
+
+  <!-- FOOTER INSTITUCIONAL -->
+  <footer id="main-footer">
+    <div class="footer-container">
+      <div class="footer-credits">
+        <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
+        <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
+        <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
+      </div>
+      <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
+        📍 VOCÊ: <strong id="visitorCoords">—</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP -->
+  <div class="whatsapp-float-container">
+    <span class="whatsapp-tooltip">Dúvidas sobre poligonal? Fale com a equipe</span>
+    <a href="https://api.whatsapp.com/send/?phone=5531992609970"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="whatsapp-float-btn"
+       aria-label="Atendimento via WhatsApp">
+      <svg class="whatsapp-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c0-5.445 4.43-9.874 9.876-9.874 2.637 0 5.115 1.028 6.977 2.89 1.861 1.862 2.887 4.341 2.886 6.979 0 5.447-4.431 9.877-9.878 9.877m0-18.147c-4.561 0-8.272 3.711-8.272 8.27 0 1.58.45 3.09 1.299 4.391l.2.311-.587 2.148 2.199-.577.301.179a8.23 8.23 0 004.858 1.549h.004c4.559 0 8.27-3.712 8.271-8.271.001-2.207-.857-4.282-2.42-5.845a8.212 8.212 0 00-5.853-2.427"/>
+      </svg>
+    </a>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js?v=20260925h"></script>
+  <script src="js/script.js?v=20260925h"></script>
+  <script src="js/conversor-coordenadas.js?v=20260925h"></script>
+  <script src="js/landing-poligonal.js?v=20260925h"></script>
+</body>
+</html>
