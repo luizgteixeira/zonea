@@ -11,6 +11,9 @@ on:
 
 jobs:
   mirror:
+    # Este arquivo também é copiado para zonea-hostinger (é um espelho do repositório inteiro).
+    # Lá ele não tem o token e falhava em todo commit, deixando um "X" vermelho. Só roda na origem.
+    if: github.repository == 'luizgteixeira/zonea'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout com histórico completo
