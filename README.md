@@ -29,7 +29,7 @@ Cada prefeitura da Região Metropolitana de Belo Horizonte (RMBH) tem seu própr
 * **Desenhar uma poligonal automaticamente** — em vez de desenhar manualmente num programa de CAD, você preenche uma tabela (ou cola direto de uma planilha Excel) com as coordenadas do terreno, e o Zonea desenha o formato, calcula a área, o perímetro e avisa se algo não fechou certo. Depois de calcular, dá pra **baixar o desenho em DXF** (abre no AutoCAD, BricsCAD, LibreCAD e QGIS) **ou em KML/KMZ** (abre no Google Earth). Se você colar o memorial completo (Vértice Inicial, Vértice Final, Azimute, Distância, E, N), o Zonea usa as coordenadas de cada vértice — o "modo por coordenadas" — e a área sai igual à declarada no documento.
 * **Falar com a gente pelo WhatsApp** — direto em qualquer página, para tirar dúvidas, sugerir um município novo, ou avisar se algo está fora do ar.
 
-A busca de município, o mapa e os artigos são **100% gratuitos**, sem precisar de conta — os dados dos municípios são públicos e vêm das próprias prefeituras. O que é pago é a **Ferramenta de Poligonal**: as **2 primeiras poligonais são grátis** (basta criar uma conta gratuita em `conta.html`) e, depois disso, é preciso assinar (Pix, boleto ou cartão, via Mercado Pago).
+A busca de município, o mapa e os artigos são **100% gratuitos**, sem precisar de conta — os dados dos municípios são públicos e vêm das próprias prefeituras. O que é pago é a **Ferramenta de Poligonal**: as **2 primeiras poligonais são grátis** (basta criar uma conta gratuita em `conta.html`) e, depois disso, é preciso assinar: **R$ 9,90 por 30 dias**, pagamento único (Pix, boleto ou cartão, via Mercado Pago), sem renovação automática.
 
 ---
 
@@ -40,13 +40,13 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 * As informações públicas dos municípios ficam num arquivo separado (`data/municipios.json`), fora do código da página — assim dá pra atualizar os dados sem mexer no visual do site.
 * O visual (cores, fontes, espaçamentos) é centralizado num único arquivo de estilo (`css/estilo.css`), então mudar a identidade visual do site inteiro é uma questão de editar um lugar só.
 * Cada página carrega os dados dinamicamente ao abrir — por isso não dá pra simplesmente abrir os arquivos `.html` clicando duas vezes; é preciso rodar um servidor local (explicado mais abaixo). Todos os links internos gerados por JavaScript usam caminho absoluto a partir da raiz (ex. `/conta.html`), pra funcionar tanto nas páginas do primeiro nível quanto nas de dentro de `conhecimento/`.
-* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/pagamento na página `conta.html`. Só a Poligonal depende disso: busca, mapa e artigos funcionam mesmo com o Supabase fora do ar.
+* **Login e assinatura** são feitos com [Supabase](https://supabase.com) (banco de dados + autenticação gerenciados) — `js/supabase-client.js` inicializa a conexão (a chave usada ali é pública por design, protegida por Row Level Security no banco, não pelo sigilo dela) e `js/auth.js` cuida do cadastro/login/logout/recuperação de senha/pagamento na página `conta.html`. No cadastro a senha é digitada duas vezes, com um checklist ao vivo (6 caracteres, maiúscula, minúscula, número e caractere especial) — as mesmas regras precisam estar ligadas no painel do Supabase, porque a checagem do navegador é só experiência de uso. O link do e-mail "Esqueci minha senha" volta com `#…type=recovery` e já deixa a pessoa logada: `supabase-client.js` guarda isso (`ZONEA_RECUPERANDO_SENHA`) antes de o SDK limpar o endereço, e `conta.html` mostra o formulário de nova senha (`updateUser`), levando pra lá quem cair em outra página. Só a Poligonal depende disso: busca, mapa e artigos funcionam mesmo com o Supabase fora do ar.
 * **Dados dos municípios** (link do portal, sistema, detalhes técnicos, sistema de referência, status de disponibilidade) ficam todos em `data/municipios.json`, um arquivo estático e público — não há mais nenhuma consulta a banco pra buscar ou mostrar um município.
 * A antiga trava por município (tabelas `municipios_protegido`, `anon_preview_usado` e `leads_interesse`, e as Edge Functions `get-preview-municipio` e `submit-lead`) **foi removida**: o código saiu do repositório e a migração `0006_remove_trava_por_municipio.sql` apaga as tabelas do Supabase (as duas funções publicadas precisam ser apagadas à mão no painel).
-* A **Poligonal** (`poligonal.html`) exige **conta logada**; quem decide se a pessoa ainda pode calcular é a Edge Function `usar-poligonal`. As 2 primeiras poligonais de cada conta são grátis; depois, só assinante ativo. O crédito é gasto no primeiro "Fechar Poligonal e Calcular" de cada poligonal (recalcular a mesma poligonal, com o mesmo ponto inicial, não gasta outro; "Limpar Tudo" começa uma nova). O contador vive em `profiles.poligonais_gratis_usadas` e é incrementado de forma atômica pela função SQL `consumir_poligonal_gratis` (só a `service_role` consegue chamá-la) — o limite fica numa constante só, `LIMITE_POLIGONAIS_GRATIS`, na Edge Function. O desenho ao vivo enquanto a pessoa digita é livre; o crédito controla o resultado (área, perímetro e erro de fechamento).
+* A **Poligonal** (`poligonal.html`) exige **conta logada**; quem decide se a pessoa ainda pode calcular é a Edge Function `usar-poligonal`. As 2 primeiras poligonais de cada conta são grátis; depois, só assinante ativo. O crédito é gasto no primeiro "Fechar Poligonal e Calcular" de cada poligonal (recalcular a mesma poligonal, com o mesmo ponto inicial, não gasta outro; "Limpar Tudo" começa uma nova). O contador vive em `profiles.poligonais_gratis_usadas` e é incrementado de forma atômica pela função SQL `consumir_poligonal_gratis` (só a `service_role` consegue chamá-la; a página inicial, os serviços e a conta mostram os créditos reais de quem está logado, via `obterCreditosPoligonal()` em `js/supabase-client.js`) — o limite fica numa constante só, `LIMITE_POLIGONAIS_GRATIS`, na Edge Function. O desenho ao vivo enquanto a pessoa digita é livre; o crédito controla o resultado (área, perímetro e erro de fechamento).
 * **Exportação da poligonal** (`js/exportar-poligonal.js`): tudo é gerado no próprio navegador, sem dependências. O **DXF** (AutoCAD R12, só ASCII) sai nas mesmas coordenadas UTM zona 23S que a pessoa informou (não converte datum), com camadas `ZONEA_POLIGONAL`, `ZONEA_VERTICES` e `ZONEA_TEXTO`. O **KML/KMZ** converte UTM → latitude/longitude por série de Krüger (diferença de sub-milímetro contra o `pyproj`; SIRGAS 2000 e WGS84 diferem em centímetros, então serve pro Google Earth). A pessoa escolhe o **datum do memorial** (SIRGAS 2000 ou SAD-69) antes de baixar: com SAD-69, as coordenadas passam por uma translação geocêntrica de 3 parâmetros do IBGE (Resolução PR 1/2005: ΔX −67,35 m, ΔY +3,88 m, ΔZ −38,22 m, elipsoide GRS67) até o SIRGAS 2000 — sem isso o desenho cairia ~64 m fora do lugar na RMBH. É aproximada (erro de poucos metros), conferida contra o `pyproj` em sub-milímetro pro mesmo modelo, e só afeta o KML/KMZ. O KMZ é um ZIP sem compressão escrito à mão. O **DWG** não é gerado: é um formato proprietário da Autodesk. Os botões só ficam ativos quando os resultados na tela estão atualizados, e o último vértice repetido do fechamento é descartado no arquivo.
-* **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`.
-* **Mapa** (`mapa.html` + `js/mapa.js`): usa [Leaflet](https://leafletjs.com) sobre tiles do OpenStreetMap e uma malha de limites municipais derivada de dados abertos do IBGE (`data/rmbh-municipios.geojson`). Reaproveita a mesma função de renderização de card da busca (`renderMunicipioCard`, em `js/script.js`), então o comportamento de acesso é idêntico nos dois lugares.
+* **Pagamento** é via Mercado Pago (Checkout Pro), sem servidor próprio: `conta.html` chama a Edge Function `create-mp-preference` (Supabase) pra gerar o link de pagamento, e a Edge Function `mp-webhook` recebe a confirmação do Mercado Pago e ativa a assinatura automaticamente — ver `supabase/functions/`. O valor (R$ 9,90) e a validade (30 dias) ficam em `PRECO_ASSINATURA` e `DIAS_DE_ACESSO` em `create-mp-preference` (a validade também em `mp-webhook`); o valor do botão em `conta.html` e o texto da FAQ são escritos à mão, então mudar o preço exige atualizar os três e republicar a função. O webhook guarda cada notificação por pagamento **+ status** (o Pix chega como `pending` e depois `approved`; guardar só o id ignorava a aprovada).
+* **Mapa** (`mapa.html` + `js/mapa.js`): usa [Leaflet](https://leafletjs.com) sobre tiles do OpenStreetMap e uma malha de limites municipais derivada de dados abertos do IBGE (`data/rmbh-municipios.geojson`). Reaproveita a mesma função de renderização de card da busca (`renderMunicipioCard`, em `js/script.js`), então o card é idêntico nos dois lugares.
 
 ---
 
@@ -73,7 +73,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │   ├── poligonal.js         # Lógica da ferramenta de poligonal (cálculos e desenho)
 │   ├── exportar-poligonal.js # Gera os arquivos DXF, KML e KMZ da poligonal (funções puras, sem dependências)
 │   ├── supabase-client.js   # Inicialização do client Supabase (usado em toda página)
-│   └── auth.js               # Cadastro/login/logout, usado só em conta.html
+│   └── auth.js               # Cadastro (senha dupla + checklist), login, recuperação de senha e pagamento, só em conta.html
 ├── data/
 │   ├── municipios.json         # Os 34 municípios: dados públicos + portal oficial auditado de cada um
 │   ├── config.json             # Configurações gerais (ex: número do WhatsApp)
@@ -95,6 +95,7 @@ O Zonea é um site simples de propósito: só HTML, CSS e JavaScript "puros", se
 │       └── mp-webhook/index.ts               # Recebe a confirmação de pagamento e ativa a assinatura
 ├── .github/workflows/
 │   └── mirror-hostinger.yml      # Espelha automaticamente todo push em main pro repositório de deploy
+├── .htaccess           # Manda o navegador conferir o HTML antes de usar a cópia guardada (Cache-Control no-cache)
 ├── robots.txt          # Diretivas de indexação para buscadores
 ├── sitemap.xml          # Mapa do site para SEO
 ├── img/                # Logo, ícones e imagens
@@ -120,13 +121,22 @@ python -m http.server 8000
 npx serve .
 ```
 
-Depois, acesse `http://localhost:8000/servicos.html` no navegador (busca, mapa e artigos são livres; a ferramenta de poligonal exige assinatura ativa — crie uma conta em `conta.html`).
+Depois, acesse `http://localhost:8000/servicos.html` no navegador (busca, mapa e artigos são livres; a ferramenta de poligonal exige uma conta logada — crie uma em `conta.html`; as 2 primeiras poligonais são grátis, e isso depende do Supabase estar no ar).
 
 ---
 
 ## Deploy
 
 O site é hospedado na Hostinger. O fluxo é: você trabalha e dá push neste repositório (`zonea`) — o workflow `.github/workflows/mirror-hostinger.yml` espelha automaticamente todo push na branch `main` para um segundo repositório (`zonea-hostinger`), que é o que a Hostinger está de fato conectada para publicar. Não existe build nem deploy manual: um `git push` aqui já é suficiente pro site novo ir ao ar.
+
+**Cache dos arquivos:** a Hostinger entrega `.js` e `.css` com validade de 7 dias, então quem já visitou o site continuaria com a cópia velha. Por isso todo `<script>` e `<link>` de arquivo do site leva uma versão no endereço (`js/auth.js?v=20260924g`). **Ao mudar qualquer `.js` ou `.css`, troque essa versão em todas as páginas HTML** (uma busca e substituição resolve). O HTML em si não precisa disso: o `.htaccess` manda o navegador conferir sempre.
+
+**Configuração que vive no painel (não no código):**
+
+* **Supabase, Edge Functions:** a `mp-webhook` precisa ter **Verify JWT desligado** — quem a chama é o Mercado Pago, que não tem login do Zonea (com a opção ligada, o Supabase devolve 401 e nenhum pagamento ativa a assinatura). Secrets: `MP_ACCESS_TOKEN` (o token de **produção** do Mercado Pago, não o de teste). Qualquer mudança em `supabase/functions/` precisa ser publicada no painel; o push do GitHub não faz isso.
+* **Supabase, e-mails de login:** SMTP próprio pelo Resend (`smtp.resend.com`, porta 465, usuário `resend`, remetente `nao-responder@zonea.com.br`, com o domínio `zonea.com.br` verificado no Resend via registros DNS na Hostinger) — o e-mail embutido do Supabase limita a ~2 por hora e derruba o cadastro. Modelos em português em `supabase/email-templates/`.
+* **Supabase, URLs e senha:** Authentication > URL Configuration com **Site URL** `https://zonea.com.br` e **Redirect URLs** incluindo `https://zonea.com.br/conta.html` (pro link de recuperação de senha); Sign In / Providers > Email com as regras de senha do cadastro (mínimo 6, maiúscula, minúscula, número e símbolo).
+* **Mercado Pago:** aplicação com as credenciais de produção ativadas e chave Pix cadastrada na conta que recebe (sem isso o Checkout não oferece Pix). A conta vendedora **não consegue pagar a si mesma** — pra testar, use outra pessoa ou outro banco.
 
 ---
 
