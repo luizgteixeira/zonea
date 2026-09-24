@@ -249,6 +249,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       badge.textContent = 'SEM ASSINATURA ATIVA';
       badge.className = 'tag busca-direta';
       details.textContent = 'Sua conta ainda não tem uma assinatura ativa. As 2 primeiras poligonais são grátis; depois, assine para continuar usando a Ferramenta de Poligonal.';
+      // Troca pelo retrato real da conta assim que o servidor responder (sem bloquear a tela).
+      obterCreditosPoligonal().then((creditos) => {
+        if (!creditos || creditos.assinante) return;
+        details.textContent = creditos.restantes > 0
+          ? `Sua conta ainda não tem assinatura ativa. Você ainda tem ${creditos.restantes} de ${creditos.limite} poligonais grátis; depois, assine para continuar usando a Ferramenta de Poligonal.`
+          : `Você já usou suas ${creditos.limite} poligonais grátis. Assine para continuar usando a Ferramenta de Poligonal.`;
+      });
       btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de saber sobre outras formas de pagamento.`);
       btnWhatsapp.style.display = '';
       if (btnAssinarEl) btnAssinarEl.style.display = '';

@@ -303,6 +303,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     .then(({ session, ativa }) => renderHeaderLockUI(session, ativa))
     .catch((err) => console.error('Erro ao carregar a sessão do Zonea:', err));
 
+  // Textos de "As 2 primeiras poligonais são grátis" (início e serviços): quem já está logado vê a
+  // situação REAL da própria conta — quantas restam, ou que já usou todas e agora é só assinar.
+  // Visitante sem conta ou falha na consulta: fica o texto padrão da página.
+  function aplicarCreditosNaPagina(creditos) {
+    const linhas = document.querySelectorAll('[data-creditos="linha"]');
+    const ctas = document.querySelectorAll('[data-creditos="cta"]');
+    if (!creditos || (!linhas.length && !ctas.length)) return;
+
+    let linhaHtml;
+    let ctaTexto;
+    let ctaHref;
+    let esgotou = false;
+    if (creditos.assinante) {
+      linhaHtml = '✓ <strong>Assinatura ativa</strong> — poligonais ilimitadas.';
+      ctaTexto = 'Abrir a Ferramenta de Poligonal →';
+      ctaHref = 'poligonal.html';
+    } else if (creditos.restantes > 0) {
+      linhaHtml = `🎁 <strong>Você ainda tem ${creditos.restantes} de ${creditos.limite} poligonais grátis.</strong>`;
+      ctaTexto = 'Usar a Ferramenta de Poligonal →';
+      ctaHref = 'poligonal.html';
+    } else {
+      linhaHtml = `⚠️ <strong>Você já usou suas ${creditos.limite} poligonais grátis.</strong> Assine para continuar calculando.`;
+      ctaTexto = 'Assinar para continuar →';
+      ctaHref = 'conta.html';
+      esgotou = true;
+    }
+
+    linhas.forEach((el) => {
+      el.innerHTML = linhaHtml;
+      if (esgotou) el.style.color = '#B45309';
+    });
+    ctas.forEach((el) => {
+      const link = el.closest('a');
+      if (link) link.setAttribute('href', ctaHref);
+      const rotulo = el.querySelector('span') || el;
+      rotulo.textContent = ctaTexto;
+    });
+  }
+
+  assinaturaPromise
+    .then(({ session }) => (session ? obterCreditosPoligonal() : null))
+    .then(aplicarCreditosNaPagina)
+    .catch((err) => console.error('Erro ao mostrar os créditos de Poligonal:', err));
+
   // 6. AUTOCOMPLETE E FORMULÁRIO DE CONSULTA (HOME)
   const input = document.getElementById('municipio');
   const suggestionsEl = document.getElementById('suggestions');

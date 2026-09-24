@@ -45,3 +45,19 @@ async function iniciarPagamento() {
   if (error || !data?.init_point) throw error || new Error('Resposta sem init_point');
   window.location.href = data.init_point;
 }
+
+// Créditos de Poligonal da conta logada (quem decide é a Edge Function usar-poligonal).
+// Devolve { assinante, limite, restantes, ... } ou null se não há sessão ou a consulta falhou —
+// quem chama só troca o texto quando vier um resultado, senão fica o texto padrão da página.
+async function obterCreditosPoligonal() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return null;
+    const { data, error } = await supabaseClient.functions.invoke('usar-poligonal', { body: { acao: 'status' } });
+    if (error || !data) return null;
+    return data;
+  } catch (err) {
+    console.error('Erro ao consultar os créditos de Poligonal:', err);
+    return null;
+  }
+}
