@@ -2338,9 +2338,17 @@ footer,
 }
 
 .aval-grade {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  /* flex e não grid: com poucas avaliações (1 ou 2) os cartões ficam centralizados em vez de
+     encostados na esquerda com um vazio à direita */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
+}
+
+.aval-grade > .aval-card {
+  flex: 1 1 300px;
+  max-width: 480px;
 }
 
 .aval-card {
@@ -2414,7 +2422,7 @@ footer,
 }
 
 .aval-vazio {
-  grid-column: 1 / -1;
+  flex: 1 1 100%;
   text-align: center;
   padding: 28px 12px;
   color: var(--cor-cinza);
