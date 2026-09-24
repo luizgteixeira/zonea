@@ -2242,3 +2242,44 @@ footer,
 .busca-endereco-limpar[hidden] {
   display: none;
 }
+
+/* Relatório em PDF (bloco dentro de "Baixar o desenho") */
+.poligonal-relatorio {
+  margin: 4px 0 18px;
+  padding: 16px;
+  background: var(--cor-cinza-claro);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+}
+
+.poligonal-relatorio-titulo {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 4px;
+}
+
+.poligonal-relatorio-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--cor-cinza);
+  margin-bottom: 12px;
+}
+
+.poligonal-relatorio-campos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.poligonal-relatorio-campo input {
+  text-align: left;
+}
+
+.poligonal-relatorio-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}

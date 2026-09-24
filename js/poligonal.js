@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnExportarDxf = document.getElementById('btnExportarDxf');
   const btnExportarKml = document.getElementById('btnExportarKml');
   const btnExportarKmz = document.getElementById('btnExportarKmz');
+  const btnExportarPdf = document.getElementById('btnExportarPdf');
+  const inputRelatorioTitulo = document.getElementById('inputRelatorioTitulo');
+  const inputRelatorioResponsavel = document.getElementById('inputRelatorioResponsavel');
 
   if (!tbody) return; // página sem a ferramenta — não faz nada
 
@@ -199,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // quando os resultados na tela estão atualizados (tabela não mudou desde então).
   function atualizarBotoesExportar() {
     const pode = !!ultimoCalculo && !!resultsStaleNotice && resultsStaleNotice.hidden;
-    [btnExportarDxf, btnExportarKml, btnExportarKmz].forEach((b) => { if (b) b.disabled = !pode; });
+    [btnExportarDxf, btnExportarKml, btnExportarKmz, btnExportarPdf].forEach((b) => { if (b) b.disabled = !pode; });
   }
 
   function nomeBaseDoArquivo() {
@@ -215,7 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         // O datum escolhido só vale na hora de baixar (não altera o cálculo nem deixa o resultado desatualizado).
         const datum = selectDatumExport ? selectDatumExport.value : 'sirgas2000';
-        ZoneaExport.baixarArquivo(`${nomeBaseDoArquivo()}.${extensao}`, gerar({ ...ultimoCalculo, datum }), tipoMime);
+        ZoneaExport.baixarArquivo(`${nomeBaseDoArquivo()}.${extensao}`, gerar({
+          ...ultimoCalculo,
+          datum,
+          // só o relatório em PDF usa estes três; DXF, KML e KMZ ignoram
+          titulo: inputRelatorioTitulo ? inputRelatorioTitulo.value : '',
+          responsavel: inputRelatorioResponsavel ? inputRelatorioResponsavel.value : '',
+          geradoEm: new Date(),
+        }), tipoMime);
       } catch (err) {
         console.error(`Erro ao gerar o arquivo ${extensao.toUpperCase()}:`, err);
         showStatus('error', `❌ Não foi possível gerar o arquivo ${extensao.toUpperCase()}. Tente novamente.`);
@@ -226,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   exportar(btnExportarDxf, 'dxf', 'application/dxf', (d) => ZoneaExport.gerarDXF(d));
   exportar(btnExportarKml, 'kml', 'application/vnd.google-earth.kml+xml', (d) => ZoneaExport.gerarKML(d));
   exportar(btnExportarKmz, 'kmz', 'application/vnd.google-earth.kmz', (d) => ZoneaExport.gerarKMZ(d));
+  exportar(btnExportarPdf, 'pdf', 'application/pdf', (d) => ZoneaRelatorio.gerarPDF(d));
 
   // ---------- STATUS ----------
   function showStatus(state, html) {
@@ -764,6 +775,8 @@ document.addEventListener('DOMContentLoaded', () => {
     rows = [emptyRow()];
     chaveCreditada = null;
     ultimoCalculo = null;
+    if (inputRelatorioTitulo) inputRelatorioTitulo.value = '';
+    if (inputRelatorioResponsavel) inputRelatorioResponsavel.value = '';
     resultArea.textContent = '—';
     resultPerimetro.textContent = '—';
     resultFechamento.textContent = '—';

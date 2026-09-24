@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925c">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925d">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -214,7 +214,7 @@
           </div>
         </div>
         <div class="poligonal-export">
-          <h3 class="poligonal-export-titulo">Baixar o desenho</h3>
+          <h3 class="poligonal-export-titulo">Baixar o desenho e o relatório</h3>
           <div class="poligonal-export-datum">
             <label for="selectDatumExport" class="poligonal-export-datum-rotulo">Datum das coordenadas do memorial</label>
             <select id="selectDatumExport" class="poligonal-export-datum-select">
@@ -226,6 +226,26 @@
             <button type="button" id="btnExportarDxf" class="btn-secondary" disabled>DXF (AutoCAD)</button>
             <button type="button" id="btnExportarKml" class="btn-secondary" disabled>KML (Google Earth)</button>
             <button type="button" id="btnExportarKmz" class="btn-secondary" disabled>KMZ (Google Earth)</button>
+          </div>
+          <div class="poligonal-relatorio">
+            <h4 class="poligonal-relatorio-titulo">Relatório em PDF</h4>
+            <p class="poligonal-relatorio-desc">Uma página com a área, o perímetro, o erro de fechamento, o desenho e a tabela de vértices, pronta para anexar a um projeto ou enviar ao cliente.</p>
+            <div class="poligonal-relatorio-campos">
+              <div class="poligonal-relatorio-campo">
+                <label for="inputRelatorioTitulo" class="poligonal-export-datum-rotulo">Identificação (opcional)</label>
+                <input type="text" id="inputRelatorioTitulo" class="poligonal-export-datum-select" maxlength="80" autocomplete="off"
+                       placeholder="Ex.: Lote 12 da Rua das Flores — cliente João">
+              </div>
+              <div class="poligonal-relatorio-campo">
+                <label for="inputRelatorioResponsavel" class="poligonal-export-datum-rotulo">Responsável técnico (opcional)</label>
+                <input type="text" id="inputRelatorioResponsavel" class="poligonal-export-datum-select" maxlength="80" autocomplete="off"
+                       placeholder="Nome e registro no CREA ou CAU">
+              </div>
+            </div>
+            <div class="poligonal-export-botoes">
+              <button type="button" id="btnExportarPdf" class="btn-secondary" disabled>Relatório (PDF)</button>
+            </div>
+            <p class="poligonal-export-nota">O que você digita nesses dois campos só entra no PDF, gerado no seu computador — não é enviado a lugar nenhum.</p>
           </div>
           <p class="poligonal-export-nota">
             Disponível depois de "Fechar Poligonal e Calcular". O <strong>DXF</strong> abre no AutoCAD, BricsCAD, LibreCAD e QGIS, sempre nas mesmas coordenadas UTM que você informou (zona 23S). O <strong>KML/KMZ</strong> abre no Google Earth, em latitude/longitude.
@@ -267,9 +287,10 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925c"></script>
-  <script src="js/script.js?v=20260925c"></script>
-  <script src="js/exportar-poligonal.js?v=20260925c"></script>
-  <script src="js/poligonal.js?v=20260925c"></script>
+  <script src="js/supabase-client.js?v=20260925d"></script>
+  <script src="js/script.js?v=20260925d"></script>
+  <script src="js/exportar-poligonal.js?v=20260925d"></script>
+  <script src="js/relatorio-pdf.js?v=20260925d"></script>
+  <script src="js/poligonal.js?v=20260925d"></script>
 </body>
 </html>
