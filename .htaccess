@@ -1,0 +1,10 @@
+# Zonea — as páginas HTML sempre são conferidas no servidor antes de usar a cópia guardada.
+# Sem isso o navegador decide sozinho por quanto tempo reaproveitar o HTML e continua
+# mostrando a página velha (e chamando o JS/CSS velho) mesmo depois de publicarmos.
+# O JS e o CSS já são protegidos pela versão no endereço (?v=...) e não entram aqui.
+# O <IfModule> garante que, se o servidor não tiver o módulo, nada quebra.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
