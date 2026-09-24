@@ -271,8 +271,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnLockToggle.title = 'Assinatura ativa. Clique para encerrar sessão.';
     } else if (session) {
       btnLockToggle.classList.remove('unlocked');
-      btnLockToggle.innerHTML = '<span>🔒 Assinatura Pendente</span>';
-      btnLockToggle.title = 'Sua conta ainda não tem assinatura ativa. Clique para gerenciar.';
+      btnLockToggle.innerHTML = '<span>👤 Minha conta</span>';
+      btnLockToggle.title = 'Você está logado, sem assinatura ativa. Clique para encerrar sessão.';
     } else {
       btnLockToggle.classList.remove('unlocked');
       btnLockToggle.innerHTML = '<span>🔒 Entrar</span>';
