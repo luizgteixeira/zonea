@@ -12,7 +12,7 @@ const MP_ACCESS_TOKEN = Deno.env.get("MP_ACCESS_TOKEN")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 
 // R$ — 30 dias de acesso. Ajuste aqui quando decidir outro valor ou plano.
-const PRECO_ASSINATURA = 60.0;
+const PRECO_ASSINATURA = 9.9;
 const DIAS_DE_ACESSO = 30;
 
 export default {

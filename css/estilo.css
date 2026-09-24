@@ -1973,3 +1973,74 @@ footer,
 @media (max-width: 360px) {
   .hero-title { font-size: 1.7rem; }
 }
+
+/* Destaque dos créditos da Poligonal (poligonais grátis / assinatura) */
+.status-message.creditos-destaque.visible {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 26px;
+  border-width: 2px;
+}
+
+.creditos-numero {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  padding: 10px 14px;
+  border-radius: var(--raio-borda-lg);
+  background: var(--cor-branco);
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.creditos-numero small {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.creditos-icone {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--cor-branco);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.creditos-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.creditos-titulo {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.creditos-detalhe {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .status-message.creditos-destaque.visible {
+    gap: 14px;
+    padding: 16px;
+  }
+  .creditos-numero { min-width: 64px; font-size: 34px; padding: 8px 10px; }
+  .creditos-titulo { font-size: 18px; }
+  .creditos-detalhe { font-size: 14px; }
+}

@@ -475,14 +475,29 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCreditos() {
     if (!creditosEl || !creditos) return;
     if (creditos.assinante) {
-      creditosEl.className = 'status-message ok visible';
-      creditosEl.innerHTML = '✓ <strong>Assinatura ativa</strong> — poligonais ilimitadas.';
+      creditosEl.className = 'status-message ok visible creditos-destaque';
+      creditosEl.innerHTML = `
+        <span class="creditos-icone" aria-hidden="true">✓</span>
+        <div class="creditos-texto">
+          <strong class="creditos-titulo">Assinatura ativa</strong>
+          <span class="creditos-detalhe">Poligonais ilimitadas enquanto sua assinatura estiver valendo.</span>
+        </div>`;
     } else if (creditos.restantes > 0) {
-      creditosEl.className = 'status-message ok visible';
-      creditosEl.innerHTML = `🎁 <strong>Você tem ${creditos.restantes} de ${creditos.limite} poligonais grátis.</strong> Um crédito é usado na primeira vez que você clica em “Fechar Poligonal e Calcular” em cada poligonal.`;
+      creditosEl.className = 'status-message ok visible creditos-destaque';
+      creditosEl.innerHTML = `
+        <span class="creditos-numero" aria-hidden="true">${creditos.restantes}<small>de ${creditos.limite}</small></span>
+        <div class="creditos-texto">
+          <strong class="creditos-titulo">Você tem ${creditos.restantes} de ${creditos.limite} poligonais grátis</strong>
+          <span class="creditos-detalhe">Um crédito é usado na primeira vez que você clica em “Fechar Poligonal e Calcular” em cada poligonal. Recalcular a mesma poligonal não gasta outro.</span>
+        </div>`;
     } else {
-      creditosEl.className = 'status-message warn visible';
-      creditosEl.innerHTML = `⚠️ <strong>Suas ${creditos.limite} poligonais grátis acabaram.</strong> Assine para continuar calculando.`;
+      creditosEl.className = 'status-message warn visible creditos-destaque';
+      creditosEl.innerHTML = `
+        <span class="creditos-numero" aria-hidden="true">0<small>de ${creditos.limite}</small></span>
+        <div class="creditos-texto">
+          <strong class="creditos-titulo">Suas ${creditos.limite} poligonais grátis acabaram</strong>
+          <span class="creditos-detalhe">Assine para continuar calculando poligonais.</span>
+        </div>`;
     }
     if (paywallEl) paywallEl.hidden = !!creditos.assinante || creditos.restantes > 0;
   }
