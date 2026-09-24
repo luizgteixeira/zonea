@@ -2283,3 +2283,364 @@ footer,
   gap: 6px;
   min-width: 0;
 }
+
+/* ===== Avaliações (avaliacoes.html e seção da página inicial) ===== */
+.aval-secao {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  padding: 0 4px;
+}
+
+.aval-resumo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.aval-resumo-nota {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cor-cinza-escuro);
+}
+
+.aval-resumo-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aval-resumo-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-cinza);
+}
+
+.aval-estrelas {
+  display: inline-flex;
+  gap: 2px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.aval-estrelas.grande {
+  font-size: 26px;
+}
+
+.aval-estrela {
+  color: var(--cor-cinza-borda);
+}
+
+.aval-estrela.cheia {
+  color: #F59E0B;
+}
+
+.aval-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 20px;
+}
+
+.aval-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-lg);
+  box-shadow: var(--sombra-card);
+}
+
+.aval-card-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.aval-selo {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cor-verde-hover);
+  background: var(--cor-verde-suave);
+  border: 1px solid var(--cor-verde-borda);
+  border-radius: var(--raio-borda-pill);
+  padding: 3px 10px;
+}
+
+.aval-texto {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--cor-cinza-escuro);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.aval-autor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+}
+
+.aval-nome {
+  font-size: 14px;
+  color: var(--cor-cinza-escuro);
+}
+
+.aval-detalhe {
+  font-size: 12.5px;
+  color: var(--cor-cinza);
+}
+
+.aval-resposta {
+  padding: 12px 14px;
+  background: var(--cor-cinza-claro);
+  border-left: 3px solid var(--cor-azul);
+  border-radius: 0 var(--raio-borda-md) var(--raio-borda-md) 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--cor-cinza-escuro);
+}
+
+.aval-resposta p {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.aval-vazio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 28px 12px;
+  color: var(--cor-cinza);
+  font-size: 15px;
+}
+
+/* seção da página inicial */
+.aval-home {
+  max-width: 1000px;
+  margin: 0 auto 48px;
+}
+
+.aval-home[hidden] {
+  display: none;
+}
+
+.aval-home-titulo {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 18px;
+}
+
+.aval-home-link {
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cor-azul);
+  text-decoration: none;
+}
+
+.aval-home-link:hover {
+  text-decoration: underline;
+}
+
+/* área "avalie você também" */
+.aval-acao-card {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.aval-acao-titulo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  margin: 0 0 8px;
+}
+
+.aval-acao-texto {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--cor-cinza);
+  margin: 0 0 16px;
+}
+
+.aval-btn-link {
+  display: inline-flex;
+  width: auto;
+  padding: 14px 28px;
+  text-decoration: none;
+}
+
+.aval-minha-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.aval-minha-topo .aval-acao-titulo {
+  margin: 0;
+}
+
+.aval-status {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--raio-borda-pill);
+  border: 1px solid var(--cor-cinza-borda);
+}
+
+.aval-status.ok {
+  color: var(--cor-verde-hover);
+  background: var(--cor-verde-suave);
+  border-color: var(--cor-verde-borda);
+}
+
+.aval-status.pendente {
+  color: #92400E;
+  background: #FFFBEB;
+  border-color: #FCD34D;
+}
+
+.aval-status.warn {
+  color: #B42318;
+  background: #FEF3F2;
+  border-color: #FDA29B;
+}
+
+.aval-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.aval-botoes .btn-submit {
+  width: auto;
+  padding: 14px 28px;
+}
+
+.aval-form .aval-campo {
+  border: 0;
+  padding: 0;
+  margin: 0 0 18px;
+  min-width: 0;
+}
+
+.aval-rotulo {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-cinza-escuro);
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.aval-form input[type="text"],
+.aval-form select,
+.aval-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--fonte-principal);
+  font-size: 15px;
+  color: var(--cor-cinza-escuro);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-md);
+  text-align: left;
+}
+
+.aval-form textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.5;
+}
+
+.aval-contador {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--cor-cinza);
+  text-align: right;
+}
+
+.aval-consentimento {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--cor-cinza);
+  margin: 0 0 14px;
+}
+
+/* nota em estrelas clicáveis (radios escondidos; a ordem invertida faz o "preencher até aqui" funcionar) */
+.aval-nota-input {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 4px;
+}
+
+.aval-radio {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.aval-estrela-label {
+  font-size: 36px;
+  line-height: 1;
+  color: var(--cor-cinza-borda);
+  cursor: pointer;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.aval-estrela-label:hover,
+.aval-estrela-label:hover ~ .aval-estrela-label,
+.aval-radio:checked ~ .aval-estrela-label {
+  color: #F59E0B;
+}
+
+.aval-estrela-label:hover {
+  transform: scale(1.12);
+}
+
+.aval-radio:focus-visible + .aval-estrela-label {
+  outline: 2px solid var(--cor-azul);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* links pequenos: rodapé e Poligonal */
+.footer-aval {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.poligonal-avaliar {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  color: var(--cor-cinza);
+}
+
+.poligonal-avaliar a {
+  color: var(--cor-azul);
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .aval-acao-card { padding: 20px 16px; }
+  .aval-resumo-nota { font-size: 44px; }
+}
+

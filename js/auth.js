@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Quem chega aqui vindo da Poligonal (guard de js/script.js) volta pra ela depois de entrar.
   const urlParams = new URLSearchParams(window.location.search);
   const veioDaPoligonal = urlParams.has('access_required');
+  // Quem veio da página de avaliações (?voltar=avaliacoes) volta pra lá depois de entrar.
+  const voltarParaAvaliacoes = urlParams.get('voltar') === 'avaliacoes';
 
   // Botão de mostrar/ocultar senha (login e cadastro)
   document.querySelectorAll('.password-toggle-btn').forEach((btn) => {
@@ -130,6 +132,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.location.href = '/poligonal.html';
       return;
     }
+    if (voltarParaAvaliacoes) {
+      window.location.href = '/avaliacoes.html';
+      return;
+    }
     await renderAccountState();
   });
 
@@ -155,6 +161,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sem confirmação de e-mail obrigatória, o cadastro já devolve a sessão: segue direto.
     if (data.session && veioDaPoligonal) {
       window.location.href = '/poligonal.html';
+      return;
+    }
+    if (data.session && voltarParaAvaliacoes) {
+      window.location.href = '/avaliacoes.html';
       return;
     }
     await renderAccountState();

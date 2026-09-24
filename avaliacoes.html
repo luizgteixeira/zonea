@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
-  <title>Zonea — Mapa da RMBH</title>
-  <meta name="description" content="Mapa interativo dos 34 municípios da Região Metropolitana de Belo Horizonte (RMBH). Clique em um município pra ver os dados oficiais e ir direto ao portal de geoprocessamento da prefeitura — gratuito, sem cadastro.">
+  <title>Zonea — Avaliações de quem usa</title>
+  <meta name="description" content="Veja o que arquitetos, engenheiros e outros profissionais dizem sobre o Zonea e a Ferramenta de Poligonal. Avaliações de quem realmente usou, revisadas antes de aparecer.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Zonea — Mapa da RMBH">
-  <meta property="og:description" content="Visor territorial clicável dos 34 municípios da RMBH, direto da fonte oficial.">
+  <meta property="og:title" content="Zonea — Avaliações de quem usa">
+  <meta property="og:description" content="Avaliações de quem realmente usou a Ferramenta de Poligonal do Zonea.">
   <meta property="og:image" content="https://zonea.com.br/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -16,8 +16,6 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="css/estilo.css?v=20260925f">
 </head>
 <body>
@@ -45,7 +43,7 @@
       <nav id="navLinks" class="nav-links">
         <a href="index.html" class="nav-link">Início</a>
         <a href="servicos.html" class="nav-link">Serviços</a>
-        <a href="mapa.html" class="nav-link active">Mapa</a>
+        <a href="mapa.html" class="nav-link">Mapa</a>
         <a href="conhecimento.html" class="nav-link">Conhecimento</a>
         <a href="poligonal.html" class="nav-link">Poligonal</a>
         <a href="faq.html" class="nav-link">Dúvidas (FAQ)</a>
@@ -57,67 +55,30 @@
   </header>
 
   <main>
-    <!-- HERO DO MAPA -->
-    <section class="hero-section">
+    <!-- HERO -->
+    <section class="hero-section" style="margin-bottom: 32px;">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Visor Territorial da RMBH
+        Avaliações
       </div>
 
       <h1 class="hero-title">
-        Mapa da <span class="logo-text">RMBH</span>
+        O que dizem quem <span class="logo-text">usa o Zonea</span>
       </h1>
 
       <p class="hero-subtitle">
-        Clique em um município — ou busque um endereço ou CEP — pra ver os dados oficiais disponíveis e ir direto ao portal da prefeitura.
-        <strong>Gratuito, sem precisar de conta.</strong>
+        Opiniões de pessoas que usaram a Ferramenta de Poligonal. Só quem usou pode avaliar, e cada avaliação é revisada antes de aparecer aqui.
       </p>
     </section>
 
-    <!-- BUSCA POR ENDEREÇO OU CEP -->
-    <section class="busca-endereco card" aria-labelledby="buscaEnderecoTitulo">
-      <h2 id="buscaEnderecoTitulo" class="busca-endereco-titulo">Buscar por endereço ou CEP</h2>
-      <form id="formBuscaEndereco" class="busca-endereco-form" novalidate>
-        <label for="inputEndereco" class="visually-hidden">Endereço ou CEP</label>
-        <div class="busca-endereco-campo">
-          <input type="text" id="inputEndereco" class="busca-endereco-input" maxlength="160" autocomplete="off"
-                 placeholder="Ex.: 30130-010  ou  Av. Afonso Pena, 1500, Belo Horizonte">
-          <button type="button" id="btnLimparBusca" class="busca-endereco-limpar" aria-label="Limpar a busca" title="Limpar a busca" hidden>
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-              <line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-        <button type="submit" id="btnBuscaEndereco" class="btn-submit busca-endereco-btn">
-          <span>Buscar no mapa</span>
-        </button>
-      </form>
-      <div id="buscaEnderecoResultado" class="status-message" aria-live="polite"></div>
-      <p class="busca-endereco-nota">
-        Descobre em qual município da RMBH fica o endereço e leva você ao portal certo. O CEP localiza a rua ou o bairro, não o terreno.
-        O que você digita é enviado à BrasilAPI e ao OpenStreetMap só para achar o ponto — o Zonea não guarda essa informação.
-      </p>
+    <!-- RESUMO + LISTA (avaliações aprovadas) -->
+    <section class="aval-secao" aria-label="Avaliações publicadas">
+      <div id="avaliacoesResumo" hidden></div>
+      <div id="avaliacoesLista" class="aval-grade"><p class="aval-vazio">Carregando avaliações...</p></div>
     </section>
 
-    <!-- LEGENDA -->
-    <section class="mapa-legenda" aria-label="Legenda do mapa">
-      <span class="tag confirmado">■ Portal oficial auditado</span>
-      <span class="tag busca-direta">■ Ainda não confirmado</span>
-    </section>
-
-    <!-- MAPA + PAINEL DE RESULTADO -->
-    <section class="mapa-layout-wrapper">
-      <div class="mapa-card card">
-        <div id="mapaContainer" class="mapa-container" role="application" aria-label="Mapa interativo dos municípios da RMBH"></div>
-      </div>
-
-      <div class="search-card card mapa-painel">
-        <div class="search-title">
-          <span>Dados do Município</span>
-        </div>
-        <div id="mapaResultado" class="status-message"></div>
-      </div>
-    </section>
+    <!-- AVALIE VOCÊ TAMBÉM (muda conforme a pessoa está logada / já avaliou) -->
+    <section class="aval-secao aval-acao" id="avaliacaoAcao" aria-live="polite"></section>
   </main>
 
   <!-- FOOTER INSTITUCIONAL -->
@@ -136,7 +97,7 @@
 
   <!-- BOTAO FLUTUANTE WHATSAPP -->
   <div class="whatsapp-float-container">
-    <span class="whatsapp-tooltip">Dúvidas sobre o mapa? Fale com a equipe</span>
+    <span class="whatsapp-tooltip">Dúvidas? Fale com a equipe</span>
     <a href="https://api.whatsapp.com/send/?phone=5531992609970"
        target="_blank"
        rel="noopener noreferrer"
@@ -151,9 +112,6 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js?v=20260925f"></script>
   <script src="js/script.js?v=20260925f"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/busca-endereco.js?v=20260925f"></script>
-  <script src="js/mapa.js?v=20260925f"></script>
+  <script src="js/avaliacoes.js?v=20260925f"></script>
 </body>
 </html>

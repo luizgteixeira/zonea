@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925e">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -67,6 +67,11 @@
         "@type": "Question",
         "name": "Posso buscar um endereço ou CEP no mapa?",
         "acceptedAnswer": { "@type": "Answer", "text": "Sim. Na página do Mapa há uma caixa de busca: digite um CEP (ex.: 30130-010) ou um endereço com o município (ex.: Av. Afonso Pena, 1500, Belo Horizonte) e o Zonea marca o ponto no mapa, diz em qual município da RMBH ele fica e mostra o portal oficial daquela prefeitura. A posição é aproximada: o CEP localiza a rua ou o bairro, e o endereço depende dos dados do OpenStreetMap, então confira o local exato no portal da prefeitura. Ainda não é possível buscar por número de lote, porque cada prefeitura tem o seu cadastro. O que você digita é enviado à BrasilAPI (CEP) e ao OpenStreetMap (endereço) apenas para achar o ponto; o Zonea não guarda essa informação." }
+      },
+      {
+        "@type": "Question",
+        "name": "Como funcionam as avaliações do Zonea?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Qualquer pessoa pode ler as avaliações na página Avaliações. Para escrever uma, é preciso ter uma conta e ter usado a Ferramenta de Poligonal pelo menos uma vez: assim as opiniões são de quem realmente usou. Cada conta pode ter uma avaliação, que pode ser editada ou apagada quando quiser. Toda avaliação passa por uma revisão antes de aparecer (e volta para a revisão se for editada). O seu e-mail nunca é mostrado, só o nome que você escolher, a sua área (opcional) e o texto. O Zonea pode responder publicamente, mas não altera a nota nem o comentário de ninguém." }
       },
       {
         "@type": "Question",
@@ -345,6 +350,18 @@
 
         <div class="faq-item card">
           <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-24" aria-expanded="false" aria-controls="faq-a-24">
+            <span>Como funcionam as avaliações do Zonea?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          </h3>
+          <div class="faq-answer" id="faq-a-24">
+            Qualquer pessoa pode ler as avaliações na página <a href="avaliacoes.html">Avaliações</a>. Para escrever uma, é preciso ter uma conta e ter <strong>usado a Ferramenta de Poligonal pelo menos uma vez</strong>: assim as opiniões são de quem realmente usou. Cada conta pode ter <strong>uma avaliação</strong>, que pode ser editada ou apagada quando quiser. Toda avaliação passa por uma <strong>revisão</strong> antes de aparecer (e volta para a revisão se for editada). O seu e-mail nunca é mostrado, só o nome que você escolher, a sua área (opcional) e o texto. O Zonea pode responder publicamente, mas não altera a nota nem o comentário de ninguém.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <h3 class="faq-question-heading">
           <button type="button" class="faq-question" id="faq-q-21" aria-expanded="false" aria-controls="faq-a-21">
             <span>Posso levar a poligonal para o AutoCAD ou para o Google Earth?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -578,6 +595,7 @@
       <div class="footer-credits">
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
         📍 VOCÊ: <strong id="visitorCoords">—</strong>
@@ -600,7 +618,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925e"></script>
-  <script src="js/script.js?v=20260925e"></script>
+  <script src="js/supabase-client.js?v=20260925f"></script>
+  <script src="js/script.js?v=20260925f"></script>
 </body>
 </html>

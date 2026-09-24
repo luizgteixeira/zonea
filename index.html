@@ -20,7 +20,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925e">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925f">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -201,6 +201,14 @@
       </a>
     </section>
 
+    <!-- AVALIAÇÕES (só aparece quando já existe alguma aprovada) -->
+    <section id="homeAvaliacoes" class="aval-home" hidden aria-labelledby="homeAvalTitulo">
+      <h2 id="homeAvalTitulo" class="aval-home-titulo">O que dizem quem <span class="logo-text">usa o Zonea</span></h2>
+      <div data-aval="resumo"></div>
+      <div data-aval="lista" class="aval-grade"></div>
+      <a href="avaliacoes.html" class="aval-home-link">Ver todas as avaliações e deixar a sua →</a>
+    </section>
+
     <!-- PAINEL DE TRANSPARÊNCIA E PILARES INSTITUCIONAIS -->
     <section class="transparency-section" aria-labelledby="transparency-heading">
       <h2 id="transparency-heading" class="visually-hidden">Por que confiar no Zonea</h2>
@@ -248,6 +256,7 @@
         <span>© 2026 <span class="logo-text">Zonea</span> - Todos os direitos reservados. Desenvolvido por <a
             href="https://www.luizgustavodev.com/" target="_blank" rel="noopener noreferrer">Luiz Gustavo</a>.</span>
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
+        <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
         📍 VOCÊ: <strong id="visitorCoords">—</strong>
@@ -269,8 +278,9 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925e"></script>
-  <script src="js/script.js?v=20260925e"></script>
+  <script src="js/supabase-client.js?v=20260925f"></script>
+  <script src="js/script.js?v=20260925f"></script>
+  <script src="js/avaliacoes.js?v=20260925f"></script>
 </body>
 
 </html>
