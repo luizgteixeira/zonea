@@ -164,12 +164,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       radius: 9, color: '#FFFFFF', weight: 3, fillColor: '#1E5AA8', fillOpacity: 1,
     }).addTo(map);
     marcadorBusca.bindTooltip('Endereço buscado', { direction: 'top' });
-    map.setView([achado.lat, achado.lon], achado.precisao === 'cep' ? 14 : 16);
+    map.setView([achado.lat, achado.lon], achado.precisao === 'cidade' ? 12 : 16);
 
     const nomeMunicipio = feature.properties.name;
-    const precisao = achado.precisao === 'cep'
-      ? 'Posição aproximada: o CEP localiza a rua ou o bairro, não o terreno.'
-      : 'Posição aproximada: confira o local exato no portal da prefeitura.';
+    const precisoes = {
+      rua: 'Posição aproximada: localizamos a rua deste CEP, não o terreno.',
+      cidade: 'Não conseguimos localizar a rua deste CEP no mapa: o ponto mostra o centro do município, não o endereço.',
+      endereco: 'Posição aproximada: confira o local exato no portal da prefeitura.',
+    };
+    const precisao = precisoes[achado.precisao] || precisoes.endereco;
     mostrarResultadoBusca('ok', [
       linha(`📍 Fica em ${nomeMunicipio}`, true),
       linha(achado.rotulo),

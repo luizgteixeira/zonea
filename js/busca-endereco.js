@@ -68,31 +68,45 @@
     return [rua, bairro, [cidade, uf].filter(Boolean).join('/')].filter(Boolean).join(', ');
   }
 
-  // Resultado: { lat, lon, rotulo, precisao: 'cep' } ou { erro: 'cep_nao_encontrado' | 'nao_localizado' }
+  function semAcento(t) {
+    return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  // "Bandeirantes (Pampulha)" → "Bandeirantes": o complemento entre parênteses atrapalha a busca.
+  function bairroLimpo(bairro) {
+    return String(bairro || '').replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  }
+
+  const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Resultado: { lat, lon, rotulo, precisao: 'rua' | 'cidade' } ou { erro: 'cep_nao_encontrado' | 'nao_localizado' }
+  //
+  // ATENÇÃO: a coordenada que a BrasilAPI devolve pra um CEP muitas vezes é só o CENTRO DA CIDADE
+  // (ex.: todo CEP de BH vem como -19.92083, -43.93778, a Praça Sete), mesmo com a rua certa.
+  // Por isso a posição vem de geocodificar a RUA (Nominatim); a coordenada da BrasilAPI só entra
+  // como último recurso, marcada como 'cidade' pra página avisar que é o centro do município.
   async function buscarCep(cep, caixa) {
     let rua = '', bairro = '', cidade = '', uf = '';
-    let brasilApiOk = false;
+    let coordenadaDaApi = null;
+    let obteveEndereco = false;
 
     try {
       const r = await buscarJson(BRASILAPI_CEP + cep);
       if (r.status === 404) return { erro: 'cep_nao_encontrado' };
       if (r.ok && r.json) {
-        brasilApiOk = true;
+        obteveEndereco = true;
         rua = r.json.street || ''; bairro = r.json.neighborhood || '';
         cidade = r.json.city || ''; uf = r.json.state || '';
         const c = r.json.location && r.json.location.coordinates;
         const lat = c ? parseFloat(c.latitude) : NaN;
         const lon = c ? parseFloat(c.longitude) : NaN;
-        if (Number.isFinite(lat) && Number.isFinite(lon)) {
-          return { lat, lon, rotulo: rotuloDoCep(rua, bairro, cidade, uf), precisao: 'cep' };
-        }
+        if (Number.isFinite(lat) && Number.isFinite(lon)) coordenadaDaApi = { lat, lon };
       }
     } catch (err) {
       console.error('BrasilAPI indisponível, tentando o ViaCEP:', err);
     }
 
-    // BrasilAPI sem coordenada (ou fora do ar): pega o endereço no ViaCEP e geocodifica.
-    if (!brasilApiOk) {
+    if (!obteveEndereco) {
       const v = await buscarJson(`${VIACEP}${cep}/json/`);
       if (!v.ok || !v.json) throw new Error('ViaCEP indisponível');
       if (v.json.erro) return { erro: 'cep_nao_encontrado' };
@@ -100,11 +114,33 @@
       cidade = v.json.localidade || ''; uf = v.json.uf || '';
     }
 
-    const consulta = [rua, cidade, uf].filter(Boolean).join(', ') || [bairro, cidade, uf].filter(Boolean).join(', ');
-    if (!consulta) return { erro: 'nao_localizado' };
-    const achou = await geocodificar(consulta, caixa);
-    if (!achou) return { erro: 'nao_localizado' };
-    return { lat: achou.lat, lon: achou.lon, rotulo: rotuloDoCep(rua, bairro, cidade, uf), precisao: 'cep' };
+    const rotulo = rotuloDoCep(rua, bairro, cidade, uf);
+
+    // 1) Geocodifica a rua (com o bairro e depois sem ele). Só vale se o resultado for da cidade do CEP:
+    //    o Nominatim, sem achar, às vezes devolve uma rua homônima de outro município.
+    if (rua) {
+      const consultas = [];
+      if (bairroLimpo(bairro)) consultas.push([rua, bairroLimpo(bairro), cidade, uf]);
+      consultas.push([rua, cidade, uf]);
+      for (let i = 0; i < consultas.length; i++) {
+        if (i > 0) await esperar(1100); // o Nominatim pede no máximo ~1 consulta por segundo
+        const achou = await geocodificar(consultas[i].filter(Boolean).join(', '), caixa);
+        if (achou && (!cidade || semAcento(achou.rotulo).includes(semAcento(cidade)))) {
+          return { lat: achou.lat, lon: achou.lon, rotulo, precisao: 'rua' };
+        }
+      }
+    }
+
+    // 2) Não achou a rua: usa a coordenada da BrasilAPI, que costuma ser o centro do município.
+    if (coordenadaDaApi) return { ...coordenadaDaApi, rotulo, precisao: 'cidade' };
+
+    // 3) Sem rua e sem coordenada (CEP genérico de cidade pequena): tenta o próprio município.
+    if (cidade) {
+      await esperar(1100);
+      const achou = await geocodificar([cidade, uf].filter(Boolean).join(', '), caixa);
+      if (achou) return { lat: achou.lat, lon: achou.lon, rotulo, precisao: 'cidade' };
+    }
+    return { erro: 'nao_localizado' };
   }
 
   // Resultado: { lat, lon, rotulo, precisao: 'endereco' } ou { erro: 'nao_localizado' }
