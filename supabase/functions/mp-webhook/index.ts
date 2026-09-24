@@ -36,16 +36,6 @@ export default {
         return new Response("ignored", { status: 200 });
       }
 
-      // Idempotência: se esse pagamento já foi processado, não faz nada de novo.
-      const { data: existing } = await ctx.supabaseAdmin
-        .from("mp_webhook_events")
-        .select("id")
-        .eq("mp_event_id", String(paymentId))
-        .maybeSingle();
-      if (existing) {
-        return new Response("already processed", { status: 200 });
-      }
-
       // Nunca confia no payload recebido — confirma o status real na API do Mercado Pago.
       const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` },
@@ -56,8 +46,22 @@ export default {
       }
       const payment = await mpRes.json();
 
+      // Idempotência por pagamento + status. O Pix chega em DUAS notificações com o mesmo id
+      // (primeiro "pending", depois "approved"); se a chave fosse só o id, a primeira
+      // marcaria o pagamento como processado e a aprovada seria ignorada — a conta nunca
+      // seria ativada. Com o status na chave, cada mudança de estado é processada uma vez.
+      const eventKey = `${paymentId}:${payment.status}`;
+      const { data: existing } = await ctx.supabaseAdmin
+        .from("mp_webhook_events")
+        .select("id")
+        .eq("mp_event_id", eventKey)
+        .maybeSingle();
+      if (existing) {
+        return new Response("already processed", { status: 200 });
+      }
+
       await ctx.supabaseAdmin.from("mp_webhook_events").insert({
-        mp_event_id: String(paymentId),
+        mp_event_id: eventKey,
         payload: payment,
       });
 
