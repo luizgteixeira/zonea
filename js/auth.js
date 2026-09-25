@@ -58,11 +58,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     return Object.values(REGRAS_SENHA).every((regra) => regra(senha));
   }
 
-  function configurarChecklistSenha({ senhaId, confirmaId, listaId, igualId, botaoId }) {
+  function configurarChecklistSenha({ senhaId, confirmaId, listaId, igualId, botaoId, termosId }) {
     const senhaEl = document.getElementById(senhaId);
     const confirmaEl = document.getElementById(confirmaId);
     const igualLi = document.getElementById(igualId);
     const botao = document.getElementById(botaoId);
+    const termosEl = termosId ? document.getElementById(termosId) : null;
     if (!senhaEl || !confirmaEl) return;
 
     function atualizar() {
@@ -78,14 +79,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         igualLi.querySelector('.senha-igual-texto').textContent =
           confirmacao !== '' && !igual ? 'As senhas ainda não são iguais' : 'As duas senhas são iguais';
       }
-      if (botao) botao.disabled = !(senhaAtendeRegras(senha) && igual);
+      if (botao) botao.disabled = !(senhaAtendeRegras(senha) && igual && (!termosEl || termosEl.checked));
     }
 
     senhaEl.addEventListener('input', atualizar);
     confirmaEl.addEventListener('input', atualizar);
+    if (termosEl) termosEl.addEventListener('change', atualizar);
   }
 
-  configurarChecklistSenha({ senhaId: 'signupPassword', confirmaId: 'signupPasswordConfirm', listaId: 'signupChecklist', igualId: 'signupMatch', botaoId: 'btnCriarConta' });
+  configurarChecklistSenha({ senhaId: 'signupPassword', confirmaId: 'signupPasswordConfirm', listaId: 'signupChecklist', igualId: 'signupMatch', botaoId: 'btnCriarConta', termosId: 'signupTermos' });
   configurarChecklistSenha({ senhaId: 'newPassword', confirmaId: 'newPasswordConfirm', listaId: 'newChecklist', igualId: 'newMatch', botaoId: 'btnSalvarNovaSenha' });
 
   function showAuthStatus(state, text) {
@@ -152,8 +154,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       showAuthStatus('error', 'As duas senhas não são iguais. Digite a mesma senha nos dois campos.');
       return;
     }
+    if (!document.getElementById('signupTermos').checked) {
+      showAuthStatus('error', 'Para criar a conta, marque que leu e concorda com os Termos de Uso e a Política de Privacidade.');
+      return;
+    }
     showAuthStatus('ok', 'Criando sua conta...');
-    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+    // O aceite fica registrado nos dados da conta (data e versão dos textos que valiam).
+    const { data, error } = await supabaseClient.auth.signUp({
+      email, password,
+      options: { data: { termos_aceitos_em: new Date().toISOString(), termos_versao: '2026-09-25' } },
+    });
     if (error) {
       showAuthStatus('error', `Não foi possível criar a conta: ${error.message}`);
       return;

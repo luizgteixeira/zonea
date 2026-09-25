@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925m">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925n">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -157,6 +157,12 @@
             <li id="signupMatch" data-regra="igual"><span class="senha-marca" aria-hidden="true"></span><span class="senha-igual-texto">As duas senhas são iguais</span></li>
           </ul>
         </div>
+        <div class="form-group termos-aceite">
+          <label class="termos-label" for="signupTermos">
+            <input type="checkbox" id="signupTermos" required>
+            <span>Li e concordo com os <a href="termos-de-uso.html" target="_blank" rel="noopener">Termos de Uso</a> e com a <a href="politica-de-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+          </label>
+        </div>
         <button type="submit" class="btn-submit" id="btnCriarConta" disabled>
           <span>Criar Conta</span>
         </button>
@@ -261,6 +267,8 @@
         <span class="footer-coords">ZONEA: 19.9167° S, 43.9345° W · BELO HORIZONTE / MG</span>
         <a href="desenhar-poligonal.html" class="footer-aval">Desenhar poligonal online</a>
         <a href="avaliacoes.html" class="footer-aval">★ Avaliações de quem usa</a>
+        <a href="termos-de-uso.html" class="footer-aval">Termos de uso</a>
+        <a href="politica-de-privacidade.html" class="footer-aval">Política de privacidade</a>
       </div>
       <div class="visitor-location" id="visitorLocation" hidden title="Localização aproximada com base no seu endereço IP">
         📍 VOCÊ: <strong id="visitorCoords">—</strong>
@@ -283,8 +291,8 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925m"></script>
-  <script src="js/script.js?v=20260925m"></script>
-  <script src="js/auth.js?v=20260925m"></script>
+  <script src="js/supabase-client.js?v=20260925n"></script>
+  <script src="js/script.js?v=20260925n"></script>
+  <script src="js/auth.js?v=20260925n"></script>
 </body>
 </html>
