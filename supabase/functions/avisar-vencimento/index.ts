@@ -126,7 +126,7 @@ export default {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${chave}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: REMETENTE, to: [u.email], subject: assunto, text: texto, html }),
+          body: JSON.stringify({ from: REMETENTE, reply_to: "contato@zonea.com.br", to: [u.email], subject: assunto, text: texto, html }),
         });
         if (res.ok) {
           enviou = true;
