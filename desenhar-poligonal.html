@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925j">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925m">
   <script type="application/ld+json">
   {
   "@context": "https://schema.org",
@@ -92,6 +92,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Não. É uma ferramenta de apoio para conferir e visualizar poligonais. O levantamento, o memorial oficial e a responsabilidade técnica continuam com o profissional habilitado (CREA/CAU)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "E se o resultado estiver errado?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O Zonea desenha a poligonal e calcula a partir dos dados que você informa, e não tem como conferir nem atestar que esses dados estão corretos. Quando o resultado parece errado, o mais comum é o problema estar nos dados: confira a digitação, se o azimute está em graus decimais ou em graus, minutos e segundos, o datum e o fuso, e o erro de fechamento. A responsabilidade pelo uso do resultado é de quem informa os dados e de quem o utiliza."
       }
     },
     {
@@ -326,6 +334,10 @@
           <p>Não. É uma ferramenta de apoio para conferir e visualizar poligonais. O levantamento, o memorial oficial e a responsabilidade técnica continuam com o profissional habilitado (CREA/CAU).</p>
         </details>
         <details class="lp-faq-item">
+          <summary>E se o resultado estiver errado?</summary>
+          <p>O Zonea desenha a poligonal e calcula a partir dos dados que você informa, e não tem como conferir nem atestar que esses dados estão corretos. Quando o resultado parece errado, o mais comum é o problema estar nos dados: confira a digitação, se o azimute está em graus decimais ou em graus, minutos e segundos, o datum e o fuso, e o erro de fechamento. A responsabilidade pelo uso do resultado é de quem informa os dados e de quem o utiliza. Veja a <a href="faq.html#faq-q-26">lista completa do que conferir</a>.</p>
+        </details>
+        <details class="lp-faq-item">
           <summary>Quanto custa?</summary>
           <p>As 2 primeiras poligonais de cada conta são grátis. Depois disso, a assinatura custa R$ 9,90 por 30 dias, em pagamento único (Pix, boleto ou cartão), sem renovação automática.</p>
         </details>
@@ -338,7 +350,7 @@
       <p class="lp-texto">As 2 primeiras poligonais são grátis. Depois, R$ 9,90 por 30 dias, sem renovação automática.</p>
       <a href="poligonal.html" class="btn-submit lp-cta">Abrir a Ferramenta de Poligonal</a>
       <p class="lp-texto lp-texto-pequeno">
-        Ferramenta de apoio: não substitui levantamento topográfico, ART/RRT nem a análise da prefeitura. Precisa de ajuda com um caso específico? Fale com a equipe pelo WhatsApp.
+        Ferramenta de apoio: não substitui levantamento topográfico, ART/RRT nem a análise da prefeitura. O Zonea calcula a partir dos dados que você informa e não tem como atestar que eles estão corretos. Precisa de ajuda com um caso específico? Fale com a equipe pelo WhatsApp.
       </p>
     </section>
   </main>
@@ -373,9 +385,9 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925j"></script>
-  <script src="js/script.js?v=20260925j"></script>
-  <script src="js/conversor-coordenadas.js?v=20260925j"></script>
-  <script src="js/landing-poligonal.js?v=20260925j"></script>
+  <script src="js/supabase-client.js?v=20260925m"></script>
+  <script src="js/script.js?v=20260925m"></script>
+  <script src="js/conversor-coordenadas.js?v=20260925m"></script>
+  <script src="js/landing-poligonal.js?v=20260925m"></script>
 </body>
 </html>

@@ -262,7 +262,7 @@
       `<b>Perímetro:</b> ${formatoBR(perimetro, 2)} m<br>` +
       `<b>Erro de fechamento:</b> ${formatoBR(erroFechamento, 3)} m<br>` +
       textoSistemaDeOrigem(datum) +
-      `<i>Gerado pelo Zonea — ferramenta de apoio, não substitui ART/RRT.</i>`;
+      `<i>Gerado pelo Zonea — ferramenta de apoio, não substitui ART/RRT. Calculado a partir dos dados informados pelo usuário; o Zonea não atesta a exatidão desses dados.</i>`;
 
     const marcadores = coordenadas.map(p =>
       `    <Placemark>\n` +

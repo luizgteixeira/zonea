@@ -17,7 +17,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925j">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925m">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -80,6 +80,11 @@
       },
       {
         "@type": "Question",
+        "name": "O Zonea garante que o resultado da poligonal está correto?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. O Zonea desenha a poligonal e faz os cálculos (área, perímetro e erro de fechamento) a partir dos dados que você informa, e não tem como conferir nem atestar que esses dados estão corretos. Se o resultado parecer errado, o mais comum é o problema estar nos dados. Confira: (1) a digitação dos azimutes e das distâncias; (2) se o azimute está em graus, minutos e segundos ou em graus decimais; (3) o datum e o fuso das coordenadas (SIRGAS 2000 ou SAD-69, UTM 23S); (4) o erro de fechamento, que mostra se os dados fecham; (5) se o memorial foi transcrito por inteiro. Compare sempre com o documento original. A ferramenta é de apoio e não substitui levantamento topográfico, ART/RRT nem a análise da prefeitura; a responsabilidade pelo uso do resultado é de quem informa os dados e de quem o utiliza. Se você achar que há um erro no cálculo em si, mande o caso pelo WhatsApp que a equipe confere." }
+      },
+      {
+        "@type": "Question",
         "name": "Posso levar a poligonal para o AutoCAD ou para o Google Earth?",
         "acceptedAnswer": { "@type": "Answer", "text": "Sim. Depois de clicar em \"Fechar Poligonal e Calcular\", é possível baixar o desenho em DXF (abre no AutoCAD, BricsCAD, LibreCAD e QGIS, nas mesmas coordenadas UTM que você informou, zona 23S) e em KML ou KMZ (abre no Google Earth, em latitude e longitude). Também há o botão de relatório em PDF: uma página com a área, o perímetro, o erro de fechamento, o desenho e a tabela de vértices, com campos opcionais de identificação e responsável técnico, gerado no seu computador. O formato DWG é proprietário da Autodesk e não é gerado, mas o DXF abre normalmente no AutoCAD e pode ser salvo como DWG por lá. Se o seu memorial estiver em SAD-69, escolha esse datum na página antes de baixar o KML ou KMZ: o Zonea converte as coordenadas para SIRGAS 2000 (com os parâmetros do IBGE, de forma aproximada) e o Google Earth posiciona o desenho no lugar certo." }
       },
@@ -111,7 +116,7 @@
       {
         "@type": "Question",
         "name": "Posso pesquisar por endereço, CEP ou lote?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Essas funcionalidades, assim como a busca por bairro ou índice cadastral, representam possibilidades de evolução e estão no roadmap do projeto (Fase 4), mas ainda não estão implementadas na versão atual." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Endereço e CEP: sim. Na página do Mapa há uma caixa de busca: digite um CEP ou um endereço com o município e o Zonea marca o ponto, diz em qual município da RMBH ele fica e mostra o portal oficial daquela prefeitura (a posição é aproximada; confira o local exato no portal). Lote: ainda não, porque cada prefeitura tem o seu próprio cadastro e isso depende de as prefeituras publicarem os dados. A busca por lote, por bairro e por índice cadastral está no roadmap do projeto (Fase 4)." }
       },
       {
         "@type": "Question",
@@ -379,6 +384,26 @@
 
         <div class="faq-item card">
           <h3 class="faq-question-heading">
+          <button type="button" class="faq-question" id="faq-q-26" aria-expanded="false" aria-controls="faq-a-26">
+            <span>O Zonea garante que o resultado da poligonal está correto?</span>
+            <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          </h3>
+          <div class="faq-answer" id="faq-a-26">
+            <strong>Não.</strong> O Zonea desenha a poligonal e faz os cálculos (área, perímetro e erro de fechamento) a partir dos dados que você informa, e <strong>não tem como conferir nem atestar que esses dados estão corretos</strong>. Se o resultado parecer errado, o mais comum é o problema estar nos dados. Confira:
+            <ol>
+              <li>a <strong>digitação</strong> dos azimutes e das distâncias;</li>
+              <li>se o <strong>azimute</strong> está em graus, minutos e segundos ou em graus decimais;</li>
+              <li>o <strong>datum e o fuso</strong> das coordenadas (SIRGAS 2000 ou SAD-69, UTM 23S);</li>
+              <li>o <strong>erro de fechamento</strong>, que mostra se os dados fecham;</li>
+              <li>se o <strong>memorial</strong> foi transcrito por inteiro.</li>
+            </ol>
+            Compare sempre com o documento original. A ferramenta é de apoio e não substitui levantamento topográfico, ART/RRT nem a análise da prefeitura; a responsabilidade pelo uso do resultado é de quem informa os dados e de quem o utiliza. Se você achar que há um erro no cálculo em si, mande o caso pelo WhatsApp que a equipe confere.
+          </div>
+        </div>
+
+        <div class="faq-item card">
+          <h3 class="faq-question-heading">
           <button type="button" class="faq-question" id="faq-q-21" aria-expanded="false" aria-controls="faq-a-21">
             <span>Posso levar a poligonal para o AutoCAD ou para o Google Earth?</span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -476,13 +501,13 @@
           <button type="button" class="faq-question" id="faq-q-12" aria-expanded="false" aria-controls="faq-a-12">
             <span>
               Posso pesquisar por endereço, CEP ou lote?
-              <span class="roadmap-badge">ROADMAP (FASE 4)</span>
+              <span class="roadmap-badge">ENDEREÇO E CEP ✓ · LOTE EM ROADMAP</span>
             </span>
             <svg class="faq-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           </h3>
           <div class="faq-answer" id="faq-a-12">
-            Essas funcionalidades, assim como a busca por bairro ou índice cadastral, representam possibilidades de evolução e estão no roadmap do projeto (Fase 4), mas ainda não estão implementadas na versão atual.
+            <strong>Endereço e CEP: sim.</strong> Na página do <a href="mapa.html">Mapa</a> há uma caixa de busca: digite um CEP ou um endereço com o município e o Zonea marca o ponto, diz em qual município da RMBH ele fica e mostra o portal oficial daquela prefeitura (a posição é aproximada; confira o local exato no portal). <strong>Lote: ainda não</strong>, porque cada prefeitura tem o seu próprio cadastro e isso depende de as prefeituras publicarem os dados. A busca por lote, por bairro e por índice cadastral está no roadmap do projeto (Fase 4).
           </div>
         </div>
 
@@ -636,7 +661,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925j"></script>
-  <script src="js/script.js?v=20260925j"></script>
+  <script src="js/supabase-client.js?v=20260925m"></script>
+  <script src="js/script.js?v=20260925m"></script>
 </body>
 </html>

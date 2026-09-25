@@ -20,7 +20,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925j">
+  <link rel="stylesheet" href="css/estilo.css?v=20260925m">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -88,6 +88,7 @@
     <section style="max-width: 1000px; margin: 0 auto 32px;">
       <div class="status-message warn visible">
         ⚠️ <strong>Ferramenta de apoio, não substitui ART/RRT:</strong> os resultados desta calculadora são uma pré-visualização para conferência. Para submissão oficial à prefeitura, a poligonal deve ser assinada por profissional habilitado (CREA/CAU).
+        O Zonea desenha a poligonal e faz os cálculos a partir dos dados que você informa, e <strong>não tem como conferir nem atestar que esses dados estão corretos</strong>: a exatidão do que foi digitado, colado ou convertido, e o uso do resultado, são de responsabilidade de quem os informa e de quem os utiliza.
       </div>
     </section>
 
@@ -216,6 +217,8 @@
             <span class="metric-label">Erro de Fechamento (m)</span>
           </div>
         </div>
+        <p class="poligonal-aviso-dados">Resultado calculado a partir dos dados que você informou. O Zonea não confere nem atesta a exatidão desses dados: se algo parecer errado, <a href="faq.html#faq-q-26">veja o que conferir primeiro</a>.</p>
+
         <div class="poligonal-export">
           <h3 class="poligonal-export-titulo">Baixar o desenho e o relatório</h3>
           <div class="poligonal-export-datum">
@@ -293,10 +296,10 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925j"></script>
-  <script src="js/script.js?v=20260925j"></script>
-  <script src="js/exportar-poligonal.js?v=20260925j"></script>
-  <script src="js/relatorio-pdf.js?v=20260925j"></script>
-  <script src="js/poligonal.js?v=20260925j"></script>
+  <script src="js/supabase-client.js?v=20260925m"></script>
+  <script src="js/script.js?v=20260925m"></script>
+  <script src="js/exportar-poligonal.js?v=20260925m"></script>
+  <script src="js/relatorio-pdf.js?v=20260925m"></script>
+  <script src="js/poligonal.js?v=20260925m"></script>
 </body>
 </html>

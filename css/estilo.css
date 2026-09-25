@@ -2922,3 +2922,28 @@ footer,
   color: var(--cor-cinza-escuro);
 }
 
+/* Nota junto dos resultados da Poligonal: os dados são de quem informou */
+.poligonal-aviso-dados {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--cor-cinza);
+  background: var(--cor-cinza-claro);
+  border-left: 3px solid var(--cor-cinza-borda);
+  border-radius: 0 var(--raio-borda-sm) var(--raio-borda-sm) 0;
+}
+
+.poligonal-aviso-dados a {
+  color: var(--cor-azul);
+  font-weight: 700;
+}
+
+.faq-answer ol {
+  margin: 10px 0 10px 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+

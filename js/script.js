@@ -519,6 +519,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
       });
     });
+
+    // Link direto pra uma pergunta (faq.html#faq-q-26): abre a resposta e leva a tela até ela.
+    if (/^#faq-q-\d+$/.test(window.location.hash)) {
+      const alvo = document.querySelector(window.location.hash);
+      if (alvo && alvo.classList.contains('faq-question')) {
+        alvo.click();
+        alvo.scrollIntoView({ block: 'center' });
+      }
+    }
   }
 
   if (catButtons.length > 0 && faqGroups.length > 0) {

@@ -390,7 +390,7 @@
     // --- notas ---
     const notas = [
       `Cada linha traz o segmento que sai do vértice até o seguinte (o do último fecha o polígono em ${vertices[0].rotulo}). Azimutes e distâncias foram recalculados a partir das coordenadas; a área usa a fórmula de Gauss sobre o polígono fechado.`,
-      'Ferramenta de apoio: não substitui ART/RRT, levantamento topográfico, matrícula do imóvel nem a análise da prefeitura. Os resultados dependem dos dados informados por quem preencheu a tabela.',
+      'Ferramenta de apoio: não substitui ART/RRT, levantamento topográfico, matrícula do imóvel nem a análise da prefeitura. O Zonea calcula a partir dos dados informados por quem preencheu a tabela e não confere nem atesta que eles estão corretos; a responsabilidade pelo uso do resultado é de quem informa os dados e de quem o utiliza.',
     ];
     const alturaNotas = notas.reduce((soma, t) => soma + quebrarLinhas(t, largUtil, 7, false).length * 9 + 4, 0) + 12;
     if (y - alturaNotas < limiteInferior) { pg = pagina(); y = PAGINA.h - MARGEM; }
