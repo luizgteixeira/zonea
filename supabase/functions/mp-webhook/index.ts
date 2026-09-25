@@ -66,18 +66,30 @@ export default {
       });
 
       if (payment.status === "approved" && payment.external_reference) {
-        const expiresAt = new Date(Date.now() + DIAS_DE_ACESSO * 24 * 60 * 60 * 1000).toISOString();
-        const { error } = await ctx.supabaseAdmin
-          .from("profiles")
-          .update({
-            subscription_status: "active",
-            subscription_expires_at: expiresAt,
-            mp_payment_id: String(paymentId),
-            plan: "mensal",
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", payment.external_reference);
-        if (error) console.error("Falha ao ativar assinatura:", error);
+        // Renova SOMANDO: quem paga antes de acabar não perde os dias que sobravam (a conta é feita
+        // no banco, numa instrução só — migração 0009 —, então dois pagamentos juntos não se atropelam).
+        const { error } = await ctx.supabaseAdmin.rpc("renovar_assinatura", {
+          p_user_id: payment.external_reference,
+          p_dias: DIAS_DE_ACESSO,
+          p_payment_id: String(paymentId),
+        });
+        if (error) {
+          // Plano B: pagamento aprovado nunca pode ficar sem acesso. Se a função de renovação falhou
+          // (por exemplo, a migração 0009 ainda não foi rodada), ativa do jeito antigo: agora + 30 dias.
+          console.error("Falha em renovar_assinatura, ativando pelo plano B:", error);
+          const expiresAt = new Date(Date.now() + DIAS_DE_ACESSO * 24 * 60 * 60 * 1000).toISOString();
+          const { error: erroB } = await ctx.supabaseAdmin
+            .from("profiles")
+            .update({
+              subscription_status: "active",
+              subscription_expires_at: expiresAt,
+              mp_payment_id: String(paymentId),
+              plan: "mensal",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", payment.external_reference);
+          if (erroB) console.error("Falha ao ativar assinatura (plano B):", erroB);
+        }
       }
 
       return new Response("ok", { status: 200 });

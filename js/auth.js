@@ -251,10 +251,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? new Date(profile.subscription_expires_at).toLocaleDateString('pt-BR')
         : null;
       details.textContent = expira
-        ? `Sua assinatura é válida até ${expira}.`
+        ? `Sua assinatura é válida até ${expira}. Vamos avisar por e-mail 3 dias antes de acabar. Se você renovar antes do fim, os dias que sobrarem são somados aos 30 novos.`
         : 'Sua assinatura está ativa.';
       btnWhatsapp.style.display = 'none';
-      if (btnAssinarEl) btnAssinarEl.style.display = 'none';
+      // Dá pra renovar antes do fim: os dias que sobram são somados (o webhook cuida disso).
+      if (btnAssinarEl) {
+        btnAssinarEl.style.display = '';
+        const rotulo = btnAssinarEl.querySelector('span');
+        if (rotulo) rotulo.textContent = 'Renovar por mais 30 dias — R$ 9,90';
+      }
     } else {
       badge.textContent = 'SEM ASSINATURA ATIVA';
       badge.className = 'tag busca-direta';
@@ -268,7 +273,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       btnWhatsapp.href = buildWhatsappLink(`Olá! Criei minha conta no Zonea (${session.user.email}) e gostaria de saber sobre outras formas de pagamento.`);
       btnWhatsapp.style.display = '';
-      if (btnAssinarEl) btnAssinarEl.style.display = '';
+      if (btnAssinarEl) {
+        btnAssinarEl.style.display = '';
+        const rotulo = btnAssinarEl.querySelector('span');
+        if (rotulo) rotulo.textContent = 'Assinar agora — R$ 9,90 / 30 dias';
+      }
     }
 
     return false;
