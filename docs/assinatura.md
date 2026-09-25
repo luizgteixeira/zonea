@@ -50,6 +50,17 @@ Todo dia às **12:00 UTC (9h em Brasília)**, uma tarefa do banco (pg_cron) cham
 
 Como não recebe nada de fora, a função é segura: chamá-la várias vezes, ou de fora, só repete o que já foi feito.
 
+## Aviso de venda para o dono
+
+Quando um pagamento é **aprovado**, o `mp-webhook` ativa a assinatura e, depois, manda um e-mail (Resend) para você com o
+cliente, o valor pago, o valor líquido, a forma de pagamento e até quando a assinatura vale. O aviso sai **no máximo uma
+vez por pagamento** (as notificações repetidas do Mercado Pago são barradas) e **nunca atrapalha a ativação**: se o Resend
+falhar, só aparece no log da função. Pix pendente e pagamentos recusados não geram aviso.
+
+Vai para o secret `VENDAS_AVISO_PARA` (vários e-mails separados por vírgula); se ele não existir, usa o
+`AVALIACOES_AVISO_PARA`. Usa o `RESEND_API_KEY` que já existe. Para mudar o destino, crie o secret em Edge Functions →
+Secrets (não precisa republicar).
+
 ## Colocar no ar (uma vez só, nesta ordem)
 
 1. **SQL Editor:** rodar `supabase/migrations/0009_renovacao_e_aviso_vencimento.sql`. Ela pode ser rodada de novo sem

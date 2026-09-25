@@ -7,6 +7,9 @@
 // configurar nada manualmente no painel do Mercado Pago.
 //
 // Secret necessário (Edge Functions → Secrets): MP_ACCESS_TOKEN
+// Opcionais (aviso de venda por e-mail ao dono, via Resend; sem eles a função só não avisa):
+//   RESEND_API_KEY          a mesma das outras funções de e-mail
+//   VENDAS_AVISO_PARA       e-mail(s) que recebem o aviso, separados por vírgula; se faltar, usa AVALIACOES_AVISO_PARA
 // auth: "none" porque quem chama isso é o servidor do Mercado Pago, não um usuário logado
 // no Zonea — ctx.supabaseAdmin dá acesso com bypass de RLS pra gente mesmo poder gravar o resultado.
 
@@ -14,6 +17,59 @@ import { withSupabase } from "jsr:@supabase/server@^1";
 
 const MP_ACCESS_TOKEN = Deno.env.get("MP_ACCESS_TOKEN")!;
 const DIAS_DE_ACESSO = 30;
+const REMETENTE = "Zonea <nao-responder@zonea.com.br>";
+
+const escapaHtml = (t: string) =>
+  t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const brl = (v: unknown) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+// Avisa o dono por e-mail que entrou uma venda. NUNCA pode atrapalhar a ativação da assinatura:
+// roda depois dela, engole qualquer erro e só registra no log. Só é chamada uma vez por pagamento
+// aprovado (a chave de idempotência acima barra as notificações repetidas do Mercado Pago).
+// deno-lint-ignore no-explicit-any
+async function avisarVenda(ctx: any, payment: any, paymentId: string) {
+  try {
+    const chave = Deno.env.get("RESEND_API_KEY");
+    const destinos = (Deno.env.get("VENDAS_AVISO_PARA") ?? Deno.env.get("AVALIACOES_AVISO_PARA") ?? "")
+      .split(",").map((e: string) => e.trim()).filter(Boolean);
+    if (!chave || !destinos.length) return;
+
+    const { data: perfil } = await ctx.supabaseAdmin
+      .from("profiles")
+      .select("email, subscription_expires_at")
+      .eq("id", payment.external_reference)
+      .maybeSingle();
+    const email = perfil?.email ?? "(conta não encontrada)";
+    const ate = perfil?.subscription_expires_at
+      ? new Date(perfil.subscription_expires_at).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })
+      : "—";
+    const liquido = payment.transaction_details?.net_received_amount;
+    const forma = String(payment.payment_method_id ?? payment.payment_type_id ?? "—");
+
+    const linhas: [string, string][] = [
+      ["Cliente", email],
+      ["Valor pago", brl(payment.transaction_amount)],
+      ...(liquido != null ? [["Você recebe (líquido)", brl(liquido)] as [string, string]] : []),
+      ["Forma de pagamento", forma],
+      ["Assinatura vale até", ate],
+      ["Pagamento no Mercado Pago", paymentId],
+    ];
+    const texto = "Nova assinatura do Zonea paga.\n\n" + linhas.map(([k, v]) => `${k}: ${v}`).join("\n");
+    const html = `<p><strong>Nova assinatura do Zonea paga.</strong></p><table cellpadding="4">` +
+      linhas.map(([k, v]) => `<tr><td style="color:#64748b">${escapaHtml(k)}</td><td><strong>${escapaHtml(v)}</strong></td></tr>`).join("") +
+      `</table>`;
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${chave}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: REMETENTE, to: destinos, subject: `Zonea: nova assinatura (${brl(payment.transaction_amount)})`, text: texto, html }),
+    });
+    if (!res.ok) console.error("Resend recusou o aviso de venda:", res.status, await res.text());
+  } catch (err) {
+    console.error("Falha ao avisar a venda por e-mail (a assinatura já foi ativada):", err);
+  }
+}
 
 export default {
   fetch: withSupabase({ auth: "none" }, async (req, ctx) => {
@@ -90,6 +146,8 @@ export default {
             .eq("id", payment.external_reference);
           if (erroB) console.error("Falha ao ativar assinatura (plano B):", erroB);
         }
+
+        await avisarVenda(ctx, payment, String(paymentId));
       }
 
       return new Response("ok", { status: 200 });
