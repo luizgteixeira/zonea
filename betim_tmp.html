@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plantas Cadastrais</title>
+    <link rel="icon" href="/geoweb/img/brasao.png" />
+    <script src="/geoweb/dist/shared.entry.js" defer></script>
+    <script src="/geoweb/dist/webComponents.entry.js" defer></script>
+    
+      <script src="/geoweb/dist/plantasCadastrais.entry.js" defer> </script>
+
+    <link rel="stylesheet" href="/geoweb/dist/shared.css">
+    <link rel="stylesheet" href="/geoweb/css/userMenu.css">
+    
+    <!-- Google tag (gtag.js) --> 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K66CNZQKXM"></script> 
+    <script> 
+        window.dataLayer = window.dataLayer || []; 
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date()); 
+        gtag('config', 'G-K66CNZQKXM'); 
+    </script>
+</head>
+
+<body>
+    <header class="layout-header">
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="row div-nav">
+      <div class="text-center col-lg-2 col-sm-12 logo-div">
+        <a href="https://www.betim.mg.gov.br/">
+          <img class="logo" src="/geoweb/img/logo.png" alt="Brasão da Prefeitura Municipal de Betim" />
+        </a>
+      </div>
+      <div class="col-lg-8 col-sm-12 title-nav-container">
+        <a href="/geoweb">
+          <h1 class="title-nav">Plantas Cadastrais</h1>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+    <div class="container-fluid layout-container">
+        
+<head>
+      <link rel="stylesheet" href="/geoweb/dist/plantasCadastrais.css">
+</head>
+
+
+<div class="map-plantasCadastrais" id="map-plantasCadastrais">
+      <button type="button" class="btn" id="select-area" title="Desenhe para buscar">
+            <i class="bi bi-pencil-square"></i>
+      </button>
+
+      <logradouro-search id="name-search-box"></logradouro-search>
+      <logradouro-search type="cep" id="cep-search-box"></logradouro-search>
+</div>
+    </div>
+
+    <footer class="layout-footer" id="layout-footer">
+  <div class="footer-home-container">
+    <a href="/geoweb">
+      <span class="footer-home-span">Voltar para o início</span>
+    </a>
+  </div>
+  <div class="copyright-text-container">
+    <span class="copyright-text">&copy; 2026 - Prefeitura Municipal de Betim</span>
+  </div>
+</footer>
+
+</body>
+
+</html>

@@ -29,9 +29,9 @@
     "regiao": "Oeste",
     "pop": "411.000 hab",
     "area": "343 km²",
-    "link": "https://sistemas.betim.mg.gov.br/geoweb/plantasCadastrais",
+    "link": "https://sistemas.betim.mg.gov.br/geoweb/zoneamentoEconomico",
     "sistema": "GeoBetim",
-    "detalhes_tecnicos": "GeoBetim, Base Cartográfica Oficial, Mapas de Zoneamento, Perímetros Urbanos e Áreas Industriais.",
+    "detalhes_tecnicos": "GeoWeb Betim — Zoneamento Econômico: busca a zona por CEP ou por CNAE. Os parâmetros construtivos (lote mínimo, coeficiente de aproveitamento, taxa de ocupação, afastamentos, altura máxima) ficam numa ferramenta separada, \"Parâmetros Urbanísticos\", no mesmo GeoWeb (clique em \"Voltar para o início\" na página do zoneamento para chegar até ela).",
     "sistema_referencia": "Divergente entre mapas: mapa oficial de localização usa Datum Córrego Alegre 1970-72 (UTM); SIRGAS 2000 citado em outras bases — confirmação pendente"
   },
   {
@@ -87,7 +87,7 @@
     "area": "195 km²",
     "link": "https://geoprocessamento.contagem.mg.gov.br/sigm/",
     "sistema": "SIGM Contagem",
-    "detalhes_tecnicos": "SIGM Contagem, Geoportal Vetorial, Camadas WMS de Loteamento, Parcelamento do Solo e Macrozoneamento.",
+    "detalhes_tecnicos": "SIGM Contagem, Geoportal Vetorial. Traz Zoneamento (Zona Homogênea), Parcelamento Territorial (Lote, Quadra, Logradouro) e Legislação Urbana. No visor, ative essas camadas no painel à esquerda — elas não aparecem ligadas de início.",
     "sistema_referencia": "SIRGAS 2000 / UTM 23S (EPSG:31983) — confirmado via metadado spatialReference do ArcGIS REST Server"
   },
   {
@@ -231,7 +231,7 @@
     "area": "516 km²",
     "link": "https://pmnl.maps.arcgis.com/apps/webappviewer/index.html?id=ff761e397b904ad4b164eb8a71cb7d86",
     "sistema": "GeoPNL Nova Lima",
-    "detalhes_tecnicos": "GeoPNL, WebSIG de Nova Lima, Consultas Cadastrais, Zoneamento Urbano e Parâmetros Construtivos.",
+    "detalhes_tecnicos": "GeoPNL, WebSIG de Nova Lima. Traz CEP, nome das vias, equipamentos urbanos, quadras cadastrais e limite municipal. NÃO publica zoneamento nem parâmetros construtivos online — essa informação só é obtida por requerimento presencial ou e-mail à prefeitura.",
     "sistema_referencia": "SIRGAS 2000 / UTM 23S (EPSG:31983) — confirmado via metadado spatialReference do ArcGIS FeatureServer (services3.arcgis.com)"
   },
   {
@@ -276,7 +276,7 @@
     "area": "155 km²",
     "link": "https://ribeiraodasneves.portal.geo360.com.br/icad/map/-44.09706337431789,-19.774924087777592,13/list",
     "sistema": "GeoNeves",
-    "detalhes_tecnicos": "GeoNeves, Mapeamento do Uso do Solo, Infraestrutura Urbana e Camadas de Zoneamento.",
+    "detalhes_tecnicos": "GeoNeves, Mapeamento do Uso do Solo, Infraestrutura Urbana e Camadas de Zoneamento. No visor (ICAD), abra \"Mapas locais\" → \"Plano Diretor\" para o zoneamento — ele não vem ligado de início.",
     "sistema_referencia": "UTM 23S (indicado como \"UTM-23s\" no seletor de mapa base do portal ICAD/GeoNeves) — provável SIRGAS 2000, datum não declarado explicitamente na interface"
   },
   {
@@ -319,12 +319,10 @@
     "regiao": "Norte",
     "pop": "220.000 hab",
     "area": "235 km²",
-    "link": "https://geo.santaluzia.mg.gov.br",
-    "sistema": "Geo Santa Luzia",
-    "detalhes_tecnicos": "Geo Santa Luzia, WebSIG de Zoneamento, Cadastro Técnico Multifinalitário e Cartografia Digital.",
-    "sistema_referencia": "Não verificado — subdomínio geo.santaluzia.mg.gov.br está fora do ar (DNS não resolve) desde a checagem em 27/07/2026. Requer nova tentativa.",
-    "indisponivel": true,
-    "indisponivel_desde": "27/07/2026"
+    "link": "https://geopin.santaluzia.mg.gov.br/visualizador/geopin-gas",
+    "sistema": "GeoPin G.A.S (Santa Luzia)",
+    "detalhes_tecnicos": "Sucessor do antigo \"Geo Santa Luzia\" (fora do ar). Traz Zoneamento (LPUOS e Plano Diretor, versões 2008 e 2026), Macrozonas, Parcelamento Aprovado/Diretrizes e Cadastro Imobiliário (IPTU).",
+    "sistema_referencia": "SIRGAS 2000 / UTM 23S (EPSG:31983) — confirmado via GetCapabilities do GeoServer (geopin.santaluzia.mg.gov.br). Substitui o antigo subdomínio geo.santaluzia.mg.gov.br, fora do ar desde 27/07/2026."
   },
   {
     "slug": "sao-joaquim-de-bicas",
