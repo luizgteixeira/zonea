@@ -169,6 +169,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     // Sem confirmação de e-mail obrigatória, o cadastro já devolve a sessão: segue direto.
+    // ATENÇÃO: isso só vale com "Confirm email" DESLIGADO em Authentication > Sign In / Providers >
+    // Email, no painel do Supabase. Se ficar ligado, o signUp() tenta mandar um e-mail de confirmação
+    // e, se o Resend falhar por qualquer motivo (DNS, limite...), a conta inteira não é criada — foi o
+    // que aconteceu em 16/10/2026 (erro "Error sending confirmation email", por causa do registro DKIM
+    // do Resend que tinha sumido do DNS). Ver README.md, seção "Supabase, e-mails de login".
     if (data.session && veioDaPoligonal) {
       window.location.href = '/poligonal.html';
       return;
