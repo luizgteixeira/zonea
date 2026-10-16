@@ -20,7 +20,7 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="css/estilo.css?v=20260925p">
+  <link rel="stylesheet" href="css/estilo.css?v=20261016a">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -147,6 +147,86 @@
           A primeira linha é o ponto inicial (coordenadas <strong>E, N</strong>). As linhas seguintes são os segmentos do caminhamento (<strong>Azimute + Distância</strong>) — E/N são calculados automaticamente. Digite célula por célula ou <strong>cole direto de uma planilha Excel</strong>.
         </p>
       </div>
+
+      <!-- AJUDA: exemplo fixo, não interativo — não chama a Edge Function nem gasta crédito -->
+      <details class="poligonal-ajuda card" open style="margin-bottom: 20px;">
+        <summary class="poligonal-ajuda-titulo">❓ Como preencher, com um exemplo (clique para recolher)</summary>
+        <div class="poligonal-ajuda-corpo">
+          <p>
+            A dúvida mais comum: <strong>em qual linha vai o azimute e a distância de cada trecho?</strong> Resposta: o trecho que <strong>sai</strong> de um ponto e <strong>chega</strong> no próximo vai sempre na linha do ponto de <strong>chegada</strong> — nunca na do ponto de partida.
+          </p>
+          <p>
+            Exemplo: um terreno retangular de 40 × 30 m, andando sempre reto (Leste, depois Sul, depois Oeste, depois Norte — por isso os azimutes abaixo são números redondos, só para ficar fácil de conferir de cabeça).
+          </p>
+
+          <div class="data-table-wrapper poligonal-ajuda-tabela-wrapper">
+            <table class="data-table poligonal-edit-table poligonal-ajuda-tabela" aria-label="Exemplo de preenchimento">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Azimute</th>
+                  <th scope="col">Distância (m)</th>
+                  <th scope="col">E (m)</th>
+                  <th scope="col">N (m)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>P0</td>
+                  <td><span class="cell-input" aria-hidden="true">—</span></td>
+                  <td><span class="cell-input" aria-hidden="true">—</span></td>
+                  <td><span class="cell-input">600000.000</span></td>
+                  <td><span class="cell-input">7800000.000</span></td>
+                </tr>
+                <tr>
+                  <td>P1</td>
+                  <td><span class="cell-input">90° (Leste)</span></td>
+                  <td><span class="cell-input">40,000</span></td>
+                  <td><span class="cell-input computed-cell">600.040,000</span></td>
+                  <td><span class="cell-input computed-cell">7.800.000,000</span></td>
+                </tr>
+                <tr>
+                  <td>P2</td>
+                  <td><span class="cell-input">180° (Sul)</span></td>
+                  <td><span class="cell-input">30,000</span></td>
+                  <td><span class="cell-input computed-cell">600.040,000</span></td>
+                  <td><span class="cell-input computed-cell">7.799.970,000</span></td>
+                </tr>
+                <tr>
+                  <td>P3</td>
+                  <td><span class="cell-input">270° (Oeste)</span></td>
+                  <td><span class="cell-input">40,000</span></td>
+                  <td><span class="cell-input computed-cell">600.000,000</span></td>
+                  <td><span class="cell-input computed-cell">7.799.970,000</span></td>
+                </tr>
+                <tr>
+                  <td>P4</td>
+                  <td><span class="cell-input">0° (Norte)</span></td>
+                  <td><span class="cell-input">30,000</span></td>
+                  <td><span class="cell-input computed-cell">600.000,000</span></td>
+                  <td><span class="cell-input computed-cell">7.800.000,000</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="poligonal-ajuda-legenda">
+            <span class="poligonal-ajuda-swatch"></span> você digita
+            <span class="poligonal-ajuda-swatch computed-cell"></span> o Zonea calcula sozinho
+          </p>
+
+          <ul class="poligonal-ajuda-lista">
+            <li>A linha <strong>P0</strong> só tem E e N — é o ponto de partida, sem azimute/distância.</li>
+            <li>A linha <strong>P4</strong> fecha o desenho: o trecho que ela descreve sai de P3 e <strong>volta para P0</strong>. Por isso o E/N calculado nela dá igual ao de P0 — é assim que o Zonea confirma que a poligonal fechou. Essa linha a mais não conta como um vértice extra na área.</li>
+            <li>Resultado deste exemplo: <strong>Área = 1.200,00 m²</strong> · <strong>Perímetro = 140,00 m</strong> · <strong>Erro de fechamento = 0,000 m</strong>.</li>
+            <li>Formatos de azimute aceitos: graus/minutos/segundos (<code>189°1'24.32"</code>) ou decimal (<code>189.5</code>).</li>
+          </ul>
+
+          <p class="poligonal-ajuda-nota">
+            Este exemplo é só ilustrativo — ele não preenche a tabela abaixo nem gasta crédito nenhum. Se o seu memorial descritivo estiver numa planilha, pode colar as colunas (vértice, azimute, distância — ou já com E/N de cada ponto) direto na primeira célula da tabela de verdade, logo abaixo.
+          </p>
+        </div>
+      </details>
 
       <div class="data-table-wrapper card" style="margin-bottom: 12px;">
         <table class="data-table poligonal-edit-table">
@@ -310,10 +390,10 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20260925p"></script>
-  <script src="js/script.js?v=20260925p"></script>
-  <script src="js/exportar-poligonal.js?v=20260925p"></script>
-  <script src="js/relatorio-pdf.js?v=20260925p"></script>
-  <script src="js/poligonal.js?v=20260925p"></script>
+  <script src="js/supabase-client.js?v=20261016a"></script>
+  <script src="js/script.js?v=20261016a"></script>
+  <script src="js/exportar-poligonal.js?v=20261016a"></script>
+  <script src="js/relatorio-pdf.js?v=20261016a"></script>
+  <script src="js/poligonal.js?v=20261016a"></script>
 </body>
 </html>

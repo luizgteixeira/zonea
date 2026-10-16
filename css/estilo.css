@@ -3036,3 +3036,92 @@ footer,
   }
 }
 
+/* Ajuda com exemplo, na Poligonal: tabela ilustrativa (não interativa — spans, não inputs) */
+.poligonal-ajuda {
+  padding: 18px 20px;
+}
+
+.poligonal-ajuda-titulo {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--cor-cinza-escuro);
+  cursor: pointer;
+  list-style: none;
+}
+
+.poligonal-ajuda-titulo::-webkit-details-marker {
+  display: none;
+}
+
+.poligonal-ajuda-corpo {
+  margin-top: 14px;
+  font-size: 13.5px;
+  color: var(--cor-cinza-escuro);
+  line-height: 1.6;
+}
+
+.poligonal-ajuda-corpo p {
+  margin: 0 0 10px;
+}
+
+.poligonal-ajuda-tabela-wrapper {
+  margin: 14px 0;
+  border: 1px solid var(--cor-cinza-borda);
+  border-radius: var(--raio-borda-sm);
+}
+
+/* Mesmas classes visuais da tabela de verdade (cell-input/computed-cell), só que em <span>
+   em vez de <input>: nada aqui é clicável, editável, nem manda nada pro servidor. */
+.poligonal-ajuda-tabela .cell-input {
+  display: inline-block;
+  width: 100%;
+  font-family: var(--fonte-mono);
+  font-size: 12.5px;
+  padding: 6px 8px;
+  border-radius: var(--raio-borda-sm);
+  color: var(--cor-cinza-escuro);
+}
+
+.poligonal-ajuda-tabela td:first-child {
+  font-weight: 700;
+  width: 36px;
+}
+
+.poligonal-ajuda-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 12.5px;
+  color: var(--cor-cinza);
+}
+
+.poligonal-ajuda-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--cor-cinza-borda);
+  margin-left: 6px;
+}
+
+.poligonal-ajuda-swatch.computed-cell {
+  background: var(--cor-cinza-claro);
+  border-color: var(--cor-cinza-borda);
+  margin-left: 12px;
+}
+
+.poligonal-ajuda-lista {
+  margin: 10px 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.poligonal-ajuda-nota {
+  font-size: 12.5px;
+  color: var(--cor-cinza);
+  margin-top: 10px;
+}
+
