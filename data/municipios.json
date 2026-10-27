@@ -43,7 +43,7 @@
     "area": "639 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Mapeamento de Áreas de Preservação e Plano Diretor sob fase de catalogação técnica."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). A Secretaria de Planejamento só oferece um formulário online para pedir \"Informação de Uso do Solo\" ou certidão de zona urbana/rural — sem mapa interativo, resposta por atendimento manual."
   },
   {
     "slug": "caete",
@@ -76,7 +76,7 @@
     "area": "42 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Mapeamento do entorno aeroportuário e zoneamento municipal em catalogação técnica."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). O site da prefeitura só disponibiliza os PDFs do Plano Diretor (LC 012/2009 e LC 013/2009) — nenhum mapa de zoneamento, nem da zona de restrição de ruído do Aeroporto Tancredo Neves, que é regulada pela ANAC fora do site municipal."
   },
   {
     "slug": "contagem",
@@ -93,13 +93,14 @@
   {
     "slug": "esmeraldas",
     "nome": "Esmeraldas",
-    "confirmado": false,
+    "confirmado": true,
     "regiao": "Oeste",
     "pop": "70.800 hab",
     "area": "909 km²",
-    "link": null,
-    "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Mapeamento de áreas rurais e expansão urbana sob análise técnica para disponibilização."
+    "link": "https://esmeraldas.mg.gov.br/qgis/",
+    "sistema": "VGEO — Portal de Geovisualização de Esmeraldas",
+    "detalhes_tecnicos": "VGEO, visualizador público (QGIS2Web/Leaflet, sem login). Traz Macrozonas do Plano Diretor 2006 (ex.: \"Adensamento Controlado\"), Quadras (2.796 quadras cadastrais), Perímetro Urbano (Lei 2.115), bairros, áreas verdes/institucionais e Cadastro Ambiental Rural (CAR 2022).",
+    "sistema_referencia": "WGS84 (CRS84) — confirmado via metadado \"crs\" de cada camada GeoJSON servida pelo visualizador. Não há metadado que confirme o datum da base original de levantamento (provavelmente SIRGAS 2000, mas isso não está declarado em nenhum documento acessível)."
   },
   {
     "slug": "florestal",
