@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
-    maxZoom: 17,
+    maxZoom: 19,
   }).addTo(map);
 
   // ---------- PROVA DE CONCEITO: consulta de zoneamento (só Contagem) ----------
