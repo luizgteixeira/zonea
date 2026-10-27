@@ -49,6 +49,108 @@ document.addEventListener('DOMContentLoaded', async () => {
     maxZoom: 17,
   }).addTo(map);
 
+  // ---------- PROVA DE CONCEITO: consulta de zoneamento (só Contagem) ----------
+  // Fase 3 do roadmap pedia camadas de zoneamento sobrepostas no mapa. Auditando o
+  // serviço de Contagem descobrimos que não dá pra simplesmente "carregar a camada":
+  // são 16.585 feições (zoneamento por LOTE, não por zona), bem mais do que cabe
+  // num mapa de navegador. Por isso, em vez de uma camada, é uma consulta pontual:
+  // cada clique dentro de Contagem pergunta ao servidor da prefeitura só o lote
+  // daquele ponto — leve, e não baixa o cadastro inteiro pra visitante nenhum.
+  const ZONEAMENTO_CONTAGEM_URL = 'https://geoprocessamento.contagem.mg.gov.br/arcgis/rest/services/SIGM_BD_Publico/Zoneamento_Publico/FeatureServer/0/query';
+  const caixaZoneamentoEl = document.getElementById('mapaZoneamentoContagem');
+  const chkZoneamentoEl = document.getElementById('chkZoneamentoContagem');
+  const resultadoZoneamentoEl = document.getElementById('mapaZoneamentoResultado');
+  let numeroDaConsultaZoneamento = 0; // mesmo padrão da busca: resposta atrasada de um clique antigo é descartada
+  let marcadorZoneamento = null;
+
+  function mostrarResultadoZoneamento(estado, texto) {
+    if (!resultadoZoneamentoEl) return;
+    resultadoZoneamentoEl.className = `status-message ${estado} visible`;
+    resultadoZoneamentoEl.textContent = texto;
+  }
+
+  function limparResultadoZoneamento() {
+    if (!resultadoZoneamentoEl) return;
+    resultadoZoneamentoEl.className = 'status-message';
+    resultadoZoneamentoEl.textContent = '';
+    if (marcadorZoneamento) {
+      map.removeLayer(marcadorZoneamento);
+      marcadorZoneamento = null;
+    }
+  }
+
+  async function consultarZoneamentoContagem(lat, lon) {
+    const meuNumero = ++numeroDaConsultaZoneamento;
+    mostrarResultadoZoneamento('ok', 'Consultando a prefeitura de Contagem...');
+    const params = new URLSearchParams({
+      geometry: `${lon},${lat}`,
+      geometryType: 'esriGeometryPoint',
+      inSR: '4326',
+      spatialRel: 'esriSpatialRelIntersects',
+      outFields: 'ZH,ZF',
+      returnGeometry: 'false',
+      f: 'json',
+    });
+    let dados;
+    try {
+      const res = await fetch(`${ZONEAMENTO_CONTAGEM_URL}?${params}`);
+      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+      dados = await res.json();
+      if (dados.error) throw new Error(dados.error.message || 'Erro na consulta');
+    } catch (err) {
+      if (meuNumero !== numeroDaConsultaZoneamento) return;
+      console.error('Erro ao consultar o zoneamento de Contagem:', err);
+      mostrarResultadoZoneamento('error', 'Não foi possível consultar a prefeitura agora. Tente de novo em instantes.');
+      return;
+    }
+    if (meuNumero !== numeroDaConsultaZoneamento) return; // outro clique chegou primeiro
+
+    const atributos = dados.features?.[0]?.attributes;
+    if (marcadorZoneamento) map.removeLayer(marcadorZoneamento);
+    marcadorZoneamento = L.circleMarker([lat, lon], {
+      radius: 8, color: '#FFFFFF', weight: 2, fillColor: '#D97706', fillOpacity: 1,
+    }).addTo(map);
+
+    if (!atributos) {
+      marcadorZoneamento.bindTooltip('Sem zoneamento cadastrado aqui', { direction: 'top' }).openTooltip();
+      mostrarResultadoZoneamento('warn', 'Não há zoneamento cadastrado exatamente neste ponto — pode ser uma via pública, área verde ou ponto fora do cadastro. Tente clicar dentro de um lote.');
+      return;
+    }
+    const texto = `Zona Homogênea ${atributos.ZH} · Zona Fiscal ${atributos.ZF}`;
+    marcadorZoneamento.bindTooltip(texto, { direction: 'top' }).openTooltip();
+    mostrarResultadoZoneamento('ok', `${texto}. Código bruto da prefeitura — o nome/descrição da zona não está neste serviço; confira a Lei de Uso do Solo de Contagem para o significado.`);
+  }
+
+  // Mostra (ou esconde) a caixa da prova de conceito de acordo com o município
+  // selecionado. `lat`/`lon` só vêm quando a seleção veio de um clique ou de uma
+  // busca com ponto exato (não do estado inicial da página).
+  function atualizarFerramentaZoneamento(m, lat, lon) {
+    if (!caixaZoneamentoEl) return;
+    const ehContagem = m && m.slug === 'contagem';
+    caixaZoneamentoEl.hidden = !ehContagem;
+    if (!ehContagem) {
+      limparResultadoZoneamento();
+      return;
+    }
+    if (chkZoneamentoEl && chkZoneamentoEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
+      consultarZoneamentoContagem(lat, lon);
+    }
+  }
+
+  if (chkZoneamentoEl) {
+    chkZoneamentoEl.addEventListener('change', () => {
+      if (!chkZoneamentoEl.checked) limparResultadoZoneamento();
+    });
+  }
+
+  // Centraliza a seleção de município (clique no mapa, busca por endereço/CEP e o
+  // estado inicial da página) num só lugar, pra card e ferramenta de zoneamento
+  // ficarem sempre coerentes entre si, nos três casos.
+  function selecionarMunicipio(m, lat, lon) {
+    renderMunicipioCard(m, painelEl);
+    atualizarFerramentaZoneamento(m, lat, lon);
+  }
+
   const geoLayer = L.geoJSON(geojson, {
     style: (feature) => estiloDoMunicipio(encontrarMunicipio(feature.properties.name)),
     onEachFeature: (feature, layer) => {
@@ -58,8 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       layer.on('mouseover', () => layer.setStyle({ weight: 3 }));
       layer.on('mouseout', () => geoLayer.resetStyle(layer));
-      layer.on('click', () => {
-        if (m) renderMunicipioCard(m, painelEl);
+      layer.on('click', (e) => {
+        if (m) selecionarMunicipio(m, e.latlng.lat, e.latlng.lng);
       });
     },
   }).addTo(map);
@@ -207,7 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ]);
 
     const municipio = encontrarMunicipio(nomeMunicipio);
-    if (municipio) renderMunicipioCard(municipio, painelEl);
+    if (municipio) selecionarMunicipio(municipio, achado.lat, achado.lon);
 
     // O mapa fica abaixo da caixa de busca: leva a tela até o ponto marcado.
     mapaContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -229,7 +331,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // de nenhum clique — evita um painel vazio e mostra o card na hora.
   const bh = encontrarMunicipio('Belo Horizonte');
   if (bh) {
-    renderMunicipioCard(bh, painelEl);
+    selecionarMunicipio(bh);
   } else {
     painelEl.innerHTML = '<div class="status-message ok visible">Clique em um município no mapa pra ver os dados disponíveis.</div>';
     painelEl.className = 'status-message visible';

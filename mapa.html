@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="css/estilo.css?v=20261016a">
+  <link rel="stylesheet" href="css/estilo.css?v=20261027a">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -116,6 +116,19 @@
           <span>Dados do Município</span>
         </div>
         <div id="mapaResultado" class="status-message"></div>
+
+        <!-- Prova de conceito: consulta ao vivo o zoneamento de Contagem (dado público da
+             prefeitura). Só aparece com Contagem selecionada — ver js/mapa.js. -->
+        <div id="mapaZoneamentoContagem" class="mapa-zoneamento-poc" hidden>
+          <label class="mapa-zoneamento-toggle">
+            <input type="checkbox" id="chkZoneamentoContagem">
+            Consultar zoneamento ao clicar dentro de Contagem
+          </label>
+          <p class="mapa-zoneamento-nota">
+            Prova de conceito: cada clique consulta, na hora, o serviço público da prefeitura (SIGM) — não é uma camada carregada no mapa, e o Zonea não guarda nem confere esse dado. A prefeitura só publica o código da zona aqui, não o nome dela; para a legenda completa, veja o <a href="https://geoprocessamento.contagem.mg.gov.br/sigm/" target="_blank" rel="noopener noreferrer">portal oficial</a>.
+          </p>
+          <div id="mapaZoneamentoResultado" class="status-message" aria-live="polite"></div>
+        </div>
       </div>
     </section>
   </main>
@@ -164,11 +177,11 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20261016a"></script>
-  <script src="js/script.js?v=20261016a"></script>
+  <script src="js/supabase-client.js?v=20261027a"></script>
+  <script src="js/script.js?v=20261027a"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/busca-endereco.js?v=20261016a"></script>
-  <script src="js/mapa.js?v=20261016a"></script>
+  <script src="js/busca-endereco.js?v=20261027a"></script>
+  <script src="js/mapa.js?v=20261027a"></script>
 </body>
 </html>

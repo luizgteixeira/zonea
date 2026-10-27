@@ -3125,3 +3125,44 @@ footer,
   margin-top: 10px;
 }
 
+/* Mapa: prova de conceito de consulta de zoneamento (só Contagem, por enquanto) */
+.mapa-zoneamento-poc {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--cor-cinza-borda);
+}
+
+.mapa-zoneamento-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cor-cinza-escuro);
+  cursor: pointer;
+}
+
+.mapa-zoneamento-toggle input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  accent-color: var(--cor-azul);
+}
+
+.mapa-zoneamento-nota {
+  font-size: 12px;
+  color: var(--cor-cinza);
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+.mapa-zoneamento-nota a {
+  color: var(--cor-azul);
+  font-weight: 600;
+}
+
+#mapaZoneamentoResultado.status-message.visible {
+  margin-top: 10px;
+}
+
