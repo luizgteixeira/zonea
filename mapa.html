@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="css/estilo.css?v=20261027f">
+  <link rel="stylesheet" href="css/estilo.css?v=20261027g">
 </head>
 <body>
   <div class="contours-watermark"></div>
@@ -175,6 +175,22 @@
           </p>
           <div id="mapaZoneamentoBetimResultado" class="status-message" aria-live="polite"></div>
         </div>
+
+        <!-- Nova Lima e Ribeirão das Neves: aviso claro de que a consulta de zoneamento NÃO
+             existe pra esses dois, em vez de simplesmente não aparecer nada (o que pareceria
+             esquecimento, não uma limitação real e conhecida). Só aparece com o respectivo
+             município selecionado — ver js/mapa.js. -->
+        <div id="mapaZoneamentoNovaLima" class="mapa-zoneamento-poc" hidden>
+          <p class="status-message warn visible">
+            ⚠️ <strong>Consulta de zoneamento ainda não disponível para Nova Lima.</strong> A prefeitura não publica o zoneamento nem os parâmetros construtivos em nenhum formato que o Zonea consiga consultar — nem no visor ao vivo (GeoPNL), nem como dado aberto. Para saber os parâmetros de um imóvel ali, é preciso pedir direto ao setor de geoprocessamento da prefeitura (telefone, e-mail ou presencial).
+          </p>
+        </div>
+
+        <div id="mapaZoneamentoRibeiraoDasNeves" class="mapa-zoneamento-poc" hidden>
+          <p class="status-message warn visible">
+            ⚠️ <strong>Consulta de zoneamento ainda não disponível para Ribeirão das Neves.</strong> O visor oficial (Plano Diretor, veja "Acessar Portal Oficial" acima) existe, mas usa uma tecnologia que o Zonea ainda não consegue consultar com segurança de fora do próprio visor deles. Estamos tentando viabilizar isso.
+          </p>
+        </div>
       </div>
     </section>
   </main>
@@ -223,11 +239,11 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js?v=20261027f"></script>
-  <script src="js/script.js?v=20261027f"></script>
+  <script src="js/supabase-client.js?v=20261027g"></script>
+  <script src="js/script.js?v=20261027g"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/busca-endereco.js?v=20261027f"></script>
-  <script src="js/mapa.js?v=20261027f"></script>
+  <script src="js/busca-endereco.js?v=20261027g"></script>
+  <script src="js/mapa.js?v=20261027g"></script>
 </body>
 </html>

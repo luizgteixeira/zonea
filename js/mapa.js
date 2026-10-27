@@ -291,6 +291,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const caixaZoneamentoBetimEl = document.getElementById('mapaZoneamentoBetim');
   const chkZoneamentoBetimEl = document.getElementById('chkZoneamentoBetim');
   const resultadoZoneamentoBetimEl = document.getElementById('mapaZoneamentoBetimResultado');
+
+  // Nova Lima e Ribeirão das Neves: nenhuma consulta aqui, só o aviso de que ainda não existe
+  // (ver mapa.html) — mostrar isso é melhor do que simplesmente não ter caixa nenhuma, que
+  // pareceria esquecimento em vez de uma limitação real e já investigada.
+  const caixaZoneamentoNovaLimaEl = document.getElementById('mapaZoneamentoNovaLima');
+  const caixaZoneamentoRibeiraoEl = document.getElementById('mapaZoneamentoRibeiraoDasNeves');
   let numeroDaConsultaZoneamentoBetim = 0;
   let marcadorZoneamentoBetim = null;
 
@@ -434,6 +440,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         consultarZoneamentoBetim(lat, lon);
       }
     }
+    if (caixaZoneamentoNovaLimaEl) caixaZoneamentoNovaLimaEl.hidden = !(m && m.slug === 'nova-lima');
+    if (caixaZoneamentoRibeiraoEl) caixaZoneamentoRibeiraoEl.hidden = !(m && m.slug === 'ribeirao-das-neves');
   }
 
   if (chkZoneamentoEl) {
