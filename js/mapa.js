@@ -195,6 +195,88 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ---------- PROVA DE CONCEITO: consulta de zoneamento (Belo Horizonte) ----------
+  // Diferente de Contagem e Santa Luzia: o mapa ao vivo da PBH bloqueia o Zonea (403 por
+  // origem — ver docs/pesquisa-lotes-belo-horizonte.md), mas a prefeitura publica o MESMO
+  // zoneamento como dado aberto (CC-BY) no portal dela, pequeno o bastante (1.716 polígonos)
+  // pra baixar uma vez e consultar no próprio navegador — sem Edge Function, sem depender de
+  // nenhum servidor depois de carregado. Resultado conferido contra o GeoServer ao vivo da
+  // PBH (mesmo ID de feição) antes de publicar.
+  const BH_ZONEAMENTO_URL = 'data/bh-zoneamento-11181.geojson';
+  const caixaZoneamentoBHEl = document.getElementById('mapaZoneamentoBH');
+  const chkZoneamentoBHEl = document.getElementById('chkZoneamentoBH');
+  const resultadoZoneamentoBHEl = document.getElementById('mapaZoneamentoBHResultado');
+  let numeroDaConsultaZoneamentoBH = 0;
+  let marcadorZoneamentoBH = null;
+  let zoneamentoBHGeojson = null; // cache: baixado uma vez só, na primeira consulta
+  let zoneamentoBHCarregando = null; // Promise em andamento, pra dois cliques rápidos não baixarem duas vezes
+
+  function mostrarResultadoZoneamentoBH(estado, texto) {
+    if (!resultadoZoneamentoBHEl) return;
+    resultadoZoneamentoBHEl.className = `status-message ${estado} visible`;
+    resultadoZoneamentoBHEl.textContent = texto;
+  }
+
+  function limparResultadoZoneamentoBH() {
+    if (!resultadoZoneamentoBHEl) return;
+    resultadoZoneamentoBHEl.className = 'status-message';
+    resultadoZoneamentoBHEl.textContent = '';
+    if (marcadorZoneamentoBH) {
+      map.removeLayer(marcadorZoneamentoBH);
+      marcadorZoneamentoBH = null;
+    }
+  }
+
+  async function carregarZoneamentoBH() {
+    if (zoneamentoBHGeojson) return zoneamentoBHGeojson;
+    if (!zoneamentoBHCarregando) {
+      zoneamentoBHCarregando = fetch(BH_ZONEAMENTO_URL).then((res) => {
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+        return res.json();
+      });
+    }
+    zoneamentoBHGeojson = await zoneamentoBHCarregando;
+    return zoneamentoBHGeojson;
+  }
+
+  async function consultarZoneamentoBH(lat, lon) {
+    const meuNumero = ++numeroDaConsultaZoneamentoBH;
+    const jaCarregado = !!zoneamentoBHGeojson;
+    mostrarResultadoZoneamentoBH('ok', jaCarregado ? 'Consultando...' : 'Baixando os dados de zoneamento de Belo Horizonte (cerca de 6 MB, só desta vez)...');
+    let geo;
+    try {
+      geo = await carregarZoneamentoBH();
+    } catch (err) {
+      if (meuNumero !== numeroDaConsultaZoneamentoBH) return;
+      console.error('Erro ao carregar o zoneamento de Belo Horizonte:', err);
+      zoneamentoBHCarregando = null; // permite tentar de novo no próximo clique
+      mostrarResultadoZoneamentoBH('error', 'Não foi possível baixar os dados agora. Tente de novo em instantes.');
+      return;
+    }
+    if (meuNumero !== numeroDaConsultaZoneamentoBH) return; // outro clique chegou primeiro
+
+    const feature = ZoneaEndereco.acharFeature(lon, lat, geo);
+    if (marcadorZoneamentoBH) map.removeLayer(marcadorZoneamentoBH);
+    marcadorZoneamentoBH = L.circleMarker([lat, lon], {
+      radius: 8, color: '#FFFFFF', weight: 2, fillColor: '#D97706', fillOpacity: 1,
+    }).addTo(map);
+
+    if (!feature) {
+      marcadorZoneamentoBH.bindTooltip('Sem zoneamento cadastrado aqui', { direction: 'top' }).openTooltip();
+      mostrarResultadoZoneamentoBH('warn', 'Não há zoneamento cadastrado exatamente neste ponto.');
+      return;
+    }
+    const texto = `${feature.properties.nome} (${feature.properties.sigla})`;
+    marcadorZoneamentoBH.bindTooltip(texto, { direction: 'top' }).openTooltip();
+    mostrarResultadoZoneamentoBH('ok', texto);
+  }
+
+  if (chkZoneamentoBHEl) {
+    chkZoneamentoBHEl.addEventListener('change', () => {
+      if (!chkZoneamentoBHEl.checked) limparResultadoZoneamentoBH();
+    });
+  }
+
   // Mostra (ou esconde) as caixas da prova de conceito de acordo com o município
   // selecionado. `lat`/`lon` só vêm quando a seleção veio de um clique ou de uma
   // busca com ponto exato (não do estado inicial da página).
@@ -213,6 +295,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!ehSantaLuzia) limparResultadoZoneamentoSL();
       else if (chkZoneamentoSLEl && chkZoneamentoSLEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
         consultarZoneamentoSantaLuzia(lat, lon);
+      }
+    }
+    if (caixaZoneamentoBHEl) {
+      const ehBH = m && m.slug === 'belo-horizonte';
+      caixaZoneamentoBHEl.hidden = !ehBH;
+      if (!ehBH) limparResultadoZoneamentoBH();
+      else if (chkZoneamentoBHEl && chkZoneamentoBHEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
+        consultarZoneamentoBH(lat, lon);
       }
     }
   }
