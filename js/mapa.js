@@ -121,19 +121,99 @@ document.addEventListener('DOMContentLoaded', async () => {
     mostrarResultadoZoneamento('ok', `${texto}. Código bruto da prefeitura — o nome/descrição da zona não está neste serviço; confira a Lei de Uso do Solo de Contagem para o significado.`);
   }
 
-  // Mostra (ou esconde) a caixa da prova de conceito de acordo com o município
+  // ---------- PROVA DE CONCEITO: consulta de zoneamento (Santa Luzia) ----------
+  // Mesma ideia da de Contagem, mas o GeoServer de Santa Luzia não manda cabeçalho CORS
+  // (confirmado: funciona com curl, dá "Failed to fetch" direto do navegador) — por isso
+  // passa pela Edge Function zoneamento-santa-luzia, que chama o GeoServer no lugar do
+  // navegador da pessoa (servidor-a-servidor não tem bloqueio de CORS).
+  const caixaZoneamentoSLEl = document.getElementById('mapaZoneamentoSantaLuzia');
+  const chkZoneamentoSLEl = document.getElementById('chkZoneamentoSantaLuzia');
+  const resultadoZoneamentoSLEl = document.getElementById('mapaZoneamentoSantaLuziaResultado');
+  let numeroDaConsultaZoneamentoSL = 0;
+  let marcadorZoneamentoSL = null;
+
+  function mostrarResultadoZoneamentoSL(estado, texto) {
+    if (!resultadoZoneamentoSLEl) return;
+    resultadoZoneamentoSLEl.className = `status-message ${estado} visible`;
+    resultadoZoneamentoSLEl.textContent = texto;
+  }
+
+  function limparResultadoZoneamentoSL() {
+    if (!resultadoZoneamentoSLEl) return;
+    resultadoZoneamentoSLEl.className = 'status-message';
+    resultadoZoneamentoSLEl.textContent = '';
+    if (marcadorZoneamentoSL) {
+      map.removeLayer(marcadorZoneamentoSL);
+      marcadorZoneamentoSL = null;
+    }
+  }
+
+  async function consultarZoneamentoSantaLuzia(lat, lon) {
+    const meuNumero = ++numeroDaConsultaZoneamentoSL;
+    mostrarResultadoZoneamentoSL('ok', 'Consultando a prefeitura de Santa Luzia...');
+    let dados;
+    try {
+      const { data, error } = await supabaseClient.functions.invoke('zoneamento-santa-luzia', { body: { lat, lon } });
+      if (error || !data) throw error || new Error('Resposta vazia da função zoneamento-santa-luzia');
+      dados = data;
+    } catch (err) {
+      if (meuNumero !== numeroDaConsultaZoneamentoSL) return;
+      console.error('Erro ao consultar o zoneamento de Santa Luzia:', err);
+      mostrarResultadoZoneamentoSL('error', 'Não foi possível consultar a prefeitura agora. Tente de novo em instantes.');
+      return;
+    }
+    if (meuNumero !== numeroDaConsultaZoneamentoSL) return; // outro clique chegou primeiro
+
+    if (marcadorZoneamentoSL) map.removeLayer(marcadorZoneamentoSL);
+    marcadorZoneamentoSL = L.circleMarker([lat, lon], {
+      radius: 8, color: '#FFFFFF', weight: 2, fillColor: '#D97706', fillOpacity: 1,
+    }).addTo(map);
+
+    const { planoDiretor2026, lpuos2008 } = dados;
+    if (!planoDiretor2026 && !lpuos2008) {
+      marcadorZoneamentoSL.bindTooltip('Sem zoneamento cadastrado aqui', { direction: 'top' }).openTooltip();
+      mostrarResultadoZoneamentoSL('warn', 'Não há zoneamento cadastrado exatamente neste ponto — pode ser uma via pública, área verde ou ponto fora do cadastro.');
+      return;
+    }
+    const partes = [];
+    if (planoDiretor2026) partes.push(`Plano Diretor 2026: ${planoDiretor2026.nome} (${planoDiretor2026.sigla})`);
+    if (lpuos2008) {
+      partes.push(
+        `LPUOS 2008: ${lpuos2008.nome} — coeficiente básico ${lpuos2008.coeficienteBasico}, `
+        + `coeficiente máximo ${lpuos2008.coeficienteMaximo}, taxa de ocupação ${lpuos2008.taxaOcupacao}, `
+        + `taxa de permeabilidade ${lpuos2008.taxaPermeabilidade}, quota de terreno ${lpuos2008.quotaTerreno}`,
+      );
+    }
+    const texto = partes.join(' · ');
+    marcadorZoneamentoSL.bindTooltip(texto, { direction: 'top' }).openTooltip();
+    mostrarResultadoZoneamentoSL('ok', texto);
+  }
+
+  if (chkZoneamentoSLEl) {
+    chkZoneamentoSLEl.addEventListener('change', () => {
+      if (!chkZoneamentoSLEl.checked) limparResultadoZoneamentoSL();
+    });
+  }
+
+  // Mostra (ou esconde) as caixas da prova de conceito de acordo com o município
   // selecionado. `lat`/`lon` só vêm quando a seleção veio de um clique ou de uma
   // busca com ponto exato (não do estado inicial da página).
   function atualizarFerramentaZoneamento(m, lat, lon) {
-    if (!caixaZoneamentoEl) return;
-    const ehContagem = m && m.slug === 'contagem';
-    caixaZoneamentoEl.hidden = !ehContagem;
-    if (!ehContagem) {
-      limparResultadoZoneamento();
-      return;
+    if (caixaZoneamentoEl) {
+      const ehContagem = m && m.slug === 'contagem';
+      caixaZoneamentoEl.hidden = !ehContagem;
+      if (!ehContagem) limparResultadoZoneamento();
+      else if (chkZoneamentoEl && chkZoneamentoEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
+        consultarZoneamentoContagem(lat, lon);
+      }
     }
-    if (chkZoneamentoEl && chkZoneamentoEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
-      consultarZoneamentoContagem(lat, lon);
+    if (caixaZoneamentoSLEl) {
+      const ehSantaLuzia = m && m.slug === 'santa-luzia';
+      caixaZoneamentoSLEl.hidden = !ehSantaLuzia;
+      if (!ehSantaLuzia) limparResultadoZoneamentoSL();
+      else if (chkZoneamentoSLEl && chkZoneamentoSLEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
+        consultarZoneamentoSantaLuzia(lat, lon);
+      }
     }
   }
 
