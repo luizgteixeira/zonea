@@ -183,10 +183,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   resolverZoneaDadosProntos();
   const assinaturaPromise = getAssinaturaAtiva();
 
-  // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página,
-  // já com uma mensagem padrão pra equipe saber do que se trata.
+  // Número de WhatsApp centralizado: aplicado a todos os botões flutuantes da página.
+  // A mensagem já chega pronta com o assunto da página (atributo "data-wpp-msg" no botão,
+  // escrito em cada HTML, ao lado do tooltip) — assim quem recebe já sabe do que se trata,
+  // sem a pessoa ter que explicar do zero. Página sem o atributo usa a mensagem genérica.
   document.querySelectorAll('.whatsapp-float-btn').forEach(el => {
-    el.href = buildWhatsappLink('Olá! Estou no site do Zonea e gostaria de tirar uma dúvida.');
+    el.href = buildWhatsappLink(el.dataset.wppMsg || 'Olá! Estou no site do Zonea e gostaria de tirar uma dúvida.');
   });
 
   // Localização aproximada do visitante (por IP, sem pedir permissão nenhuma) —
