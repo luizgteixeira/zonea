@@ -121,7 +121,7 @@
     "area": "72 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Cadastro imobiliário e mapa de zoneamento em fase de estruturação de geodados."
+    "detalhes_tecnicos": "Nenhum geoportal ou visualizador de zoneamento público encontrado (checado em 27/10/2026). Os sistemas digitais do município são só de arrecadação (IPTU/ITBI, Betha e geosiap — este último fora do ar), sem nenhum componente de mapa."
   },
   {
     "slug": "igarape",
@@ -310,7 +310,7 @@
     "area": "302 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Plano Diretor e áreas de tombamento histórico em catalogação técnica."
+    "detalhes_tecnicos": "A prefeitura contratou a plataforma Geo360 (mesmo fornecedor do GeoNeves, de Ribeirão das Neves) para cadastro imobiliário, mas hoje é fechada por login — visualizador e API devolvem \"sessão expirada\"/\"token não fornecido\" sem autenticação (checado em 27/10/2026). Vale reconferir de tempos em tempos: o GeoNeves também já foi fechado antes de abrir ao público."
   },
   {
     "slug": "santa-luzia",
@@ -377,6 +377,6 @@
     "area": "70 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Base cartográfica e diretrizes do Plano Diretor sob catalogação técnica."
+    "detalhes_tecnicos": "Nenhum geoportal ou visualizador de zoneamento público encontrado (checado em 27/10/2026). O Plano Diretor só está publicado em PDF da lei; os sistemas digitais do município são só de arrecadação (IPTU/ITBI/BCI, via webcidadao.com.br), sem nenhum componente de mapa."
   }
 ]
