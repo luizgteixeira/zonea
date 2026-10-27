@@ -221,7 +221,7 @@
     "area": "252 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Base geográfica e diretrizes do solo sob catalogação técnica prioritária."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026): testamos ArcGIS REST, GeoServer, qgis2web e Geo360 no domínio oficial e em subdomínios geo./mapas./sig. — nada, só páginas de erro do próprio site. A prefeitura mantém um portal de legislação (CESPRO), mas sem módulo de mapa."
   },
   {
     "slug": "nova-lima",
@@ -266,7 +266,7 @@
     "area": "70 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Limites territoriais e declividade urbana sob catalogação técnica."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). O site oficial fica atrás de um desafio anti-robô (Cloudflare); usamos um retrato antigo do site (Wayback Machine) pra conferir o menu mesmo assim — só uma imagem estática do município e o Plano Diretor em texto/notícia, sem visualizador de mapa."
   },
   {
     "slug": "ribeirao-das-neves",
@@ -345,7 +345,7 @@
     "area": "48 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Base cadastral municipal e zoneamento em processo de revisão."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). A própria carta de serviços oficial da prefeitura (dados abertos) confirma que todo atendimento de cadastro/IPTU é presencial, sem sistema online — e não existe nenhum ArcGIS, GeoServer ou qgis2web ativo."
   },
   {
     "slug": "sarzedo",
