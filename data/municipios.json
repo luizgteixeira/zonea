@@ -32,7 +32,7 @@
     "link": "https://sistemas.betim.mg.gov.br/geoweb/zoneamentoEconomico",
     "sistema": "GeoBetim",
     "detalhes_tecnicos": "GeoWeb Betim — Zoneamento Econômico: busca a zona por CEP ou por CNAE. Os parâmetros construtivos (lote mínimo, coeficiente de aproveitamento, taxa de ocupação, afastamentos, altura máxima) ficam numa ferramenta separada, \"Parâmetros Urbanísticos\", no mesmo GeoWeb (clique em \"Voltar para o início\" na página do zoneamento para chegar até ela).",
-    "sistema_referencia": "Divergente entre mapas: mapa oficial de localização usa Datum Córrego Alegre 1970-72 (UTM); SIRGAS 2000 citado em outras bases — confirmação pendente"
+    "sistema_referencia": "Confirmado via metadado da camada de zoneamento (PDILUOS/PDIPARAMETRO) do GeoServer deles: Datum Córrego Alegre 1970-72 / UTM 23S (EPSG:22523) — não SIRGAS 2000. O mapa oficial de localização já indicava esse datum; outras bases do mesmo portal podem usar um sistema diferente (não verificado)."
   },
   {
     "slug": "brumadinho",

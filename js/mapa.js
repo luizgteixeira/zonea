@@ -277,6 +277,127 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ---------- PROVA DE CONCEITO: consulta de zoneamento (Betim) ----------
+  // Consulta ao vivo, como Contagem — mas o GeoServer de Betim (zeus.betim.mg.gov.br) não
+  // aceita o filtro espacial por CQL (dá erro de sintaxe pro "SRID=4326;POINT(...)" que
+  // funciona em Contagem/Santa Luzia) e guarda a geometria no DATUM ANTIGO — Córrego Alegre
+  // 1970-72, EPSG:22523, não SIRGAS 2000. Por isso a consulta usa o protocolo WFS "Filter
+  // Encoding" (XML, POST): manda o ponto em WGS84 com o SRID marcado na própria tag GML
+  // (<gml:Point srsName="...EPSG::4326">), e quem reprojeta pro datum antigo é o GeoServer —
+  // nenhuma conta de datum feita por nós. CORS confirmado (o servidor ecoa a origem).
+  // Duas camadas: PDILUOS (zona) e PDIPARAMETRO (parâmetros construtivos — a mesma fonte da
+  // ferramenta "Parâmetros Urbanísticos" do GeoWeb deles).
+  const GEOSERVER_BETIM = 'https://zeus.betim.mg.gov.br/geoserver/betim/ows';
+  const caixaZoneamentoBetimEl = document.getElementById('mapaZoneamentoBetim');
+  const chkZoneamentoBetimEl = document.getElementById('chkZoneamentoBetim');
+  const resultadoZoneamentoBetimEl = document.getElementById('mapaZoneamentoBetimResultado');
+  let numeroDaConsultaZoneamentoBetim = 0;
+  let marcadorZoneamentoBetim = null;
+
+  function mostrarResultadoZoneamentoBetim(estado, texto) {
+    if (!resultadoZoneamentoBetimEl) return;
+    resultadoZoneamentoBetimEl.className = `status-message ${estado} visible`;
+    resultadoZoneamentoBetimEl.textContent = texto;
+  }
+
+  function limparResultadoZoneamentoBetim() {
+    if (!resultadoZoneamentoBetimEl) return;
+    resultadoZoneamentoBetimEl.className = 'status-message';
+    resultadoZoneamentoBetimEl.textContent = '';
+    if (marcadorZoneamentoBetim) {
+      map.removeLayer(marcadorZoneamentoBetim);
+      marcadorZoneamentoBetim = null;
+    }
+  }
+
+  // O GeoServer de Betim devolve alguns textos com acentuação corrompida (UTF-8 lido como
+  // Latin-1 e regravado) — ex. "OcupaÃ§Ã£o". Esse é o conserto padrão desse tipo de problema.
+  function corrigeMojibake(texto) {
+    try {
+      return decodeURIComponent(escape(texto));
+    } catch {
+      return texto; // já estava certo (ou não é esse problema) — mantém como veio
+    }
+  }
+
+  async function consultarCamadaBetim(typeName, campos, lat, lon) {
+    const propriedades = campos.map((c) => `<wfs:PropertyName>${c}</wfs:PropertyName>`).join('');
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:betim="betim" service="WFS" version="2.0.0" outputFormat="application/json">
+  <wfs:Query typeNames="betim:${typeName}">
+    ${propriedades}
+    <fes:Filter>
+      <fes:Intersects>
+        <fes:ValueReference>GEOMETRY</fes:ValueReference>
+        <gml:Point srsName="urn:ogc:def:crs:EPSG::4326" gml:id="p-${typeName}">
+          <gml:pos>${lat} ${lon}</gml:pos>
+        </gml:Point>
+      </fes:Intersects>
+    </fes:Filter>
+  </wfs:Query>
+</wfs:GetFeature>`;
+    const res = await fetch(GEOSERVER_BETIM, { method: 'POST', headers: { 'Content-Type': 'application/xml' }, body: xml });
+    if (!res.ok) throw new Error(`GeoServer de Betim HTTP ${res.status}`);
+    const dados = await res.json();
+    const props = dados.features?.[0]?.properties;
+    if (!props) return null;
+    const corrigido = {};
+    for (const [k, v] of Object.entries(props)) corrigido[k] = typeof v === 'string' ? corrigeMojibake(v) : v;
+    return corrigido;
+  }
+
+  async function consultarZoneamentoBetim(lat, lon) {
+    const meuNumero = ++numeroDaConsultaZoneamentoBetim;
+    mostrarResultadoZoneamentoBetim('ok', 'Consultando a prefeitura de Betim...');
+    let zona, parametros;
+    try {
+      [zona, parametros] = await Promise.all([
+        consultarCamadaBetim('PDILUOS', ['TIPO', 'DESCRICAO'], lat, lon),
+        consultarCamadaBetim('PDIPARAMETRO', [
+          'LOTEMINPARCELAMENTO', 'LOTEMINDESDOBRO', 'CABASICO', 'CAMAXIMO', 'TXOCUPACAO',
+          'TXPERMEABILIDADE', 'AFFRONTAL', 'AFLATERAL', 'AFFUNDOS', 'ALTMAXIDIVISA', 'NMAXPAVIMENTOS',
+        ], lat, lon),
+      ]);
+    } catch (err) {
+      if (meuNumero !== numeroDaConsultaZoneamentoBetim) return;
+      console.error('Erro ao consultar o zoneamento de Betim:', err);
+      mostrarResultadoZoneamentoBetim('error', 'Não foi possível consultar a prefeitura agora. Tente de novo em instantes.');
+      return;
+    }
+    if (meuNumero !== numeroDaConsultaZoneamentoBetim) return; // outro clique chegou primeiro
+
+    if (marcadorZoneamentoBetim) map.removeLayer(marcadorZoneamentoBetim);
+    marcadorZoneamentoBetim = L.circleMarker([lat, lon], {
+      radius: 8, color: '#FFFFFF', weight: 2, fillColor: '#D97706', fillOpacity: 1,
+    }).addTo(map);
+
+    if (!zona && !parametros) {
+      marcadorZoneamentoBetim.bindTooltip('Sem zoneamento cadastrado aqui', { direction: 'top' }).openTooltip();
+      mostrarResultadoZoneamentoBetim('warn', 'Não há zoneamento cadastrado exatamente neste ponto.');
+      return;
+    }
+    const partes = [];
+    if (zona) partes.push(`Zona: ${zona.DESCRICAO} (${zona.TIPO})`);
+    if (parametros) {
+      partes.push(
+        `Lote mínimo: ${parametros.LOTEMINPARCELAMENTO} (desdobro ${parametros.LOTEMINDESDOBRO}) · `
+        + `Coeficiente básico ${parametros.CABASICO}, máximo ${parametros.CAMAXIMO} · `
+        + `Taxa de ocupação ${parametros.TXOCUPACAO} · Taxa de permeabilidade: ${parametros.TXPERMEABILIDADE} · `
+        + `Afastamentos — frontal ${parametros.AFFRONTAL}, lateral: ${parametros.AFLATERAL}, fundos: ${parametros.AFFUNDOS} · `
+        + `Altura máxima na divisa ${parametros.ALTMAXIDIVISA} · Máx. ${parametros.NMAXPAVIMENTOS} pavimentos`,
+      );
+    }
+    const texto = partes.join(' — ');
+    marcadorZoneamentoBetim.bindTooltip(zona ? `${zona.DESCRICAO} (${zona.TIPO})` : texto, { direction: 'top' }).openTooltip();
+    mostrarResultadoZoneamentoBetim('ok', texto);
+  }
+
+  if (chkZoneamentoBetimEl) {
+    chkZoneamentoBetimEl.addEventListener('change', () => {
+      if (!chkZoneamentoBetimEl.checked) limparResultadoZoneamentoBetim();
+    });
+  }
+
   // Mostra (ou esconde) as caixas da prova de conceito de acordo com o município
   // selecionado. `lat`/`lon` só vêm quando a seleção veio de um clique ou de uma
   // busca com ponto exato (não do estado inicial da página).
@@ -303,6 +424,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!ehBH) limparResultadoZoneamentoBH();
       else if (chkZoneamentoBHEl && chkZoneamentoBHEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
         consultarZoneamentoBH(lat, lon);
+      }
+    }
+    if (caixaZoneamentoBetimEl) {
+      const ehBetim = m && m.slug === 'betim';
+      caixaZoneamentoBetimEl.hidden = !ehBetim;
+      if (!ehBetim) limparResultadoZoneamentoBetim();
+      else if (chkZoneamentoBetimEl && chkZoneamentoBetimEl.checked && Number.isFinite(lat) && Number.isFinite(lon)) {
+        consultarZoneamentoBetim(lat, lon);
       }
     }
   }
