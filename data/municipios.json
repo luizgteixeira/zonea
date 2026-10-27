@@ -54,7 +54,7 @@
     "area": "542 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Base cartográfica municipal e diretrizes urbanísticas em auditoria para integração OGC."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026): testamos ArcGIS REST, GeoServer, qgis2web e Geo360 no domínio oficial e em subdomínios geo./mapas./sig. — nada. O cadastro imobiliário e o IPTU/ITBI são só formulários de emissão de guia, sem mapa."
   },
   {
     "slug": "capim-branco",
@@ -111,7 +111,7 @@
     "area": "194 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Legislação urbanística local e mapa de uso do solo em catálogo para validação."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). O site oficial fica atrás de um desafio anti-robô (Cloudflare) que bloqueia até a checagem automática da home; usamos um retrato antigo do site (Wayback Machine) pra conferir todo o menu — nenhuma secretaria de planejamento urbano, nenhum item de geoprocessamento ou mapa de zoneamento. Município pequeno (~7 mil hab.), sem indício de geoportal."
   },
   {
     "slug": "ibirite",
@@ -210,7 +210,7 @@
     "area": "302 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Cartografia básica municipal sob verificação para integração com padrão WMS."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026): testamos ArcGIS REST, GeoServer, qgis2web e Geo360 no domínio oficial e em subdomínios geo./mapas./sig. — nada. Os sistemas de IPTU/ITBI são só emissão de guia; o \"SIG Protocolo\" do site é gestão de documentos, não geoprocessamento (apesar do nome)."
   },
   {
     "slug": "matozinhos",
