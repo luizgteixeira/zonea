@@ -166,7 +166,7 @@
     "area": "1.921 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Limites de conservação ambiental e Plano Diretor municipal sob catalogação."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). O site roda em Joomla e os sistemas online (financeiro, educação) são terceirizados, sem nenhum módulo de mapa ou cadastro georreferenciado."
   },
   {
     "slug": "juatuba",
@@ -177,7 +177,7 @@
     "area": "96 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Zoneamento de polos industriais e perímetro urbano em processo de catalogação."
+    "detalhes_tecnicos": "Não tem geoportal nem visualizador web de zoneamento (checado em 27/10/2026). Na seção \"Espaço Plano Diretor\" do site oficial há só um link de download de um KML compactado (.rar, ~1 MB) com o mapa de zoneamento, pensado pra abrir no Google Earth — não num navegador."
   },
   {
     "slug": "lagoa-santa",
@@ -255,7 +255,7 @@
     "area": "292 km²",
     "link": null,
     "sistema": "Busca Direta",
-    "detalhes_tecnicos": "Base cartográfica urbana e dados cadastrais sob auditoria de fontes públicas."
+    "detalhes_tecnicos": "Nenhum geoportal público encontrado (checado em 27/10/2026). O site oficial (pl.mg.gov.br) oferece só serviços tributários (IPTU, ITBI) em formulário e um mapa turístico ilustrativo, sem dado de uso do solo."
   },
   {
     "slug": "raposos",
